@@ -1,5 +1,13 @@
-extends layout
-
-block content
-  h1= title
-  p Welcome to #{title}
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <%- include('partials/head.ejs') %>
+    <title><%= title %></title>  
+  </head>
+  <body>
+    <%- include('partials/header.ejs') %>
+  </body>
+  <footer>
+    <%- include('partials/footer.ejs') %>
+  </footer>
+</html>
