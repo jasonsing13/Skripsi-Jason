@@ -2,6 +2,7 @@ const pool = require('../../database/db');
 const queries = require('../user/queries');
 
 const getUser = (req,res)=>{
+    // config database pool melakukan fungsi query(query dari cosnt queries getuser)
     pool.query(queries.getUser, (error, results)=>{
         if(error) throw error;
         res.status(200).json(results.rows);
@@ -102,12 +103,7 @@ module.exports = {
     getRoleById,
 };
 
-const getVendor = (req,res)=>{
-    pool.query(queries.getVendor, (error, results)=>{
-        if(error) throw error;
-        res.status(200).json(results.rows);
-    })
-};
+
 
 const getVendorById = (req,res)=>{
     const id = req.params.id;

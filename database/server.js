@@ -9,6 +9,8 @@ app.get("/",(req,res)=>{
     res.send("hello world");
 });
 
+// set routes
 app.use('/users', userroutes);
+
 
 app.listen(port, () => console.log(`app listen on ${port}`))
