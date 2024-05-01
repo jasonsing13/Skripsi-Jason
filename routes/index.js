@@ -16,25 +16,26 @@ router.get('/register', function(req, res) {
   res.render('registration');
 });
 
-
 router.post('/submit-vendor-registration', function(req, res) {
   const { companyName, companyEmail, companyStatus, companyAddress, directorName, companyPhone } = req.body;
   // Process the data, save to database or perform other actions
-  // Here you would typically validate the data and save it to your database
-  // For example, using a hypothetical database function:
   saveVendorInformation({
-    companyName,
-    companyEmail,
-    companyStatus,
-    companyAddress,
-    directorName,
-    companyPhone
+      companyName,
+      companyEmail,
+      companyStatus,
+      companyAddress,
+      directorName,
+      companyPhone
   }).then(() => {
-    res.redirect('/next-registration-step'); // Redirect to the next part of the registration process
+      res.redirect('/bank-info'); // Redirect to the bank info page
   }).catch(error => {
-    console.error('Error saving vendor information:', error);
-    res.status(500).send('An error occurred during registration.');
+      console.error('Error saving vendor information:', error);
+      res.status(500).send('An error occurred during registration.');
   });
+});
+
+router.get('/bank-info', function(req, res) {
+  res.render('bank-info');
 });
 
 router.post('/submit-bank-info', function(req, res) {
