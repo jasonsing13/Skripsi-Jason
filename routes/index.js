@@ -16,7 +16,7 @@ router.get('/register', function(req, res) {
   res.render('registration');
 });
 
-router.post('/submit-vendor-registration', function(req, res) {
+router.post('/register', function(req, res) {
   const { companyName, companyEmail, companyStatus, companyAddress, directorName, companyPhone } = req.body;
   // Process the data, save to database or perform other actions
   saveVendorInformation({
@@ -38,29 +38,36 @@ router.get('/bank-info', function(req, res) {
   res.render('bank-info');
 });
 
-router.post('/submit-bank-info', function(req, res) {
+router.post('/bank-info', function(req, res) {
   const { accountNumber, accountName, bankName } = req.body;
   // Process the data, save to database or perform other actions
   // Redirect to the next step or handle errors
-  res.redirect('/next-step-url'); // Modify with actual URL for the next step
+  res.redirect('/tax-info'); // Modify this to the correct next step URL
 });
 
-router.post('/submit-tax-info', function(req, res) {
+router.get('/tax-info', function(req, res) {
+  res.render('tax-info');
+});
+
+router.post('/tax-info', function(req, res) {
   const { npwpNumber, pkpStatus } = req.body;
   // Process the data, save to database or perform other actions
   // Redirect to the next step or handle errors
-  res.redirect('/next-step-url'); // Modify with actual URL for the next step
+  res.redirect('/legal-info'); // Modify with actual URL for the next step
 });
 
-router.post('/submit-final-registration', function(req, res) {
+router.get('/legal-info', function(req, res) {
+  res.render('legal-info');
+});
+
+
+router.post('/legal-info', function(req, res) {
   const { nibNumber, ktpNumber } = req.body;
-  // Assuming session or another method is used to store previous steps data
   const allData = {
-      ...req.session.vendorData, // Data from previous steps
+      ...req.session.vendorData, // Ensure session data is correctly managed
       nibNumber,
       ktpNumber
   };
-  // Process the data, save to database or perform other actions
   saveAllVendorInformation(allData).then(() => {
       res.redirect('/registration-complete'); // Redirect to a confirmation page
   }).catch(error => {
@@ -68,5 +75,4 @@ router.post('/submit-final-registration', function(req, res) {
       res.status(500).send('An error occurred during registration.');
   });
 });
-
 module.exports = router;
