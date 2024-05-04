@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Profile - Legal Information</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+        }
+        .header, .container {
+            margin-bottom: 30px;
+            text-align: center;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .alert {
+            color: #856404;
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="col-md-3">
+            <!-- Sidebar -->
+            <div class="d-flex flex-column align-items-start">
+                <h4>Profil Vendor</h4>
+                <a href="/profil-informasi">Profil</a>
+                <a href="/profil-akun-bank">Akun Bank</a>
+                <a href="/profil-perpajakan">Perpajakan</a>
+                <a href="/profil-legalitas">Legalitas</a>
+            </div>
+        </div>
+        <h3>PT. Setia Berkah Abadi</h3>
+        <div class="alert">
+            <a href="/upload-dokumen-vendor" class="btn btn-primary">Lengkapi Dokumen Vendor</a>                  
+            <p>Segera lengkapi dokumen vendor untuk bisa bergabung dalam pengadaan MPM</p>
+        </div>
+        <div class="header">
+            <h4>Legalitas</h4>
+        </div>
+        <div>
+            <p>Nomor NIB RBA: <%= legal.nibNumber %></p>
+            <p>Nomor KTP Direktur/Pemilik: <%= legal.ownerIdNumber %></p>
+            <p>Nomor KTP Penerima Kuasa: <%= legal.authorizedIdNumber %></p>
+        </div>
+        <button class="btn btn-primary">Update</button>
+    </div>
+</body>
+</html>
+

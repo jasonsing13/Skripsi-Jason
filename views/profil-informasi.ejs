@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+        }
+        .header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .alert {
+            color: #856404;
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <!-- Sidebar -->
+                <div class="d-flex flex-column align-items-start">
+                    <h4>Profil Vendor</h4>
+                    <a href="/profil-informasi">Profil</a>
+                    <a href="/profil-akun-bank">Akun Bank</a>
+                    <a href="/profil-perpajakan">Perpajakan</a>
+                    <a href="/profil-legalitas">Legalitas</a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <!-- Main Content -->
+                <div class="alert">
+                    <a href="/upload-dokumen-vendor" class="btn btn-primary">Lengkapi Dokumen Vendor</a>                  
+                        <p>Segera lengkapi dokumen vendor untuk bisa bergabung dalam pengadaan MPM</p>
+                </div>
+                <h3>PT. Setia Berkah Abadi</h3>
+                <p>Status Verifikasi: <span class="badge bg-success">Data Belum Lengkap</span></p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Informasi Vendor</h4>
+                        <p>Kode Vendor: <%= vendor.code %></p>
+                        <p>Kategori Vendor: <%= vendor.category %></p>
+                        <p>Nama Vendor: <%= vendor.name %></p>
+                        <p>Status Kantor: <%= vendor.officeStatus %></p>
+                        <p>Nama Direktur/Pemilik: <%= vendor.ownerName %></p>
+                        <p>Nomor Telepon Perusahaan: <%= vendor.phone %></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Email Perusahaan</h4>
+                        <p><%= vendor.email %></p>
+                        <h4>Alamat Perusahaan</h4>
+                        <p><%= vendor.address %></p>
+                        <p>Negara: <%= vendor.country %></p>
+                        <p>Provinsi: <%= vendor.province %></p>
+                        <p>Kabupaten/Kota: <%= vendor.city %></p>
+                        <p>Kode Pos: <%= vendor.postalCode %></p>
+                    </div>
+                </div>
+                <button class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

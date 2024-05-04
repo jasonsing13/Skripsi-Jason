@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Unggah Dokumen Vendor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .document-section {
+            margin-bottom: 20px;
+        }
+        .document-header {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .document-upload {
+            border: 1px dashed #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <form action="/upload-dokumen-vendor" method="post" enctype="multipart/form-data">
+            <p>Daftar dokumen yang harus diunggah dengan format file pdf: Akta Pendirian, Akta Perubahan, SK Kemenkumham (AHU), Profil Perusahaan</p>
+            
+            <div class="document-section">
+                <div class="document-header">Dokumen Buku Akun Bank</div>
+                <div class="document-upload">
+                    <input type="file" name="url_buku_akun_bank" class="form-control mb-2">
+                    <button class="btn btn-outline-primary">Unggah Buku Akun Bank</button>
+                </div>
+            </div>
+
+            <div class="document-section">
+                <div class="document-header">Dokumen Perpajakan</div>
+                <div class="document-upload">
+                    <input type="file" name="url_npwp" class="form-control mb-2">
+                    <button class="btn btn-outline-primary">Unggah NPWP</button>
+                    <input type="file" name="url_ppkp" class="form-control mb-2">
+                    <button class="btn btn-outline-primary">Unggah PPKP</button>
+                </div> 
+            </div>
+
+            <div class="document-section">
+                <div class="document-header">Dokumen Legalitas</div>
+                <div class="document-upload">
+                    <input type="file" name="url_ktp_direktur" class="form-control mb-2">
+                    <button class="btn btn-outline-primary">Unggah KTP Direktur/Pemilik</button>
+                    <input type="file" name="url_akta_perubahan" class="form-control mb-2">
+                    <button class="btn btn-outline-primary">Unggah Akta Perubahan</button>
+                    <input type="file" name="url_akta_pendirian" class="form-control mb-2">
+                    <button class="btn btn-outline-primary">Unggah Akta Pendirian</button>
+                    <input type="file" name="url_nibrba" class="form-control mb-2">
+                    <button class="btn btn-outline-primary">Unggah NIB RBA</button>
+                </div>
+            </div>
+
+            <div class="document-section">
+                <div class="document-header">Dokumen Lain-Lain</div>
+                <div class="document-upload">
+                    <input type="file" name="url_dokumen_ijin_lain" class="form-control mb-2">
+                    <button class="btn btn-outline-primary">Unggah Dokumen Lain-Lain</button>
+                </div>
+            </div>
+
+            <div class="document-section">
+                <div class="document-header">Profil Perusahaan</div>
+                <div class="document-upload">
+                    <input type="file" name="url_profil_perusahaan" class="form-control mb-2">
+                    <button class="btn btn-outline-primary">Unggah Profil Perusahaan</button>
+                </div>
+            </div>
+
+            <button class="btn btn-success">Simpan & Verifikasi</button>
+        </form>
+    </div>
+</body>
+</html>
