@@ -205,6 +205,7 @@ router.post('/upload-dokumen-vendor', upload.fields([
 
   db.saveFileInformation(fileData)
     .then(() => {
+      res.redirect('/dashboard-vendor'); 
       console.log('File information saved successfully');
       res.send('Files uploaded and saved successfully!');
     })
@@ -212,6 +213,26 @@ router.post('/upload-dokumen-vendor', upload.fields([
       console.error('Error saving file information:', error);
       res.status(500).send('Failed to save file information');
     });
+});
+
+router.get('/dashboard-vendor', function(req, res) {
+  res.render('dashboard-vendor');
+});
+
+router.get('/approved-vendor-profile', function(req, res) {
+  res.render('approved-vendor-profile', { /* pass necessary data */ });
+});
+
+router.get('/approved-akun-bank', function(req, res) {
+  res.render('approved-akun-bank', { /* pass necessary data */ });
+});
+
+router.get('/approved-perpajakan', function(req, res) {
+  res.render('approved-perpajakan', { /* pass necessary data */ });
+});
+
+router.get('/approved-legalitas', function(req, res) {
+  res.render('approved-legalitas', { /* pass necessary data */ });
 });
 
 module.exports = router;
