@@ -4,6 +4,21 @@ var db = require("../database/db")
 var { saveAllVendorInformation } = require("../database/db");
 var multer = require('multer');
 var upload = multer({ dest: 'uploads/' });
+var bidding_tenderController = require('../src/bidding_tender/controller');
+// var pengadaan = require('../src/detail_bidding_tender/controller');
+// var pengadaan = require('../src/detail_template_vs/controller');
+// var pengadaan = require('../src/detail_vs/controller');
+// var pengadaan = require('../src/goods_received/controller');
+// var pengadaan = require('../src/item/controller');
+// var pengadaan = require('../src/purchase_order/controller');
+// var pengadaan = require('../src/role/controller');
+// var pengadaan = require('../src/status/controller');
+// var pengadaan = require('../src/template_vs/controller');
+// var pengadaan = require('../src/tipe_pemilihan/controller');
+// var pengadaan = require('../src/user/controller');
+var pengadaanController = require('../src/pengadaan/controller');
+// var pengadaan = require('../src/vendor_score/controller');
+var vendorController = require('../src/vendor/controller');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -13,16 +28,16 @@ router.get('/', function(req, res) {
 });
 
 /* GET registration page. */
-router.get('/register', function(req, res) {
-  res.render('registration', {
+router.get('/registration', function(req, res) {
+  res.render('registration', { // Remove the leading slash before "registration"
     title: 'Registrasi Vendor'
   });
 });
 
-/* POST registration page. */
-router.post('/register', async function(req, res) {
-  const { companyName, companyEmail, companyStatus, companyAddress, directorName, companyPhone } = req.body;
 
+/* POST registration page. */
+router.post('/registration', async function(req, res) {
+  const { companyName, companyEmail, companyStatus, companyAddress, directorName, companyPhone } = req.body;
   try {
     // Await the Promise returned by saveVendorInformation
     await db.saveVendorInformation({
@@ -33,7 +48,6 @@ router.post('/register', async function(req, res) {
       directorName,
       companyPhone
     });
-
     // Redirect to the next page if the save is successful
     res.redirect('/bank-info');
   } catch (error) {
@@ -43,9 +57,10 @@ router.post('/register', async function(req, res) {
   }
 });
 
+
 /* GET bank-info page. */
 router.get('/bank-info', function(req, res) {
-  res.render('bank-info', {
+  res.render('/bank-info', {
     title: 'Bank Information'
   });
 });
@@ -117,23 +132,14 @@ router.post('/legal-info', function(req, res) {
   });
 });
 
-router.get('/profil-informasi', function(req, res) {
-  // Fetch vendor information from the database or session
-  const vendorInfo = {
-      code: 'V1234',
-      category: 'Electronics',
-      name: 'PT. Setia Berkah Abadi',
-      officeStatus: 'Active',
-      ownerName: 'John Doe',
-      phone: '08123456789',
-      email: 'contact@setiaberkahabadi.com',
-      address: 'Jl. Merdeka No. 123, Jakarta',
-      country: 'Indonesia',
-      province: 'DKI Jakarta',
-      city: 'Jakarta',
-      postalCode: '10110'
-  };
-  res.render('profil-informasi', { vendor: vendorInfo });
+router.get('/profil-informasi', async (req, res) => {
+  try {
+    const result = await vendorController.getVendor();
+    res.render('profil-informasi', { vendor: result });
+  } catch (error) {
+    console.error('Error fetching vendor data:', error);
+    res.status(500).send('Error fetching vendor data');
+  }
 });
 
 
@@ -220,19 +226,294 @@ router.get('/dashboard-vendor', function(req, res) {
 });
 
 router.get('/approved-vendor-profile', function(req, res) {
-  res.render('approved-vendor-profile', { /* pass necessary data */ });
+  const vendorInfo = {
+    code: 'V1234',
+    category: 'Electronics',
+    name: 'PT. Setia Berkah Abadi',
+    officeStatus: 'Active',
+    ownerName: 'John Doe',
+    phone: '08123456789',
+    email: 'contact@setiaberkahabadi.com',
+    address: 'Jl. Merdeka No. 123, Jakarta',
+    country: 'Indonesia',
+    province: 'DKI Jakarta',
+    city: 'Jakarta',
+    postalCode: '10110'
+};
+  res.render('approved-vendor-profile', { vendor: vendorInfo });
 });
 
 router.get('/approved-akun-bank', function(req, res) {
-  res.render('approved-akun-bank', { /* pass necessary data */ });
+  const bankInfo = {
+    accountNumber: '88362773868',
+    accountName: 'PT Setia Berkah Abadi',
+    bankName: 'Bank BCA'
+};
+  res.render('approved-akun-bank', { bank: bankInfo });
 });
 
 router.get('/approved-perpajakan', function(req, res) {
-  res.render('approved-perpajakan', { /* pass necessary data */ });
+  const taxInfo = {
+    npwpNumber: '09.254.8274-8-23.000',
+    pkpStatus: 'Sudah PKP',
+    pkpNumber: 'PEM-02339/ERI.09/KP.0904/2012'
+};
+
+  res.render('approved-perpajakan', {tax: taxInfo});
 });
 
 router.get('/approved-legalitas', function(req, res) {
-  res.render('approved-legalitas', { /* pass necessary data */ });
+  const legalInfo = {
+    nibNumber: '2208220056059',
+    ownerIdNumber: '187700093874002',
+    authorizedIdNumber: '33099270002938'
+};
+  res.render('approved-legalitas', { legal: legalInfo});
 });
+
+router.get('/daftar-pengadaan', async function(req, res) {
+  try {
+    const result = await pengadaanController.getPengadaan(); // Fetch pengadaan data
+    res.render('daftar-pengadaan', { pengadaan: result });
+  } catch (error) {
+    console.error('Error fetching pengadaan data:', error);
+    res.status(500).send('Error fetching pengadaan data: ' + error.message);
+  }
+});
+
+router.get('/informasi-pengadaan', function(req, res) {
+  const procurementInfo = {
+      procurementName: 'Portal Vendor',
+      procurementType: 'Jasa',
+      vendorType: 'Software House',
+      itemName: 'Website',
+      itemPrice: 'Rp. 150.000.000,00',
+      itemQuantity: 1,
+      startDate: '01-01-2024',
+      endDate: '30-04-2024',
+      actualEndDate: '-'
+  };
+  res.render('informasi-pengadaan', { procurement: procurementInfo });
+});
+
+router.get('/item-pengadaan', function(req, res) {
+  const itemsData = [
+      { no: 'IG000001', name: 'MEJA', quantity: 20, price: 'Rp. 200.000', discount: '-', netAmount: 'Rp. 4.000.000' },
+      { no: 'IG000002', name: 'KURSI', quantity: 100, price: 'Rp. 100.000', discount: '-', netAmount: 'Rp. 10.000.000' }
+  ];
+  res.render('item-pengadaan', { items: itemsData });
+});
+
+router.get('/informasi-purchase-order', function(req, res) {
+  const itemsData = [
+      { no: 'IG000001', name: 'MEJA', quantity: 20, price: 'Rp. 200.000', discount: '-', netAmount: 'Rp. 4.000.000' },
+      { no: 'IG000002', name: 'KURSI', quantity: 100, price: 'Rp. 100.000', discount: '-', netAmount: 'Rp. 10.000.000' }
+  ];
+  res.render('informasi-purchase-order', { items: itemsData });
+});
+
+router.get('/dokumen-purchase-order', function(req, res) {
+  const itemsData = [
+      { no: 'IG000001', name: 'MEJA', quantity: 20, price: 'Rp. 200.000', deliveryDate: '14-04-2024', status: 'TUTUP' },
+      { no: 'IG000002', name: 'KURSI', quantity: 100, price: 'Rp. 100.000', deliveryDate: '12-04-2024', status: 'TUTUP' }
+  ];
+  res.render('dokumen-purchase-order', { items: itemsData });
+});
+
+router.get('/list-bidding-vendor', async (req, res) => {
+    try {
+      const bids = await getBids(); // Fetch bids data
+      res.render('list-bidding-vendor', { bids: bids });
+    } catch (error) {
+      res.status(500).send('Error fetching bids data');
+    }
+});
+
+
+router.get('/form-bidding-vendor', function(req, res) {
+  const currentDate = new Date();
+  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const formattedDate = currentDate.toLocaleDateString('id-ID', options);
+
+  res.render('form-bidding-vendor', {
+    title: "Form Bidding Vendor",
+    currdate: formattedDate
+  });
+});
+
+router.post('/form-bidding-vendor', async function(req, res) {
+  const { duration, bidAmount, vendor_id, bt_id } = req.body;  // Ensure vendor_id and bt_id are provided in the form or derived from session/context
+
+  try {
+      await db.addDetail_Bidding_Tender({
+          pengajuan_harga: bidAmount,
+          durasi_pekerjaan: duration,
+          vendor_id: vendor_id,  // Assuming vendor_id is obtained correctly
+          bt_id: bt_id           // Assuming bt_id is obtained correctly
+      });
+
+      res.redirect('/list-bidding-vendor'); // Redirect or send a success response
+  } catch (error) {
+      console.error('Error submitting bid:', error);
+      res.status(500).send('An error occurred during the bidding process: ' + error.message);
+  }
+});
+
+router.get('/list-tender-vendor', async (req, res) => {
+  try {
+    const tenders = await db.getBiddingTender(); // Fetch tenders data using a function from db.js
+    res.render('list-tender-vendor', { tenders: tenders }); // Render a view and pass the tenders data
+  } catch (error) {
+    console.error('Error fetching tenders:', error);
+    res.status(500).send('Error fetching tender data');
+  }
+});
+
+router.get('/link-zoom-tender', async (req, res) => {
+  try {
+      const tenders = await db.getBidding_Tender(); // Fetch tenders data using a function from db.js
+      res.render('/link-zoom-tender', { tenders: tenders });
+  } catch (error) {
+      console.error('Error fetching tenders:', error);
+      res.status(500).send('Error fetching tender data');
+  }
+});
+
+router.get('/form-vendor-scoring', function(req,res) {
+  res.render('form-vendor-scoring', {
+    title: "Form Vendor Scoring"
+  })
+})
+
+//ADMIN
+//
+
+router.get('/list-vendor-admin', async (req, res) => {
+  try {
+      const vendors = await db.getVendors(); // Fetch vendors data using a function from db.js
+      res.render('list-vendor-admin', { vendors: vendors });
+  } catch (error) {
+      console.error('Error fetching vendors:', error);
+      res.status(500).send('Error fetching vendor data');
+  }
+});
+
+
+router.get('/approval-vendor-admin', function(req, res) {
+  res.render('approval-vendor-admin');
+});
+
+router.post('/approval-vendor-admin', async (req, res) => {
+  const { vendorId, status } = req.body;
+  try {
+      await db.updateVendorStatus(vendorId, status); // Assuming db.updateVendorStatus updates the status
+      res.redirect('/list-vendor-admin');
+  } catch (error) {
+      console.error('Failed to update vendor status:', error);
+      res.status(500).send('Error updating vendor status');
+  }
+});
+
+router.get('/buat-pengadaan', function(req, res) {
+  res.render('buat-pengadaan');
+});
+
+router.post('/buat-pengadaan', async function(req, res) {
+  const { namaPengadaan, jenisPengadaan, jenisVendor, metodePengadaan, terminPembayaran, namaBarang, hargaBarang, jumlahBarang } = req.body;
+  try {
+      // Assuming you have a function to insert data into the database
+      await pengadaanController.addPengadaan(namaPengadaan, jenisPengadaan, jenisVendor, metodePengadaan, terminPembayaran, namaBarang, hargaBarang, jumlahBarang);
+      res.redirect('/daftar-pengadaan-admin'); // Redirect to the list page after successful insertion
+  } catch (error) {
+      console.error('Failed to add new pengadaan:', error);
+      res.status(500).send('Error adding new pengadaan');
+  }
+});
+
+router.get('/daftar-pengadaan-admin', async (req, res) => {
+  try {
+    const result = await pengadaanController.getPengadaan();
+    res.render('daftar-pengadaan-admin', { pengadaan: result });
+  } catch (error) {
+      console.error('Error fetching procurement data:', error);
+      res.status(500).send('Error fetching procurement data');
+  }
+});
+
+router.get('/informasi-pengadaan-previous', async (req, res) => {
+  try {
+    const result = await pengadaanController.getPengadaan();
+    res.render('informasi-pengadaan-previous', { pengadaan: result });
+  } catch (error) {
+      console.error('Error fetching procurement data:', error);
+      res.status(500).send('Error fetching procurement data');
+  }
+});
+
+
+router.get('/item-pengadaan-previous', function(req, res) {
+  // Fetch the necessary items data
+  const itemsData = [
+      { itemNumber: '001', itemName: 'Item 1', quantity: 10, price: '100', discount: '5%', netAmount: '95' },
+      { itemNumber: '002', itemName: 'Item 2', quantity: 20, price: '200', discount: '10%', netAmount: '180' }
+  ];
+  res.render('item-pengadaan-previous', { items: itemsData });
+});
+
+router.get('/validasi-pengadaan-admin', function(req, res) {
+  res.render('validasi-pengadaan-admin');
+});
+
+router.post('/validasi-pengadaan-admin', async function(req, res) {
+  const { terminPembayaran, alokasiPengadaan, rekomendasiVendor } = req.body;
+  try {
+      // Assuming you have a function to approve the procurement
+      await procurement.approveProcurement({ terminPembayaran, alokasiPengadaan, rekomendasiVendor });
+      res.redirect('/informasi-pengadaan-approved'); // Redirect to a success page or back to the list
+  } catch (error) {
+      console.error('Failed to approve procurement:', error);
+      res.status(500).send('Error approving procurement');
+  }
+});
+
+router.get('/informasi-pengadaan-approved', function(req, res) {
+  const procurementInfo = {
+      procurementName: 'Portal Vendor',
+      procurementType: 'Jasa',
+      vendorType: 'Software House',
+      itemName: 'Website',
+      itemPrice: 'Rp. 150.000.000,00',
+      itemQuantity: 1,
+      startDate: '01-01-2024',
+      endDate: '30-04-2024',
+      actualEndDate: '-'
+  };
+  res.render('informasi-pengadaan-approved', { procurement: procurementInfo });
+});
+
+router.get('/item-pengadaan-approved', function(req, res) {
+  const itemsData = [
+      { no: 'IG000001', name: 'MEJA', quantity: 20, price: 'Rp. 200.000', discount: '-', netAmount: 'Rp. 4.000.000' },
+      { no: 'IG000002', name: 'KURSI', quantity: 100, price: 'Rp. 100.000', discount: '-', netAmount: 'Rp. 10.000.000' }
+  ];
+  res.render('item-pengadaan-approved', { items: itemsData });
+});
+
+router.get('/informasi-purchase-order-approved', function(req, res) {
+  const itemsData = [
+      { no: 'IG000001', name: 'MEJA', quantity: 20, price: 'Rp. 200.000', discount: '-', netAmount: 'Rp. 4.000.000' },
+      { no: 'IG000002', name: 'KURSI', quantity: 100, price: 'Rp. 100.000', discount: '-', netAmount: 'Rp. 10.000.000' }
+  ];
+  res.render('informasi-purchase-order-approved', { items: itemsData });
+});
+
+router.get('/dokumen-purchase-order-approved', function(req, res) {
+  const itemsData = [
+      { no: 'IG000001', name: 'MEJA', quantity: 20, price: 'Rp. 200.000', deliveryDate: '14-04-2024', status: 'TUTUP' },
+      { no: 'IG000002', name: 'KURSI', quantity: 100, price: 'Rp. 100.000', deliveryDate: '12-04-2024', status: 'TUTUP' }
+  ];
+  res.render('dokumen-purchase-order-approved', { items: itemsData });
+});
+
 
 module.exports = router;

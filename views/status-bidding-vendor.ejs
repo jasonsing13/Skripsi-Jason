@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head.ejs') %>
+    <%- include('partials/style.ejs') %>
+    <title>Status Bidding</title>
+</head>
+<body>
+    <%- include('partials/sidebar.ejs') %>
+    <div class="container p-4">
+        <h2>Bidding</h2>
+        <p>Lihat semua bidding</p>
+        <div class="tab">
+            <button class="tablinks" onclick="location.href='/list-bidding-vendor.ejs'">Undangan Bidding</button>
+            <button class="tablinks active" onclick="location.href='/status-bidding-vendor.ejs'">Dalam Pengajuan</button>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nomor Bidding</th>
+                    <th>Nama Pengadaan</th>
+                    <th>Jenis Pengadaan</th>
+                    <th>Nama Barang</th>
+                    <th>Harga Rekomendasi</th>
+                    <th>Jumlah Barang</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% bids.forEach(function(bid) { %>
+                <tr>
+                    <td><%= bid.bidNumber %></td>
+                    <td><%= bid.procurementName %></td>
+                    <td><%= bid.procurementType %></td>
+                    <td><%= bid.itemName %></td>
+                    <td><%= bid.recommendedPrice %></td>
+                    <td><%= bid.quantity %></td>
+                    <td><%= bid.status %></td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

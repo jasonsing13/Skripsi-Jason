@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat Pengadaan</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <%- include('partials/style.ejs') %>
+</head>
+<body>
+    <%- include('partials/sidebar.ejs') %>
+    <div class="container mt-4">
+        <h1>Buat Pengadaan</h1>
+        <form action="buat-pengadaan" method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="nama_pengadaan" class="form-label">Nama Pengadaan*</label>
+                        <input type="text" class="form-control" id="nama_pengadaan" name="nama_pengadaan" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="jenisPengadaan" class="form-label">Jenis Pengadaan*</label>
+                        <select class="form-select" id="jenisPengadaan" name="jenisPengadaan" required>
+                            <option selected>Choose...</option>
+                            <option value="1">Vendor Scoring</option>
+                            <option value="2">Penunjukkan Langsung</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="jenisVendor" class="form-label">Jenis Vendor*</label>
+                        <input type="text" class="form-control" id="jenisVendor" name="jenisVendor" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="metodePengadaan" class="form-label">Metode Pengadaan*</label>
+                        <select class="form-select" id="metodePengadaan" name="metodePengadaan" required>
+                            <option selected>Choose...</option>
+                            <option value="langsung">Penunjukan Langsung</option>
+                            <option value="scoring">Vendor Scoring</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="terminPembayaran" class="form-label">Termin Pembayaran</label>
+                        <input type="text" class="form-control" id="terminPembayaran" name="terminPembayaran">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Buat Pengadaan</button>
+                </div>
+                <div class="col-md-6">
+                    <h4>Detail Item</h4>
+                    <div id="itemDetails">
+                        <div class="mb-3">
+                            <label for="namaBarang" class="form-label">Nama Barang*</label>
+                            <input type="text" class="form-control" id="namaBarang" name="namaBarang" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="hargaBarang" class="form-label">Harga Barang*</label>
+                            <input type="number" class="form-control" id="hargaBarang" name="hargaBarang" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jumlahBarang" class="form-label">Jumlah Barang*</label>
+                            <input type="number" class="form-control" id="jumlahBarang" name="jumlahBarang" required>
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="addItem()">Tambah Item</button>
+                    </div>
+                    <div id="additionalItems"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        function addItem() {
+            const container = document.getElementById('additionalItems');
+            const itemTemplate = `
+                <div class="mb-3">
+                    <input type="text" class="form-control mb-2" name="namaBarang" placeholder="Nama Barang" required>
+                    <input type="number" class="form-control mb-2" name="hargaBarang" placeholder="Harga Barang" required>   
+                    <input type="number" class="form-control mb-2" name="hargaBarang" placeholder="Harga Barang" required>
+                    <input type="number" class="form-control" name="jumlahBarang" placeholder="Jumlah Barang" required>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', itemTemplate);
+        }
+    </script>
+</body>
+</html>

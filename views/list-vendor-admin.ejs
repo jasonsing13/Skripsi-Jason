@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head.ejs') %>
+    <%- include('partials/style.ejs') %>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>List Vendor Admin</title>
+</head>
+<body>
+    <%- include('partials/sidebar.ejs') %>
+    <%- include('partials/sidebar.ejs') %>
+    <div class="container">
+        <h1>List Vendor</h1>
+        <p>List Vendor Aktif</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Kode Vendor</th>
+                    <th>Kategori Vendor</th>
+                    <th>Nama Vendor</th>
+                    <th>Jenis Vendor</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% vendors.forEach(function(vendor) { %>
+                    <tr>
+                        <td><%= vendor.kode %></td>
+                        <td><%= vendor.kategori %></td>
+                        <td><%= vendor.nama %></td>
+                        <td><%= vendor.jenis %></td>
+                        <td><%= vendor.status %></td>
+                        <td>
+                            <button onclick="location.href='/vendor-detail/' + <%= vendor.id %>">Detail</button>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

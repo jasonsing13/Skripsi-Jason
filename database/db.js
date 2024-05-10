@@ -37,6 +37,35 @@ function saveAllVendorInformation(allData) {
   });
 }
 
+async function getPengadaan() {
+  const client = await pool.connect();
+  try {
+      const result = await client.query('SELECT * FROM pengadaan'); // Adjust the SQL query based on your actual table and data structure
+      return result.rows;
+  } catch (error) {
+      console.error('Error executing query', error.stack);
+      throw error;
+  } finally {
+      client.release();
+  }
+}
+
+async function getBidding_Tender() {
+  let client;
+  try {
+      client = await pool.connect();
+      const result = await client.query('SELECT * FROM bidding_tender'); // Ensure your table name and query match your schema
+      return result.rows;
+  } catch (error) {
+      console.error('Error executing query', error.stack);
+      throw error;
+  } finally {
+      if (client) {
+          client.release();
+      }
+  }
+}
+
 async function saveFileInformation(fileUrls) {
   const client = await pool.connect();
   try {
@@ -67,11 +96,38 @@ async function saveFileInformation(fileUrls) {
   }
 }
 
+async function addDetail_Bidding_Tender({ pengajuan_harga, durasi_pekerjaan, vendor_id, bt_id}) {
+  const client = await pool.connect();
+  try {
+      await client.query('BEGIN');
+      const insertQuery = `
+          INSERT INTO public.detail_bidding_tender (dbt_id, pengajuan_harga, durasi_pekerjaan, vendor_id, bt_id)
+          VALUES (gen_random_uuid(), $1, $2, $3, $4);
+      `;
+      await client.query(insertQuery, [pengajuan_harga, durasi_pekerjaan, vendor_id, bt_id]);
+      await client.query('COMMIT');
+  } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+  } finally {
+      client.release();
+  }
+}
+
+async function approveProcurement(procurementDetails) {
+  // Example: Update the procurement status in the database
+  const { namaPengadaan } = procurementDetails;
+  // Assuming a database function that updates the procurement status
+  return db.query('UPDATE procurements SET status = "Approved" WHERE name = $1', [namaPengadaan]);
+}
 
 module.exports = {
   pool,
   saveVendorInformation,
   saveAllVendorInformation,
-  saveVendorInformation
+  saveVendorInformation,
+  getPengadaan,
+  getBidding_Tender,
+  addDetail_Bidding_Tender
 }
 

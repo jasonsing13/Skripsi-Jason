@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head.ejs') %>
+    <%- include('partials/style.ejs') %>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Zoom Tender</title>
+</head>
+<body>
+    <%- include('partials/sidebar.ejs') %>
+    <div class="container">
+        <h1>Informasi Tender</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID TENDER</th>
+                    <th>TANGGAL TENDER</th>
+                    <th>LINK ZOOM</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% tenders.forEach(function(tender) { %>
+                    <tr>
+                        <td><%= tender.id %></td>
+                        <td><%= tender.date %></td>
+                        <td><a href="<%= tender.zoomLink %>">KLIK DISINI</a></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

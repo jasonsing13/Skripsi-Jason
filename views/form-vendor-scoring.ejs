@@ -1,0 +1,166 @@
+<head>
+    <%- include('partials/head.ejs') %>
+        <%- include('partials/style.ejs') %>
+            <style>
+            </style>
+</head>
+
+<body>
+    <%- include('partials/sidebar.ejs') %>
+        <div class="container p-4">
+            <h2>Vendor Scoring</h2>
+            <p>Scoring vendor berdasarkan hasil pengadaan</p>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5>Detail Vendor</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <label>Nama Perusahaan</label>
+                            <input class="form-control" type="text" placeholder="PT. Vendoria Sejahtera" readonly>
+                        </div>
+                        <div class="col">
+                            <label>Nomor Pengadaan</label>
+                            <input class="form-control" type="text" placeholder="MML-AX-001" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5>Kriteria Teknikal</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="form-group">
+                                        <label for="nama-kriteria">Nama Template</label>
+                                        <input class="form-control" type="text" id="teknikal-kriteria" required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="bobot-kriteria">Bobot</label>
+                                        <input class="form-control" type="number" id="teknikal-bobot" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-8">
+                                    <p>KUALITAS / SPESIFIKASI</p>
+                                </div>
+                                <div class="col">
+                                    <input class="form-control" type="number" id="bobot-kualitas" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-8">
+                                    <p>LEAD TIME</p>
+                                </div>
+                                <div class="col">
+                                    <input class="form-control" type="number" id="bobot-lead-time" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-8">
+                                    <p>TECHNICAL SCORE</p>
+                                </div>
+                                <div class="col">
+                                    <input style="background-color: #FCE2D3;" class="form-control" type="number" id="bobot-technical-score" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5>Kriteria Komersil</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="form-group">
+                                        <label for="nama-kriteria">Nama Template</label>
+                                        <input class="form-control" type="text" id="komersil-kriteria" required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="bobot-kriteria">Bobot</label>
+                                        <input class="form-control" type="number" id="komersil-bobot" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-8">
+                                    <p>CREDIT SCORE</p>
+                                </div>
+                                <div class="col">
+                                    <input class="form-control" type="number" id="bobot-credit" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-8">
+                                    <p>HARGA</p>
+                                </div>
+                                <div class="col">
+                                    <input class="form-control" type="number" id="bobot-harga" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-8">
+                                    <p>COMMERCIAL SCORE</p>
+                                </div>
+                                <div class="col">
+                                    <input style="background-color: #FCE2D3;" class="form-control" type="number" id="bobot-commercial-score" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5>User Opinion</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <label>Admin Divisi</label>
+                            <textarea class="form-control" type="text" placeholder="Opini Admin Divisi" ></textarea>
+                        </div>
+                        <div class="col">
+                            <label>Admin Purchasing</label>
+                            <textarea class="form-control" type="text" placeholder="Opini Admin Purchasing"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5>Hasil Akhir</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-4">
+                            <label>FINAL SCORE</label>
+                        </div>
+                        <div class="col-2">
+                            <input style="background-color: #FCE2D3;" class="form-control" type="number" id="final-score" required>
+                        </div>
+                        <button type="button" class="col-6 btn btn-orange">Submit Scoring</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>

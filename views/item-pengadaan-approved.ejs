@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validasi Pengadaan</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <%- include('partials/style.ejs') %>
+</head>
+<body>
+    <%- include('partials/sidebar.ejs') %>
+    <div class="container mt-4">
+        <h1>Item Pengadaan</h1>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="/informasi-pengadaan-approved">Informasi Pengadaan</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/item-pengadaan-approved">Item Pengadaan</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " href="/informasi-purchase-order-approved">Informasi Purchase Order</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " href="/dokumen-purchase-order-approved">Dokumen Purchase Order</a>
+            </li>
+        </ul>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Daftar Item</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>No. Item</th>
+                            <th>Nama Pengadaan</th>
+                            <th>Quantity</th>
+                            <th>Harga Item</th>
+                            <th>Diskon</th>
+                            <th>Net Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% items.forEach(function(item) { %>
+                        <tr>
+                            <td><%= item.item_id %></td>
+                            <td><%= item.nama_item %></td>
+                            <td><%= item.quantity %></td>
+                            <td><%= item.harga_item %></td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approval Vendor Admin</title>
+    <%- include('partials/head.ejs') %>
+    <%- include('partials/style.ejs') %>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <%- include('partials/sidebar.ejs') %>
+    <div class="container mt-4">
+        <h1>Vendor Profile</h1>
+        <div class="card">
+            <div class="card-header">
+                <strong>PT. Setia Berkah Abadi</strong> <span class="badge bg-warning">In Review</span>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="approved-vendor-profile.ejs">Informasi Vendor</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="approved-akun-bank.ejs">Akun Bank</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="approved-perpajakan.ejs">Perpajakan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="approved-legalitas.ejs">Legalitas</a>
+                    </li>
+                </ul>
+                <div class="mt-3">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>Kode Vendor</th>
+                                <td><%= vendor.kode %></td>
+                                <th>Email Perusahaan</th>
+                                <td><%= vendor.email %></td>
+                            </tr>
+                            <tr>
+                                <th>Kategori Vendor</th>
+                                <td><%= vendor.kategori %></td>
+                                <th>Alamat Perusahaan</th>
+                                <td><%= vendor.alamat %></td>
+                            </tr>
+                            <tr>
+                                <th>Nama Vendor</th>
+                                <td><%= vendor.nama %></td>
+                                <th>Negara</th>
+                                <td><%= vendor.negara %></td>
+                            </tr>
+                            <tr>
+                                <th>Status Kantor</th>
+                                <td><%= vendor.statusKantor %></td>
+                                <th>Provinsi</th>
+                                <td><%= vendor.provinsi %></td>
+                            </tr>
+                            <tr>
+                                <th>Berdiri Sejak</th>
+                                <td><%= vendor.berdiriSejak %></td>
+                                <th>Kabupaten/Kota</th>
+                                <td><%= vendor.kota %></td>
+                            </tr>
+                            <tr>
+                                <th>Total Karyawan</th>
+                                <td><%= vendor.totalKaryawan %></td>
+                                <th>Kode Pos</th>
+                                <td><%= vendor.kodePos %></td>
+                            </tr>
+                            <tr>
+                                <th>Nama Direktur/Pemilik</th>
+                                <td><%= vendor.pemilik %></td>
+                                <th>Nomor Telepon</th>
+                                <td><%= vendor.telepon %></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <form action="/approval-vendor-admin" method="post">
+                        <input type="hidden" name="vendorId" value="<%= vendor.id %>">
+                        <input type="hidden" name="status" value="terverifikasi">
+                        <button type="submit" class="btn btn-success me-2">Approve</button>
+                    </form>
+                    <form action="/approval-vendor-admin" method="post">
+                        <input type="hidden" name="vendorId" value="<%= vendor.id %>">
+                        <input type="hidden" name="status" value="ditolak">
+                        <button type="submit" class="btn btn-danger">Reject</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approved Perpajakan</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <%- include('partials/style.ejs') %> 
+    <style>
+        body {
+            padding: 20px;
+        }
+        .header, .container {
+            margin-bottom: 30px;
+            text-align: center;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .alert {
+            color: #856404;
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/sidebar.ejs') %>
+    <div class="container mt-4">
+        <h1>Vendor Profile</h1>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="/approved-vendor-profile">Informasi Vendor</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/approved-akun-bank">Akun Bank</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/approved-perpajakan">Perpajakan</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/approved-legalitas">Legalitas</a>
+            </li>
+        </ul>
+        <div class="header">
+            <h4>Perpajakan</h4>
+        </div>
+        <div>
+            <p>Nomor NPWP: <%= tax.npwpNumber %></p>
+            <p>Status PKP: <%= tax.pkpStatus %></p>
+            <p>Nomor PKP: <%= tax.pkpNumber %></p>
+        </div>
+        <button class="btn btn-primary">Update</button>
+    </div>
+</body>
+</html>

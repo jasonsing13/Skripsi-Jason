@@ -1,5 +1,5 @@
 const pool = require('../../database/db');
-const queries = require('../dbidding_tender/queries');
+const queries = require('../bidding_tender/queries');
 
 const getBidding_Tender = (req,res)=>{
     pool.query(queries.getBidding_Tender, (error, results)=>{

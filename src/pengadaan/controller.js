@@ -1,13 +1,19 @@
-const pool = require('../../database/db');
+const db = require('../../database/db');
 const queries = require('../pengadaan/queries');
 
 
-const getPengadaan = (req,res)=>{
-    pool.query(queries.getPengadaan, (error, results)=>{
-        if(error) throw error;
-        res.status(200).json(results.rows);
-    })
-};
+async function getPengadaan() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getPengadaan); // Adjust the SQL query based on your actual table and data structure
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
 
 const getPengadaanById = (req,res)=>{
     const id = req.params.id;
@@ -17,15 +23,17 @@ const getPengadaanById = (req,res)=>{
     })
 };
 
-const addPengadaan = (req,res)=>{
-    const { pengadaan_id, tanggal_permintaan, tanggal_pemilihan, tanggal_pemilihan_selesai, harga, vendor_pemenang, status_id, tipe_pemilihan_id, validator_1, validator_2, validator_3, validator_4, create_date, create_by, modif_date, modif_by, pic, termin_pembayaran, catatan_revisi
+const addPengadaan = (req,res)=>{ 
+    const {nama_pengadaan, tanggal_permintaan, tanggal_pemilihan, tanggal_pemilihan_selesai, harga, vendor_pemenang, status_id, tipe_pemilihan_id, validator_1, validator_2, validator_3, validator_4, create_date, create_by, modif_date, modif_by, pic, termin_pembayaran, catatan_revisi
     } = req.body;
+    const {id} = req.session;
+    console.log(req.body)
     pool.query(
         queries.addPengadaan,
-        [pengadaan_id, tanggal_permintaan, tanggal_pemilihan, tanggal_pemilihan_selesai, harga, vendor_pemenang, status_id, tipe_pemilihan_id, validator_1, validator_2, validator_3, validator_4, create_date, create_by, modif_date, modif_by, pic, termin_pembayaran, catatan_revisi        
+        [nama_pengadaan, tanggal_permintaan, tanggal_pemilihan, tanggal_pemilihan_selesai, harga, vendor_pemenang, status_id, tipe_pemilihan_id, validator_1, validator_2, validator_3, validator_4, create_date, create_by, modif_date, modif_by, pic, termin_pembayaran, catatan_revisi        
         ], (error, results) => {
             if (error) throw error;
-            res.status(201).send("user created success")
+            res.status(201).send("Pengadaan created success")
         }
     );
 };
@@ -54,7 +62,6 @@ const removePengadaan = (req,res)=>{
     });
 };
 
-
 const updatePengadaan = (req, res) => {
     const id = req.params.id;
     const { username } = req.body;
@@ -72,5 +79,4 @@ module.exports = {
     removePengadaan,
     updatePengadaan,
 };
-
 

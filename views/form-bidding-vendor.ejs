@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head.ejs') %>
+    <%- include('partials/style.ejs') %>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/sidebar.ejs') %>
+        <div class="container p-4">
+            <h2>Form Bidding</h2>
+            <p>Form untuk pengajuan bidding</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5>Detail Bidding</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Nama Pengadaan</label>
+                                <input class="form-control" type="text" placeholder="Portal Vendor" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Jenis Pengadaan</label>
+                                <input class="form-control" type="text" placeholder="Jasa" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Jenis Vendor</label>
+                                <input class="form-control" type="text" placeholder="Software House" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Nama Barang</label>
+                                <input class="form-control" type="text" placeholder="Website" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Harga Rekomendasi</label>
+                                <input class="form-control" type="text" placeholder="Rp. 100.000" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Jumlah Barang</label>
+                                <input class="form-control" type="text" placeholder="10" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Nama Barang</label>
+                                <input class="form-control" type="text" placeholder="Website" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Harga Rekomendasi</label>
+                                <input class="form-control" type="text" placeholder="Rp. 100.000" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Jumlah Barang</label>
+                                <input class="form-control" type="text" placeholder="10" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card aanwijzing mb-3">
+                        <div class="card-header">
+                            <h5>Persyaratan Aanwijzing</h5>
+                        </div>
+                        <div class="card-body">
+                            <p><%- currdate %></p>
+                            <p>Scope pekerjaan dari tender yang diadakan adalah sebagai berikut:</p>
+                            <ul>
+                                <li>Termin pembayaran lebih dari 3 kali</li>
+                                <li>Proyek memiliki scope pekerjaan renovasi gudang 2 lantai</li>
+                            </ul>
+                            <p>Pihak vendor dianggap telah memahami spesifikasi pekerjaan, volume pekerjaan maupun
+                                kelengkapan
+                                lainnya sesuai kebutuhan dan keinginan yang diharapkan pihak PT. Mitra Pinasthika Mulia.
+                                Dengan
+                                demikian, jika salah satu vendor yang hadir saat ini terpilih sebagai pemenang tender,
+                                maka
+                                segala resiko yang timbul akibat kekurangan volume dan sebagainya, telah menjadi
+                                tanggung jawab
+                                dari pihak vendor pemenang tender pekerjaan ini. Demikian Berita Acara ini dibuat dan
+                                disetujui
+                                oleh perwakilan dari pihak perwakilan vendor.</p>
+                        </div>
+                    </div>
+                    <div class="card form-bidding">
+                        <div class="card-header">
+                            <h5>Form Pengajuan</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="detail-bidding">
+                                <form action="/form-bidding-vendor" method="post">
+                                    <div class="form-group">
+                                        <label for="duration">Durasi Pekerjaan*</label>
+                                        <input class="form-control" type="text" id="duration" name="duration" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="bidAmount">Pengajuan Harga*</label>
+                                        <input class="form-control" type="text" id="bidAmount" name="bidAmount"
+                                            required>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                        <small class="form-check-label text-muted" for="exampleCheck1">Dengan ini pihak yang bersangkutan telah menyetujui aanwijzing, beserta syarat dan ketentuan yang berlaku.*</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary pt-1">Ajukan Bidding</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="successMessage" class="card hidden">
+                    <div class="card-body text-center">
+                        <h4>Bidding Berhasil Diajukan</h4>
+                        <button onclick="closeSuccessMessage()" class="btn btn-success">Tutup</button>
+                    </div>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('biddingForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                document.getElementById('successMessage').classList.remove('hidden');
+            });
+    
+            function closeSuccessMessage() {
+                document.getElementById('successMessage').classList.add('hidden');
+            }
+        </script>
+    </body>
+    </html>

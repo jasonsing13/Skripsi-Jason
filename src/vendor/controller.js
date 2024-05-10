@@ -1,12 +1,18 @@
-const pool = require('../../database/db');
+const db = require('../../database/db');
 const queries = require('../vendor/queries');
 
-const getVendor = (req,res)=>{
-    pool.query(queries.getVendor, (error, results)=>{
-        if(error) throw error;
-        res.status(200).json(results.rows);
-    })
-};
+async function getVendor() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getVendor); // Adjust the SQL query based on your actual table and data structure
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
 
 const getVendorById = (req,res)=>{
     const id = req.params.id;

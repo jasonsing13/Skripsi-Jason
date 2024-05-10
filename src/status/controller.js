@@ -16,8 +16,20 @@ const getStatusById = (req,res)=>{
     })
 };
 
+const updateStatus = (req, res) => {
+    const { vendorId, status } = req.body;
+    const query = 'UPDATE vendors SET status = $1 WHERE id = $2';
+    const values = [status, vendorId];
+    pool.query(query, values, (error, results) => {
+        if (error) throw error;
+        res.redirect('/list-vendor-admin'); // Redirect after updating
+    });
+};
+
+
 module.exports = {
     getStatus,
     getStatusById,
+    updateStatus,
 };
 

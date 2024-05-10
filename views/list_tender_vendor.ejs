@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head.ejs') %>
+    <%- include('partials/style.ejs') %>
+    <title>Tender List</title>
+</head>
+<body>
+    <%- include('partials/sidebar.ejs') %>
+    <div class="container p-4">
+        <h2>Tender</h2>
+        <p>Lihat semua Tender</p>
+        <div class="tab">
+            <button class="tablinks" onclick="location.href='/list-tender-vendor.ejs'">Undangan Tender</button>
+            <button class="tablinks active" onclick="location.href='/status-tender-vendor.ejs'">Dalam Pengajuan</button>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nomor Tender</th>
+                    <th>Nama Pengadaan</th>
+                    <th>Jenis Pengadaan</th>
+                    <th>Nama Barang</th>
+                    <th>Harga Rekomendasi</th>
+                    <th>Jumlah Barang</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% bids.forEach(function(bid) { %>
+                <tr>
+                    <td><%= bid.bidNumber %></td>
+                    <td><%= bid.procurementName %></td>
+                    <td><%= bid.procurementType %></td>
+                    <td><%= bid.itemName %></td>
+                    <td><%= bid.recommendedPrice %></td>
+                    <td><%= bid.quantity %></td>
+                    <td>
+                        <form action="/form-tender-vendor.ejs" method="get">
+                            <button type="submit" class="btn btn-primary">Ajukan</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

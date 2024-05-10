@@ -49,22 +49,20 @@
                 <div class="row">
                     <div class="col-md-6">
                         <h4>Informasi Vendor</h4>
-                        <p>Kode Vendor: <%= vendor.code %></p>
-                        <p>Kategori Vendor: <%= vendor.category %></p>
-                        <p>Nama Vendor: <%= vendor.name %></p>
-                        <p>Status Kantor: <%= vendor.officeStatus %></p>
-                        <p>Nama Direktur/Pemilik: <%= vendor.ownerName %></p>
-                        <p>Nomor Telepon Perusahaan: <%= vendor.phone %></p>
+                        <p>Kode Vendor: <%= vendor.vendor_id %></p>
+                        <p>Nama Vendor: <%= vendor.nama_vendor %></p>
+                        <p>Status Kantor: <%= vendor.status_kantor %></p>
+                        <p>Nama Direktur/Pemilik: <%= vendor.nama_direktur %></p>
+                        <p>Nomor Telepon Perusahaan: <%= vendor.no_telp %></p>
                     </div>
                     <div class="col-md-6">
                         <h4>Email Perusahaan</h4>
-                        <p><%= vendor.email %></p>
+                        <p><%= vendor.email_perusahaan %></p>
                         <h4>Alamat Perusahaan</h4>
-                        <p><%= vendor.address %></p>
-                        <p>Negara: <%= vendor.country %></p>
-                        <p>Provinsi: <%= vendor.province %></p>
-                        <p>Kabupaten/Kota: <%= vendor.city %></p>
-                        <p>Kode Pos: <%= vendor.postalCode %></p>
+                        <p><%= vendor.alamat_perusahaan %></p>
+                        <p>Negara: <%= vendor.negara %></p>
+                        <p>Provinsi: <%= vendor.provinsi %></p>
+                        <p>Kabupaten/Kota: <%= vendor.kabupaten_kota %></p>
                     </div>
                 </div>
                 <button class="btn btn-primary">Update</button>
