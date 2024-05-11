@@ -19,17 +19,31 @@
                         <input type="text" class="form-control" id="nama_pengadaan" name="nama_pengadaan" required>
                     </div>
                     <div class="mb-3">
-                        <label for="jenis_pengadaan" class="form-label">Jenis Pengadaan*</label>
-                        <select class="form-select" id="jenis_pengadaan" name="jenis_pengadaan" required>
+                        <label for="tipe_pemilihan" class="form-label">Tipe_Pemilihan*</label>
+                        <select class="form-select" id="tipe_pemilihan" name="tipe_pemilihan" required>
                             <option selected>Choose...</option>
-                            <option value="1">Vendor Scoring</option>
-                            <option value="2">Penunjukkan Langsung</option>
+                            <% option_Tipe_Pemilihan.forEach(option => { %>
+                                <option value="<%= option.value %>"><%= option.name %></option>
+                            <% }); %>
                         </select>
                     </div>
+                    <label for="jenis_pengadaan" class="form-label">Jenis Pengadaan*</label>
+                    <select class="form-select" id="jenis_pengadaan" name="jenis_pengadaan" required>
+                        <option selected>Choose...</option>
+                        <% option_Jenis_Pengadaan.forEach(option => { %>
+                            <option value="<%= option.value %>"><%= option.name %></option>
+                        <% }); %>
+                    </select>
+                </div>
                     <div class="mb-3">
                         <label for="jenis_vendor" class="form-label">Jenis Vendor*</label>
-                        <input type="text" class="form-control" id="jenis_vendor" name="jenis_vendor" required>
-                    </div>
+                        <select class="form-select" id="jenis_vendor" name="jenis_vendor" required>
+                            <option selected>Choose...</option>
+                            <% option_Jenis_Vendor.forEach(option => { %>
+                                <option value="<%= option.value %>"><%= option.name %></option>
+                            <% }); %>
+                        </select>                    </div>
+
                     <div class="mb-3">
                         <label for="termin_pembayaran" class="form-label">Termin Pembayaran</label>
                         <input type="text" class="form-control" id="termin_pembayaran" name="termin_pembayaran">

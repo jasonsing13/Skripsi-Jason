@@ -15,6 +15,45 @@ async function getPengadaan() {
     }
   }
 
+  async function option_Tipe_Pemilihan() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.option_Tipe_Pemilihan); // Adjust the SQL query based on your actual table and data structure
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
+
+  async function option_Jenis_Pengadaan() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.option_Jenis_Pengadaan); // Adjust the SQL query based on your actual table and data structure
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
+
+  async function option_Jenis_Vendor() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.option_Jenis_Vendor); // Adjust the SQL query based on your actual table and data structure
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
+
 const getPengadaanById = (req,res)=>{
     const id = req.params.id;
     pool.query(queries.getPengadaanById,[id], (error, results)=>{
@@ -96,6 +135,9 @@ const updatePengadaan = (req, res) => {
 
 module.exports = {
     getPengadaan,
+    option_Tipe_Pemilihan,
+    option_Jenis_Pengadaan,
+    option_Jenis_Vendor,
     getPengadaanById,
     addPengadaan,
     removePengadaan,

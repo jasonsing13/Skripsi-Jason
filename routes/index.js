@@ -19,6 +19,7 @@ var userController = require('../src/user/controller');
 var pengadaanController = require('../src/pengadaan/controller');
 var vendor_scoreController = require('../src/vendor_score/controller');
 var vendorController = require('../src/vendor/controller');
+const { option_Tipe_Pemilihan } = require('../src/pengadaan/queries');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -415,7 +416,10 @@ router.post('/approval-vendor-admin', async (req, res) => {
 });
 
 router.get('/buat-pengadaan', function(req, res) {
-  res.render('buat-pengadaan');
+  const option_Tipe_Pemilihan = pengadaanController.option_Tipe_Pemilihan();
+  const option_Jenis_Pengadaan = pengadaanController.option_Jenis_Pengadaan();
+  const option_Jenis_Vendor = pengadaanController.option_Jenis_Vendor();
+  res.render('buat-pengadaan', { option_Tipe_Pemilihan, option_Jenis_Pengadaan, option_Jenis_Vendor });
 });
 
 router.post('/buat-pengadaan', async function(req, res) {
@@ -513,6 +517,27 @@ router.get('/dokumen-purchase-order-approved', function(req, res) {
       { no: 'IG000002', name: 'KURSI', quantity: 100, price: 'Rp. 100.000', deliveryDate: '12-04-2024', status: 'TUTUP' }
   ];
   res.render('dokumen-purchase-order-approved', { items: itemsData });
+});
+
+// GET route for the goods received page
+router.get('/goods-received_vendor', (req, res) => {
+  res.render('goods_received_vendor');
+});
+
+router.post('/goods-received_vendor', 
+upload.fields([{ name: 'invoice' }, { name: 'surat_jalan' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_invoice = req.files['invoice'][0].path;
+    const url_surat_jalan = req.files['surat_jalan'][0].path;
+
+    // Assuming you have a function to insert data into the database
+    await goods_receivedController.addGoods_Received(url_invoice, url_surat_jalan);
+    res.redirect('/daftar-pengadaan-vendor'); // Redirect to the list page after successful insertion
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
 });
 
 
