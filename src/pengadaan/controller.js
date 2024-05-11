@@ -24,19 +24,41 @@ const getPengadaanById = (req,res)=>{
 };
 
 const addPengadaan = (req,res)=>{ 
-    const {nama_pengadaan, tanggal_permintaan, tanggal_pemilihan, tanggal_pemilihan_selesai, harga, vendor_pemenang, status_id, tipe_pemilihan_id, validator_1, validator_2, validator_3, validator_4, create_date, create_by, modif_date, modif_by, pic, termin_pembayaran, catatan_revisi
+    const {nama_jenis_pengadaan, nama_jenis_vendor, nama_item, harga_item, jumlah_item, nama_pengadaan, tanggal_pemilihan, tanggal_pemilihan_selesai, harga, termin_pembayaran
     } = req.body;
     const {id} = req.session;
     console.log(req.body)
     pool.query(
-        queries.addPengadaan,
-        [nama_pengadaan, tanggal_permintaan, tanggal_pemilihan, tanggal_pemilihan_selesai, harga, vendor_pemenang, status_id, tipe_pemilihan_id, validator_1, validator_2, validator_3, validator_4, create_date, create_by, modif_date, modif_by, pic, termin_pembayaran, catatan_revisi        
-        ], (error, results) => {
+        queries.addPengadaan_Insert_Jenis_Vendor,
+        [nama_jenis_vendor,], (error, results) => {
+            if (error) throw error;
+            res.status(201).send("Pengadaan created success")
+        }
+    );
+    pool.query(
+        queries.addPengadaan_Insert_Jenis_Pengadaan,
+        [nama_jenis_pengadaan,], (error, results) => {
+            if (error) throw error;
+            res.status(201).send("Pengadaan created success")
+        }
+    );
+    pool.query(
+        queries.addPengadaan_Insert_Item,
+        [nama_item, harga_item, jumlah_item], (error, results) => {
+            if (error) throw error;
+            res.status(201).send("Pengadaan created success")
+        }
+    );
+    pool.query(
+        queries.addPengadaan_Insert_Pengadaan,
+        [nama_pengadaan, tanggal_pemilihan, tanggal_pemilihan_selesai, harga, termin_pembayaran], (error, results) => {
             if (error) throw error;
             res.status(201).send("Pengadaan created success")
         }
     );
 };
+
+
 
 const removePengadaan = (req,res)=>{
     const id = req.params.id;

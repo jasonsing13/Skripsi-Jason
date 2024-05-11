@@ -19,28 +19,20 @@
                         <input type="text" class="form-control" id="nama_pengadaan" name="nama_pengadaan" required>
                     </div>
                     <div class="mb-3">
-                        <label for="jenisPengadaan" class="form-label">Jenis Pengadaan*</label>
-                        <select class="form-select" id="jenisPengadaan" name="jenisPengadaan" required>
+                        <label for="jenis_pengadaan" class="form-label">Jenis Pengadaan*</label>
+                        <select class="form-select" id="jenis_pengadaan" name="jenis_pengadaan" required>
                             <option selected>Choose...</option>
                             <option value="1">Vendor Scoring</option>
                             <option value="2">Penunjukkan Langsung</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="jenisVendor" class="form-label">Jenis Vendor*</label>
-                        <input type="text" class="form-control" id="jenisVendor" name="jenisVendor" required>
+                        <label for="jenis_vendor" class="form-label">Jenis Vendor*</label>
+                        <input type="text" class="form-control" id="jenis_vendor" name="jenis_vendor" required>
                     </div>
                     <div class="mb-3">
-                        <label for="metodePengadaan" class="form-label">Metode Pengadaan*</label>
-                        <select class="form-select" id="metodePengadaan" name="metodePengadaan" required>
-                            <option selected>Choose...</option>
-                            <option value="langsung">Penunjukan Langsung</option>
-                            <option value="scoring">Vendor Scoring</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="terminPembayaran" class="form-label">Termin Pembayaran</label>
-                        <input type="text" class="form-control" id="terminPembayaran" name="terminPembayaran">
+                        <label for="termin_pembayaran" class="form-label">Termin Pembayaran</label>
+                        <input type="text" class="form-control" id="termin_pembayaran" name="termin_pembayaran">
                     </div>
                     <button type="submit" class="btn btn-primary">Buat Pengadaan</button>
                 </div>
@@ -48,16 +40,16 @@
                     <h4>Detail Item</h4>
                     <div id="itemDetails">
                         <div class="mb-3">
-                            <label for="namaBarang" class="form-label">Nama Barang*</label>
-                            <input type="text" class="form-control" id="namaBarang" name="namaBarang" required>
+                            <label for="nama_barang" class="form-label">Nama Barang*</label>
+                            <input type="text" class="form-control" id="nama_barang" name="nama_barang" required>
                         </div>
                         <div class="mb-3">
-                            <label for="hargaBarang" class="form-label">Harga Barang*</label>
-                            <input type="number" class="form-control" id="hargaBarang" name="hargaBarang" required>
+                            <label for="harga_barang" class="form-label">Harga Barang*</label>
+                            <input type="number" class="form-control" id="harga_barang" name="harga_barang" required>
                         </div>
                         <div class="mb-3">
-                            <label for="jumlahBarang" class="form-label">Jumlah Barang*</label>
-                            <input type="number" class="form-control" id="jumlahBarang" name="jumlahBarang" required>
+                            <label for="jumlah_barang" class="form-label">Jumlah Barang*</label>
+                            <input type="number" class="form-control" id="jumlah_barang" name="jumlah_barang" required>
                         </div>
                         <button type="button" class="btn btn-secondary" onclick="addItem()">Tambah Item</button>
                     </div>
@@ -71,12 +63,44 @@
             const container = document.getElementById('additionalItems');
             const itemTemplate = `
                 <div class="mb-3">
+                    <tr 
                     <input type="text" class="form-control mb-2" name="namaBarang" placeholder="Nama Barang" required>
                     <input type="number" class="form-control mb-2" name="hargaBarang" placeholder="Harga Barang" required>   
                     <input type="number" class="form-control mb-2" name="hargaBarang" placeholder="Harga Barang" required>
                     <input type="number" class="form-control" name="jumlahBarang" placeholder="Jumlah Barang" required>
                 </div>
             `;
+            
+            <table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Nama Barangt</th>
+      <th scope="col">Harga Barang</th>
+      <th scope="col">Jumlah Barang</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+      <td>Thornton</td>
+      <td>@fat</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td>Larry</td>
+      <td>the Bird</td>
+      <td>@twitter</td>
+    </tr>
+  </tbody>
+</table>
             container.insertAdjacentHTML('beforeend', itemTemplate);
         }
     </script>

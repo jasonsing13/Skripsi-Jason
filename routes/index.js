@@ -5,19 +5,19 @@ var { saveAllVendorInformation } = require("../database/db");
 var multer = require('multer');
 var upload = multer({ dest: 'uploads/' });
 var bidding_tenderController = require('../src/bidding_tender/controller');
-// var pengadaan = require('../src/detail_bidding_tender/controller');
-// var pengadaan = require('../src/detail_template_vs/controller');
-// var pengadaan = require('../src/detail_vs/controller');
-// var pengadaan = require('../src/goods_received/controller');
-// var pengadaan = require('../src/item/controller');
-// var pengadaan = require('../src/purchase_order/controller');
-// var pengadaan = require('../src/role/controller');
-// var pengadaan = require('../src/status/controller');
-// var pengadaan = require('../src/template_vs/controller');
-// var pengadaan = require('../src/tipe_pemilihan/controller');
-// var pengadaan = require('../src/user/controller');
+var detail_bidding_tenderController = require('../src/detail_bidding_tender/controller');
+var detail_template_vsController = require('../src/detail_template_vs/controller');
+var detail_vsController = require('../src/detail_vs/controller');
+var goods_receivedController = require('../src/goods_received/controller');
+var itemController = require('../src/item/controller');
+var purchase_orderController = require('../src/purchase_order/controller');
+var roleController = require('../src/role/controller');
+var statusController = require('../src/status/controller');
+var template_vsController = require('../src/template_vs/controller');
+var tipe_pemilihanController = require('../src/tipe_pemilihan/controller');
+var userController = require('../src/user/controller');
 var pengadaanController = require('../src/pengadaan/controller');
-// var pengadaan = require('../src/vendor_score/controller');
+var vendor_scoreController = require('../src/vendor_score/controller');
 var vendorController = require('../src/vendor/controller');
 
 /* GET home page. */
@@ -419,10 +419,10 @@ router.get('/buat-pengadaan', function(req, res) {
 });
 
 router.post('/buat-pengadaan', async function(req, res) {
-  const { namaPengadaan, jenisPengadaan, jenisVendor, metodePengadaan, terminPembayaran, namaBarang, hargaBarang, jumlahBarang } = req.body;
+  const { nama_pengadaan, nama_jenis_pengadaan, jenis_vendor, termin_pembayaran, nama_item, harga_item, jumlah_item } = req.body;
   try {
       // Assuming you have a function to insert data into the database
-      await pengadaanController.addPengadaan(namaPengadaan, jenisPengadaan, jenisVendor, metodePengadaan, terminPembayaran, namaBarang, hargaBarang, jumlahBarang);
+      await pengadaanController.addPengadaan(nama_pengadaan, nama_jenis_pengadaan, jenis_vendor, termin_pembayaran, nama_item, harga_item, jumlah_item);
       res.redirect('/daftar-pengadaan-admin'); // Redirect to the list page after successful insertion
   } catch (error) {
       console.error('Failed to add new pengadaan:', error);
