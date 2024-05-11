@@ -415,10 +415,10 @@ router.post('/approval-vendor-admin', async (req, res) => {
   }
 });
 
-router.get('/buat-pengadaan', function(req, res) {
-  const option_Tipe_Pemilihan = pengadaanController.option_Tipe_Pemilihan();
-  const option_Jenis_Pengadaan = pengadaanController.option_Jenis_Pengadaan();
-  const option_Jenis_Vendor = pengadaanController.option_Jenis_Vendor();
+router.get('/buat-pengadaan', async function(req, res) {
+  const option_Tipe_Pemilihan = await pengadaanController.option_Tipe_Pemilihan();
+  const option_Jenis_Pengadaan = await pengadaanController.option_Jenis_Pengadaan();
+  const option_Jenis_Vendor = await pengadaanController.option_Jenis_Vendor();
   res.render('buat-pengadaan', { option_Tipe_Pemilihan, option_Jenis_Pengadaan, option_Jenis_Vendor });
 });
 

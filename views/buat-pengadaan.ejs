@@ -23,7 +23,7 @@
                         <select class="form-select" id="tipe_pemilihan" name="tipe_pemilihan" required>
                             <option selected>Choose...</option>
                             <% option_Tipe_Pemilihan.forEach(option => { %>
-                                <option value="<%= option.value %>"><%= option.name %></option>
+                                <option value="<%= option.nama_tipe_pemilihan %>"><%= option.nama_tipe_pemilihan %></option>
                             <% }); %>
                         </select>
                     </div>
@@ -31,7 +31,7 @@
                     <select class="form-select" id="jenis_pengadaan" name="jenis_pengadaan" required>
                         <option selected>Choose...</option>
                         <% option_Jenis_Pengadaan.forEach(option => { %>
-                            <option value="<%= option.value %>"><%= option.name %></option>
+                            <option value="<%= option.nama_jenis_pengadaan %>"><%= option.nama_jenis_pengadaan %></option>
                         <% }); %>
                     </select>
                 </div>
@@ -40,9 +40,10 @@
                         <select class="form-select" id="jenis_vendor" name="jenis_vendor" required>
                             <option selected>Choose...</option>
                             <% option_Jenis_Vendor.forEach(option => { %>
-                                <option value="<%= option.value %>"><%= option.name %></option>
+                                <option value="<%= option.nama_jenis_vendor %>"><%= option.nama_jenis_vendor %></option>
                             <% }); %>
-                        </select>                    </div>
+                        </select>                    
+                    </div>
 
                     <div class="mb-3">
                         <label for="termin_pembayaran" class="form-label">Termin Pembayaran</label>
@@ -72,51 +73,61 @@
             </div>
         </form>
     </div>
-    <script>
+    <!-- <script>
         function addItem() {
             const container = document.getElementById('additionalItems');
             const itemTemplate = `
-                <div class="mb-3">
-                    <tr 
-                    <input type="text" class="form-control mb-2" name="namaBarang" placeholder="Nama Barang" required>
-                    <input type="number" class="form-control mb-2" name="hargaBarang" placeholder="Harga Barang" required>   
-                    <input type="number" class="form-control mb-2" name="hargaBarang" placeholder="Harga Barang" required>
-                    <input type="number" class="form-control" name="jumlahBarang" placeholder="Jumlah Barang" required>
-                </div>
-            `;
-            
-            <table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Nama Barangt</th>
-      <th scope="col">Harga Barang</th>
+            <div class="mb-3">
+             <table class="table table-striped">
+   <thead>
+     <tr>
+       <th scope="col">#</th>
+       <th scope="col">Nama Barang</th>
+       <th scope="col">Harga Barang</th>
       <th scope="col">Jumlah Barang</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
+     </tr>
+   </thead>
+   <tbody>
+     <tr>
+       <th scope="row">1</th>
       <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</table>
-            container.insertAdjacentHTML('beforeend', itemTemplate);
+       <td>Otto</td>
+       <td>@mdo</td>
+     </tr>
+     <tr>
+       <th scope="row">2</th>
+       <td>Jacob</td>
+       <td>Thornton</td>
+       <td>@fat</td>
+     </tr>
+     <tr>
+       <th scope="row">3</th>
+       <td>Larry</td>
+       <td>the Bird</td>
+       <td>@twitter</td>
+     </tr>
+   </tbody>
+ </table> `;
+             container.insertAdjacentHTML('beforeend', itemTemplate);
         }
-    </script>
+    </script> -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#itemDetails').on('submit', function(e) {
+            e.preventDefault();
+            const nama_barang = $('#nama_barang').val();
+            const harga_barang = $('#harga_barang').val();
+            const jumlah_barang = $('#jumlah_barang').val();
+            $.post('/add-item', { itemName: itemName, harga_barang: harga_barang, jumlah_barang: jumlah_barang }, function(data) {
+                $('#itemList').append('<li>' + data.itemName + '</li>');
+                $('#itemList').append('<li>' + data.harga_barang + '</li>');
+                $('#itemList').append('<li>' + data.jumlah_barang + '</li>');
+                $('#nama_barang').val(''); // Clear input after submission
+            });
+        });
+    });
+</script>
 </body>
 </html>
