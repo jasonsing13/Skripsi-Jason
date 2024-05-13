@@ -1,7 +1,8 @@
-const getPengadaan = `SELECT pengadaan.*, status.nama_status, jenis_pengadaan.nama_jenis_pengadaan
+const getPengadaan = `SELECT pengadaan.*, status.nama_status, jenis_pengadaan.nama_jenis_pengadaan, jenis_vendor.nama_jenis_vendor
 FROM pengadaan
 INNER JOIN status ON pengadaan.status_id = status.status_id
-INNER JOIN vendor ON pengadaan.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id;
+INNER JOIN jenis_pengadaan ON pengadaan.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id
+INNER JOIN jenis_vendor ON pengadaan.jenis_vendor_id = jenis_vendor.jenis_vendor_id;
 `;
 
 const option_Tipe_Pemilihan = `SELECT tipe_pemilihan_id, nama_tipe_pemilihan

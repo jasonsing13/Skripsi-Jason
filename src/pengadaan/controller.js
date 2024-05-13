@@ -2,7 +2,7 @@ const db = require('../../database/db');
 const queries = require('../pengadaan/queries');
 
 
-async function getPengadaan() {
+    async function getPengadaan() {
     const client = await db.pool.connect();
     try {
         const result = await client.query(queries.getPengadaan); // Adjust the SQL query based on your actual table and data structure

@@ -8,6 +8,19 @@ const getGoods_Received = (req,res)=>{
     })
 };
 
+async function option_Jenis_Vendor() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.option_Jenis_Vendor); // Adjust the SQL query based on your actual table and data structure
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
+
 const getGoods_ReceivedById = (req,res)=>{
     const id = req.params.id;
     pool.query(queries.getGoods_ReceivedById,[id], (error, results)=>{
@@ -76,6 +89,7 @@ const updateGoods_Received = (req, res) => {
 
 module.exports = {
     getGoods_Received,
+    option_Jenis_Vendor,
     getGoods_ReceivedById,
     addGoods_Received,
     removeGoods_Received,

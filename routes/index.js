@@ -6,20 +6,25 @@ var multer = require('multer');
 var upload = multer({ dest: 'uploads/' });
 var bidding_tenderController = require('../src/bidding_tender/controller');
 var detail_bidding_tenderController = require('../src/detail_bidding_tender/controller');
-var detail_template_vsController = require('../src/detail_template_vs/controller');
-var detail_vsController = require('../src/detail_vs/controller');
+//var detail_template_vsController = require('../src/detail_template_vs/controller');
+//var detail_vsController = require('../src/detail_vs/controller');
 var goods_receivedController = require('../src/goods_received/controller');
-var itemController = require('../src/item/controller');
-var purchase_orderController = require('../src/purchase_order/controller');
-var roleController = require('../src/role/controller');
-var statusController = require('../src/status/controller');
-var template_vsController = require('../src/template_vs/controller');
-var tipe_pemilihanController = require('../src/tipe_pemilihan/controller');
-var userController = require('../src/user/controller');
+//var itemController = require('../src/item/controller');
+//var purchase_orderController = require('../src/purchase_order/controller');
+//var roleController = require('../src/role/controller');
+//var statusController = require('../src/status/controller');
+//var template_vsController = require('../src/template_vs/controller');
+//var tipe_pemilihanController = require('../src/tipe_pemilihan/controller');
+//var userController = require('../src/user/controller');
 var pengadaanController = require('../src/pengadaan/controller');
-var vendor_scoreController = require('../src/vendor_score/controller');
+//var vendor_scoreController = require('../src/vendor_score/controller');
 var vendorController = require('../src/vendor/controller');
+//var jenis_pengadaanController = require('../src/jenis_pengadaan/controller');
+//var jenis_vendorController = require('../src/jenis_vendor/controller');
 const { option_Tipe_Pemilihan } = require('../src/pengadaan/queries');
+const { option_Jenis_Vendor } = require('../src/jenis_vendor/queries');
+const { option_Jenis_Pengadaan } = require('../src/jenis_pengadaan/queries');
+
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -35,19 +40,19 @@ router.get('/registration', function(req, res) {
   });
 });
 
-
 /* POST registration page. */
 router.post('/registration', async function(req, res) {
-  const { companyName, companyEmail, companyStatus, companyAddress, directorName, companyPhone } = req.body;
+  const { nama_perusahaan, nama_jenis_vendor, email_perusahaan, status_kantor, alamat_perusahaan, nama_direktur, no_telp } = req.body;
   try {
     // Await the Promise returned by saveVendorInformation
-    await db.saveVendorInformation({
-      companyName,
-      companyEmail,
-      companyStatus,
-      companyAddress,
-      directorName,
-      companyPhone
+    await vendorController.addVendor({
+      nama_perusahaan,
+      nama_jenis_vendor,
+      email_perusahaan,
+      status_kantor,
+      alamat_perusahaan,
+      nama_direktur,
+      no_telp
     });
     // Redirect to the next page if the save is successful
     res.redirect('/bank-info');
@@ -58,7 +63,6 @@ router.post('/registration', async function(req, res) {
   }
 });
 
-
 /* GET bank-info page. */
 router.get('/bank-info', function(req, res) {
   res.render('/bank-info', {
@@ -68,14 +72,14 @@ router.get('/bank-info', function(req, res) {
 
 /* POST bank-info page. */
 router.post('/bank-info', async function(req, res) {
-  const { accountNumber, accountName, bankName } = req.body;
+  const { nama_bank, no_rek, nama_rek } = req.body;
 
   try {
     // Await the Promise returned by saveVendorInformation
-    await db.saveVendorInformation({
-      accountNumber,
-      accountName,
-      bankName
+    await vendorController.addVendor({
+      nama_bank,
+      no_rek,
+      nama_rek
     });
 
     // Redirect to the next page if the save is successful
@@ -94,13 +98,12 @@ router.get('/tax-info', function(req, res) {
 
 /* POST tax-info page. */
 router.post('/tax-info', async function(req, res) {
-  const { npwpNumber, pkpStatus } = req.body;
+  const { no_npwp } = req.body;
 
   try {
     // Await the Promise returned by saveVendorInformation
-    await db.saveVendorInformation({
-      npwpNumber,
-      pkpStatus
+    await vendorController.addVendor({
+      no_npwp,
     });
 
     // Redirect to the next page if the save is successful
@@ -119,11 +122,11 @@ router.get('/legal-info', function(req, res) {
 
 /* POST legal-info page. */
 router.post('/legal-info', function(req, res) {
-  const { nibNumber, ktpNumber } = req.body;
+  const { no_nibrba, no_ktp_direktur } = req.body;
   const allData = {
       ...req.session.vendorData, // Ensure session data is correctly managed
-      nibNumber,
-      ktpNumber
+      no_nibrba,
+      no_ktp_direktur
   };
   saveAllVendorInformation(allData).then(() => {
       res.redirect('/profil-informasi'); // Redirect to a profil-informasi page
@@ -323,26 +326,49 @@ router.get('/dokumen-purchase-order', function(req, res) {
 
 router.get('/list-bidding-vendor', async (req, res) => {
     try {
-      const bids = await getBids(); // Fetch bids data
-      res.render('list-bidding-vendor', { bids: bids });
-    } catch (error) {
-      res.status(500).send('Error fetching bids data');
+      const result = await bidding_tenderController.getBidding_Tender(); // Fetch bids data
+      res.render('list-bidding-vendor', { bidding_tender: result });
+    } catch (error){
+      res.status(500).send('Error fetching bidding tender data'); 
     }
 });
 
-
-router.get('/form-bidding-vendor', function(req, res) {
+router.get('/form-bidding', function(req, res) {
   const currentDate = new Date();
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   const formattedDate = currentDate.toLocaleDateString('id-ID', options);
 
-  res.render('form-bidding-vendor', {
-    title: "Form Bidding Vendor",
+  res.render('form-bidding', {
+    title: "Form Bidding",
     currdate: formattedDate
   });
 });
 
-router.post('/form-bidding-vendor', async function(req, res) {
+
+router.post('/form-bidding', async function(req, res) {
+  const { durasi_pekerjaan, pengajuan_harga } = req.body;
+  try {
+      // Assuming you have a function to insert data into the database
+      await detail_bidding_tenderController.addDetail_Bidding_Tender(durasi_pekerjaan, pengajuan_harga);
+      res.redirect('/list-bidding-vendor'); // Redirect to the list page after successful insertion
+  } catch (error) {
+      console.error('Failed to add new detail bidding tender:', error);
+      res.status(500).send('Error adding new detail bidding tender');
+  }
+});
+
+router.get('/form-tender', function(req, res) {
+  const currentDate = new Date();
+  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const formattedDate = currentDate.toLocaleDateString('id-ID', options);
+
+  res.render('form-tender', {
+    title: "Form Tender",
+    currdate: formattedDate
+  });
+});
+
+router.post('/form-tender', async function(req, res) {
   const { duration, bidAmount, vendor_id, bt_id } = req.body;  // Ensure vendor_id and bt_id are provided in the form or derived from session/context
 
   try {
@@ -353,7 +379,7 @@ router.post('/form-bidding-vendor', async function(req, res) {
           bt_id: bt_id           // Assuming bt_id is obtained correctly
       });
 
-      res.redirect('/list-bidding-vendor'); // Redirect or send a success response
+      res.redirect('/list-tender-vendor'); // Redirect or send a success response
   } catch (error) {
       console.error('Error submitting bid:', error);
       res.status(500).send('An error occurred during the bidding process: ' + error.message);

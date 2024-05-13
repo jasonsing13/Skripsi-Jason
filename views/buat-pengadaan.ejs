@@ -73,61 +73,31 @@
             </div>
         </form>
     </div>
-    <!-- <script>
+    <script>
         function addItem() {
-            const container = document.getElementById('additionalItems');
-            const itemTemplate = `
-            <div class="mb-3">
-             <table class="table table-striped">
-   <thead>
-     <tr>
-       <th scope="col">#</th>
-       <th scope="col">Nama Barang</th>
-       <th scope="col">Harga Barang</th>
-      <th scope="col">Jumlah Barang</th>
-     </tr>
-   </thead>
-   <tbody>
-     <tr>
-       <th scope="row">1</th>
-      <td>Mark</td>
-       <td>Otto</td>
-       <td>@mdo</td>
-     </tr>
-     <tr>
-       <th scope="row">2</th>
-       <td>Jacob</td>
-       <td>Thornton</td>
-       <td>@fat</td>
-     </tr>
-     <tr>
-       <th scope="row">3</th>
-       <td>Larry</td>
-       <td>the Bird</td>
-       <td>@twitter</td>
-     </tr>
-   </tbody>
- </table> `;
-             container.insertAdjacentHTML('beforeend', itemTemplate);
+            const namaBarang = document.getElementById('nama_barang').value;
+            const hargaBarang = document.getElementById('harga_barang').value;
+            const jumlahBarang = document.getElementById('jumlah_barang').value;
+    
+            if (namaBarang && hargaBarang && jumlahBarang) {
+                const table = document.getElementById('itemTable').getElementsByTagName('tbody')[0];
+                const newRow = table.insertRow(table.rows.length);
+                newRow.innerHTML = `
+                    <td>${table.rows.length}</td>
+                    <td>${namaBarang}</td>
+                    <td>${hargaBarang}</td>
+                    <td>${jumlahBarang}</td>
+                `;
+    
+                // Clear the input fields after adding the item
+                document.getElementById('nama_barang').value = '';
+                document.getElementById('harga_barang').value = '';
+                document.getElementById('jumlah_barang').value = '';
+            } else {
+                alert('Please fill all the fields!');
+            }
         }
-    </script> -->
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#itemDetails').on('submit', function(e) {
-            e.preventDefault();
-            const nama_barang = $('#nama_barang').val();
-            const harga_barang = $('#harga_barang').val();
-            const jumlah_barang = $('#jumlah_barang').val();
-            $.post('/add-item', { itemName: itemName, harga_barang: harga_barang, jumlah_barang: jumlah_barang }, function(data) {
-                $('#itemList').append('<li>' + data.itemName + '</li>');
-                $('#itemList').append('<li>' + data.harga_barang + '</li>');
-                $('#itemList').append('<li>' + data.jumlah_barang + '</li>');
-                $('#nama_barang').val(''); // Clear input after submission
-            });
-        });
-    });
+    </script>
 </script>
 </body>
 </html>
