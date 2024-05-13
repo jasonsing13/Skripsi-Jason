@@ -10,103 +10,71 @@ const option_Jenis_Vendor = `SELECT jenis_vendor_id, nama_jenis_vendor
 FROM public.jenis_vendor;
 `;
 const addVendor = `INSERT INTO public.vendor( 
-  nama_vendor, 
-  no_telp, 
-  nama_direktur, 
-  status_kantor, 
-  no_rek, 
-  username, 
-  password, 
-  email_perusahaan, 
-  alamat_perusahaan, 
-  url_ktp_direktur, 
-  url_ktp_penerima_kuasa, 
-  url_nibrba, 
-  url_akta_pendirian, 
-  url_akta_perubahan, 
-  url_dokumen_ijin_lain, 
-  url_dokumen_npwp, 
-  url_buku_akun_bank, 
-  create_date, 
-  create_by, 
-  modif_date, 
-  modif_by, 
-  negara, 
-  provinsi, 
-  kabupaten_kota, 
-  nama_bank, 
-  nama_pemilik_rekening, 
-  no_npwp, 
-  no_kpt_penerima_kuasa, 
-  url_profil_perusahaan, 
+  nama_vendor,
+  nama_jenis_vendor,
+  email_perusahaan,
+  status_kantor,
+  alamat_perusahaan,
+  nama_direktur,
+  no_telp,
+  negara,
+  provinsi,
+  kabupaten_kota,
+  create_date,
+  create_by
 ) VALUES (
   $1,  -- nama_vendor
-  $2,  -- no_telp
-  $3,  -- nama_direktur
+  $2,  -- nama_jenis_vendor
+  $3,  -- email_perusahaan
   $4,  -- status_kantor
-  $5,  -- no_rek
-  $6,  -- username
-  $7,  -- password
-  $8,  -- email_perusahaan
-  $9, -- alamat_perusahaan
-  $10, -- url_ktp_direktur
-  $11, -- url_ktp_penerima_kuasa
-  $12, -- url_nibrba
-  $13, -- url_akta_pendirian
-  $14, -- url_akta_perubahan
-  $15, -- url_dokumen_ijin_lain
-  $16, -- url_dokumen_npwp
-  $17, -- url_buku_akun_bank
+  $5,  -- alamat_perusahaan
+  $6,  -- nama_direktur
+  $7,  -- no_telp
+  $8,  -- negara
+  $9,  -- provinsi
+  $10,  -- kabupaten_kota
   CURRENT_TIMESTAMP,  -- create_date
-  $18, -- create_by
-  CURRENT_TIMESTAMP,  -- modif_date
-  $20, -- modif_by
-  $21, -- negara
-  $22, -- provinsi
-  $23, -- kabupaten_kota
-  $24, -- nama_bank
-  $25, -- nama_pemilik_rekening
-  $26, -- no_npwp
-  $27, -- no_kpt_penerima_kuasa
-  $28, -- url_profil_perusahaan
+  $11, -- create_by
 )`;
 
 const removeVendor = ` delete from vendor where vendor_id = $1 `;
 
-const updateVendor = `
-  UPDATE vendor
+const updateVendor1 = 
+` UPDATE vendor
   SET 
-    nama_vendor = $2,
-    no_telp = $3,
-    nama_direktur = $4,
-    status_kantor = $5,
-    jenis_pengadaan = $6,
-    no_rek = $7,
-    username = $8,
-    password = $9,
-    email_perusahaan = $10,
-    alamat_perusahaan = $11,
-    url_ktp_direktur = $12,
-    url_ktp_penerima_kuasa = $13,
-    url_nibrba = $14,
-    url_akta_pendirian = $15,
-    url_akta_perubahan = $16,
-    url_dokumen_ijin_lain = $17,
-    url_dokumen_npwp = $18,
-    url_buku_akun_bank = $19,
-    create_date = $20,
-    create_by = $21,
-    modif_date = $22,
-    modif_by = $23,
-    negara = $24,
-    provinsi = $25,
-    kabupaten_kota = $26,
-    nama_bank = $27,
-    nama_pemilik_rekening = $28,
-    no_npwp = $29,
-    no_kpt_penerima_kuasa = $30,
-    url_profil_perusahaan = $31
-  WHERE vendor_id = $1;
+  nama_bank = $2,
+  nama_pemilik_rekening = $3,
+  no_rek = $4
+WHERE vendor_id = $1;
+`;
+
+const updateVendor2 = 
+` UPDATE vendor
+  SET 
+  no_npwp = $2,
+WHERE vendor_id = $1;
+`;
+
+const updateVendor3 = 
+`
+UPDATE vendor
+ SET
+  no_nibrba = $2,
+  no_ktp_direktur = $3
+ WHERE vendor_id = $1;
+`
+const updateVendor4 = 
+` UPDATE vendor
+  SET 
+  url_ktp_direktur = $2,
+  url_nibrba = $3,
+  url_akta_pendirian = $4,
+  url_akta_perubahan = $5,
+  url_dokumen_ijin_lain = $6,
+  url_dokumen_npwp = $7, 
+  url_buku_akun_bank = $8, 
+  url_profil_perusahaan = $9, 
+WHERE vendor_id = $1;
 `;
 
 
@@ -117,5 +85,8 @@ module.exports = {
     getVendorById,
     addVendor,
     removeVendor,
-    updateVendor,
+    updateVendor1,
+    updateVendor2,
+    updateVendor3,
+    updateVendor4
 };

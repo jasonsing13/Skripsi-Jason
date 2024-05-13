@@ -42,11 +42,11 @@ router.get('/registration', function(req, res) {
 
 /* POST registration page. */
 router.post('/registration', async function(req, res) {
-  const { nama_perusahaan, nama_jenis_vendor, email_perusahaan, status_kantor, alamat_perusahaan, nama_direktur, no_telp } = req.body;
+  const { nama_vendor, nama_jenis_vendor, email_perusahaan, status_kantor, alamat_perusahaan, nama_direktur, no_telp } = req.body;
   try {
     // Await the Promise returned by saveVendorInformation
     await vendorController.addVendor({
-      nama_perusahaan,
+      nama_vendor,
       nama_jenis_vendor,
       email_perusahaan,
       status_kantor,
@@ -79,7 +79,7 @@ router.post('/bank-info', async function(req, res) {
     await vendorController.addVendor({
       nama_bank,
       no_rek,
-      nama_rek
+      nama_renamk
     });
 
     // Redirect to the next page if the save is successful
@@ -121,7 +121,7 @@ router.get('/legal-info', function(req, res) {
 });
 
 /* POST legal-info page. */
-router.post('/legal-info', function(req, res) {
+router.post('/legal-info', function(req, res) {  
   const { no_nibrba, no_ktp_direktur } = req.body;
   const allData = {
       ...req.session.vendorData, // Ensure session data is correctly managed
