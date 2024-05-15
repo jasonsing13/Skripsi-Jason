@@ -58,18 +58,14 @@ const removeVendor = (req,res)=>{
             res.status(500).send('Terjadi kesalahan pada server');
             return;
         }
-
         if (result && result.rowCount > 0) {
             // Jika ada baris yang terhapus, kirim respons berhasil
             res.status(200).send('Vendor berhasil dihapus');
-        } 
-        
+        }        
         else {
             // Jika tidak ada baris yang terhapus, kirim pesan bahwa pengguna tidak ditemukan
             res.status(404).send('Vendor tidak ditemukan');
         }
-        
-
     });
 };
 
@@ -96,17 +92,6 @@ const updateVendor2 = (req, res) => {
     });
 };
 
-const updateVendor4 = (req, res) => {
-    const id = req.params.id;
-    const { url_ktp_direktur, url_nibrba, url_akta_pendirian, url_akta_perubahan, url_dokumen_ijin_lain, url_dokumen_npwp, url_buku_akun_bank, url_profil_perusahaan } = req.body;
-    const queryParams = [url_ktp_direktur, url_nibrba, url_akta_pendirian, url_akta_perubahan, url_dokumen_ijin_lain, url_dokumen_npwp, url_buku_akun_bank, url_profil_perusahaan];
-
-    pool.query(queries.updateVendor4, queryParams, (error, result) => {
-        if (error) throw error;
-        res.status(200).send("Vendor director details updated successfully");
-    });
-};
-
 const updateVendor3 = (req, res) => {
     const id = req.params.id;
     const { no_nibrba, no_ktp_direktur } = req.body;
@@ -118,6 +103,16 @@ const updateVendor3 = (req, res) => {
     });
 };
 
+const updateVendor4 = (req, res) => {
+    const id = req.params.id;
+    const { url_ktp_direktur, url_nibrba, url_akta_pendirian, url_akta_perubahan, url_dokumen_ijin_lain, url_dokumen_npwp, url_buku_akun_bank, url_profil_perusahaan } = req.body;
+    const queryParams = [url_ktp_direktur, url_nibrba, url_akta_pendirian, url_akta_perubahan, url_dokumen_ijin_lain, url_dokumen_npwp, url_buku_akun_bank, url_profil_perusahaan];
+
+    pool.query(queries.updateVendor4, queryParams, (error, result) => {
+        if (error) throw error;
+        res.status(200).send("Vendor director details updated successfully");
+    });
+};
 
 module.exports = {
     getVendor,

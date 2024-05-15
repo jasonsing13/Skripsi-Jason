@@ -52,7 +52,10 @@ router.post('/registration', async function(req, res) {
       status_kantor,
       alamat_perusahaan,
       nama_direktur,
-      no_telp
+      no_telp,
+      negara,
+      provinsi,
+      kabupaten_kota
     });
     // Redirect to the next page if the save is successful
     res.redirect('/bank-info');
@@ -76,7 +79,7 @@ router.post('/bank-info', async function(req, res) {
 
   try {
     // Await the Promise returned by saveVendorInformation
-    await vendorController.addVendor({
+    await vendorController.updateVendor1({
       nama_bank,
       no_rek,
       nama_renamk
@@ -102,7 +105,7 @@ router.post('/tax-info', async function(req, res) {
 
   try {
     // Await the Promise returned by saveVendorInformation
-    await vendorController.addVendor({
+    await vendorController.updateVendor2({
       no_npwp,
     });
 
@@ -121,20 +124,23 @@ router.get('/legal-info', function(req, res) {
 });
 
 /* POST legal-info page. */
-router.post('/legal-info', function(req, res) {  
+router.post('/legal-info', async function(req, res) {  
   const { no_nibrba, no_ktp_direktur } = req.body;
-  const allData = {
-      ...req.session.vendorData, // Ensure session data is correctly managed
+    
+  try {
+
+    await vendorController.updateVendor3({
       no_nibrba,
       no_ktp_direktur
-  };
-  saveAllVendorInformation(allData).then(() => {
-      res.redirect('/profil-informasi'); // Redirect to a profil-informasi page
-  }).catch(error => {
+    });
+
+  res.redirect('/profil-informasi'); // Redirect to a profil-informasi page
+  } catch(error) {
       console.error('Error saving final vendor information:', error);
       res.status(500).send('An error occurred during registration.');
-  });
+  }
 });
+
 
 router.get('/profil-informasi', async (req, res) => {
   try {
@@ -182,47 +188,70 @@ router.get('/upload-dokumen-vendor', function(req, res) {
 });
 
 
-router.post('/upload-dokumen-vendor', upload.fields([
-  { name: 'url_buku_akun_bank', maxCount: 1 },
-  { name: 'url_npwp', maxCount: 1 },
-  { name: 'url_pkp', maxCount: 1 },
-  { name: 'url_ktp_direktur', maxCount: 1 },
-  { name: 'url_akta_perubahan', maxCount: 1 },
-  { name: 'url_akta_pendirian', maxCount: 1 },
-  { name: 'url_nibrba', maxCount: 1 },
-  { name: 'url_dokumen_ijin_lain', maxCount: 1 },
-  { name: 'url_profile_perusahaan', maxCount: 1 }
-]), function(req, res) {
-  // Process the uploaded files here
-  // Assuming db.saveFileInformation expects an array of file data
-  let fileData = [];
-  for (let key in req.files) {
-    fileData.push(...req.files[key].map(file => ({
-      url_buku_akun_bank: file.filename,
-      url_npwp: file.filename,
-      url_pkp: file.filename,
-      url_ktp_direktur: file.filename,
-      url_akta_perubahan: file.filename,
-      url_akta_pendirian: file.filename,
-      url_nibrba: file.filename,
-      url_dokumen_ijin_lain: file.filename,
-      url_profile_perusahaan: file.filename,
-      path: file.path,
-      size: file.size,
-      mimetype: file.mimetype
-    })));
-  }
+// router.post('/upload-dokumen-vendor', upload.fields([
+//   { name: 'url_buku_akun_bank', maxCount: 1 },
+//   { name: 'url_npwp', maxCount: 1 },
+//   { name: 'url_pkp', maxCount: 1 },
+//   { name: 'url_ktp_direktur', maxCount: 1 },
+//   { name: 'url_akta_perubahan', maxCount: 1 },
+//   { name: 'url_akta_pendirian', maxCount: 1 },
+//   { name: 'url_nibrba', maxCount: 1 },
+//   { name: 'url_dokumen_ijin_lain', maxCount: 1 },
+//   { name: 'url_profile_perusahaan', maxCount: 1 }
+// ]), function(req, res) {
+//   // Process the uploaded files here
+//   // Assuming db.saveFileInformation expects an array of file data
+//   let fileData = [];
+//   for (let key in req.files) {
+//     fileData.push(...req.files[key].map(file => ({
+//       url_buku_akun_bank: file.filename,
+//       url_npwp: file.filename,
+//       url_pkp: file.filename,
+//       url_ktp_direktur: file.filename,
+//       url_akta_perubahan: file.filename,
+//       url_akta_pendirian: file.filename,
+//       url_nibrba: file.filename,
+//       url_dokumen_ijin_lain: file.filename,
+//       url_profile_perusahaan: file.filename,
+//       path: file.path,
+//       size: file.size,
+//       mimetype: file.mimetype
+//     })));
+//   }
 
-  db.saveFileInformation(fileData)
-    .then(() => {
-      res.redirect('/dashboard-vendor'); 
-      console.log('File information saved successfully');
-      res.send('Files uploaded and saved successfully!');
-    })
-    .catch(error => {
-      console.error('Error saving file information:', error);
-      res.status(500).send('Failed to save file information');
+//   db.saveFileInformation(fileData)
+//     .then(() => {
+//       res.redirect('/dashboard-vendor'); 
+//       console.log('File information saved successfully');
+//       res.send('Files uploaded and saved successfully!');
+//     })
+//     .catch(error => {
+//       console.error('Error saving file information:', error);
+//       res.status(500).send('Failed to save file information');
+//     });
+// });
+
+router.post('/upload-dokumen-vendor', async function(req, res) {
+  const { url_buku_akun_bank, url_npwp, url_pkp, url_ktp_direktur, url_akta_perubahan, url_akta_pendirian, url_nibrba, url_dokumen_ijin_lain, url_profile_perusahaan } = req.body;
+  try {
+    // Await the Promise returned by saveVendorInformation
+    await vendorController.updateVendor4({
+      url_buku_akun_bank, 
+      url_npwp, url_pkp, 
+      url_ktp_direktur, 
+      url_akta_perubahan, 
+      url_akta_pendirian, 
+      url_nibrba, 
+      url_dokumen_ijin_lain, 
+      url_profile_perusahaan
     });
+    // Redirect to the next page if the save is successful
+    res.redirect('/dashboard-vendor');
+  } catch (error) {
+    // Log the error and send a 500 response if an error occurs
+    console.error('Error saving vendor information:', error);
+    res.status(500).send('An error occurred during registration: ' + error.message);
+  }
 });
 
 router.get('/dashboard-vendor', function(req, res) {
