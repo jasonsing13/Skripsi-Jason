@@ -23,12 +23,31 @@ const getVendorById = (req,res)=>{
 };
 
 const addVendor = (req,res)=>{
-    const {  nama_vendor, email_perusahaan, status_kantor, alamat_perusahaan, nama_direktur, no_telp, negara,provinsi, kabupaten_kota, create_date, create_by
+    const {  nama_vendor,
+        jenis_vendor_id,
+        email_perusahaan,
+        status_kantor,
+        alamat_perusahaan,
+        nama_direktur,
+        no_telp,
+        negara,
+        create_date,
+        create_by,
+        kk_id
     } = req.body;
     pool.query(
         queries.addVendor,
-        [nama_vendor, email_perusahaan, status_kantor, alamat_perusahaan, nama_direktur, no_telp, negara,provinsi, kabupaten_kota, create_date, create_by
-        ],
+        [  nama_vendor,
+            jenis_vendor_id,
+            email_perusahaan,
+            status_kantor,
+            alamat_perusahaan,
+            nama_direktur,
+            no_telp,
+            negara,
+            create_date,
+            create_by,
+            kk_id],
         (error, results) => {
             if (error) throw error;
             res.status(201).send("Vendor created success")
@@ -40,6 +59,46 @@ async function option_Jenis_Vendor() {
     const client = await db.pool.connect();
     try {
         const result = await client.query(queries.option_Jenis_Vendor); // Adjust the SQL query based on your actual table and data structure
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
+
+  
+async function option_Provinsi() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.option_Provinsi); // Adjust the SQL query based on your actual table and data structure
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
+
+  async function option_Kabupaten_Kota() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.option_Kabupaten_Kota); // Adjust the SQL query based on your actual table and data structure
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
+
+  async function option_Bank() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.option_Bank); // Adjust the SQL query based on your actual table and data structure
         return result.rows;
     } catch (error) {
         console.error('Error executing query', error.stack);
@@ -117,6 +176,9 @@ const updateVendor4 = (req, res) => {
 module.exports = {
     getVendor,
     option_Jenis_Vendor,
+    option_Provinsi,
+    option_Kabupaten_Kota,
+    option_Bank,
     getVendorById,
     addVendor,
     removeVendor,

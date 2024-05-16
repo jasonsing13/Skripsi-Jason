@@ -34,15 +34,21 @@ router.get('/', function(req, res) {
 });
 
 /* GET registration page. */
-router.get('/registration', function(req, res) {
+router.get('/registration', async function(req, res) {
+  const option_Jenis_Vendor = await vendorController.option_Jenis_Vendor();
+  const option_Provinsi = await vendorController.option_Provinsi();
+  const option_Kabupaten_Kota = await vendorController.option_Kabupaten_Kota();
   res.render('registration', { // Remove the leading slash before "registration"
-    title: 'Registrasi Vendor'
+    title: 'Registrasi Vendor',
+    option_Jenis_Vendor,
+    option_Provinsi,
+    option_Kabupaten_Kota
   });
 });
 
 /* POST registration page. */
 router.post('/registration', async function(req, res) {
-  const { nama_vendor, nama_jenis_vendor, email_perusahaan, status_kantor, alamat_perusahaan, nama_direktur, no_telp } = req.body;
+  const { nama_vendor, nama_jenis_vendor, email_perusahaan, status_kantor, alamat_perusahaan, nama_direktur, no_telp, kk_id, } = req.body;
   try {
     // Await the Promise returned by saveVendorInformation
     await vendorController.addVendor({
@@ -54,8 +60,7 @@ router.post('/registration', async function(req, res) {
       nama_direktur,
       no_telp,
       negara,
-      provinsi,
-      kabupaten_kota
+      kk_id,
     });
     // Redirect to the next page if the save is successful
     res.redirect('/bank-info');
@@ -67,9 +72,11 @@ router.post('/registration', async function(req, res) {
 });
 
 /* GET bank-info page. */
-router.get('/bank-info', function(req, res) {
+router.get('/bank-info', async function(req, res) {
+  const option_Bank = await vendorController.option_Bank();
   res.render('/bank-info', {
-    title: 'Bank Information'
+    title: 'Bank Information',
+    option_Bank
   });
 });
 

@@ -9,33 +9,44 @@ const getVendorById = `select * from vendor where vendor_id = $1`;
 const option_Jenis_Vendor = `SELECT jenis_vendor_id, nama_jenis_vendor
 FROM public.jenis_vendor;
 `;
+
+const option_Provinsi = `SELECT provinsi_id, nama_provinsi
+FROM public.provinsi; 
+`;
+
+const option_Kabupaten_Kota = `SELECT kk_id, nama_kk
+FROM public.kabupaten_kota WHERE provinsi_id = $1`;
+
+const option_Bank = `SELECT bank_id, nama_bank
+FROM public.bank;
+`;
+
+
 const addVendor = `INSERT INTO public.vendor( 
   nama_vendor,
-  nama_jenis_vendor,
+  jenis_vendor_id,
   email_perusahaan,
   status_kantor,
   alamat_perusahaan,
   nama_direktur,
   no_telp,
   negara,
-  provinsi,
-  kabupaten_kota,
   create_date,
-  create_by
+  create_by,
+  kk_id
 ) VALUES (
   $1,  -- nama_vendor
-  $2,  -- nama_jenis_vendor
+  $2,  -- jenis_vendor_id
   $3,  -- email_perusahaan
   $4,  -- status_kantor
   $5,  -- alamat_perusahaan
   $6,  -- nama_direktur
   $7,  -- no_telp
   $8,  -- negara
-  $9,  -- provinsi
-  $10,  -- kabupaten_kota
   CURRENT_TIMESTAMP,  -- create_date
-  $11, -- create_by
-)`;
+  $9, -- create_by
+  $10, -- kk_id
+);`
 
 const removeVendor = ` delete from vendor where vendor_id = $1 `;
 
@@ -82,6 +93,9 @@ WHERE vendor_id = $1;
 module.exports = {
     getVendor,
     option_Jenis_Vendor,
+    option_Provinsi,
+    option_Kabupaten_Kota,
+    option_Bank,
     getVendorById,
     addVendor,
     removeVendor,

@@ -40,9 +40,18 @@
                         <input type="email" class="form-control" id="email_perusahaan" name="email_perusahaan" required>
                     </div>
                 </div>
+                <div class="col-md-6 mb-3">
+                    <label for="jenis_vendor" class="form-label">Jenis Vendor</label>
+                    <select class="form-select" id="jenis_vendor" name="jenis_vendor" required>
+                        <option selected>Choose...</option>
+                        <% option_Jenis_Vendor.forEach(option => { %>
+                            <option value="<%= option.jenis_vendor_id %>"><%= option.nama_jenis_vendor %></option>
+                        <% }); %>
+                    </select>
+                </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="status_kantor">Status Kantor</label>
+                        <label for="status_kantor" class="form-label">Status Kantor</label>
                         <select class="form-select" id="status_kantor" name="status_kantor">
                             <option selected>Pilih Status Kantor</option>
                             <option value="1">Pusat</option>
@@ -69,56 +78,18 @@
                 <label for="negara">Negara</label>
                 <select class="form-select" id="negara" name="negara">
                     <option selected>Pilih Negara</option>
-                    <option value="1">Indonesia</option>
-                    <option value="2">Luar Negeri</option>
+                    <option value="Indonesia">Indonesia</option>
+                    <option value="Luar Negeri">Luar Negeri</option>
                 </select>
             </div>
+
             <div class="col-md-6 mb-3">
-                <label for="negara">Negara</label>
-                <select class="form-select" id="negara" name="negara">
-                    <option selected>Pilih Provinsi</option>
-                    <option value="1">Jawa Barat</option>
-                    <option value="2">Jawa Tengah</option>
-                    <option value="3">Jawa Timur</option>
-                    <option value="4">Aceh</option>
-                    <option value="5">Sumatera Utara</option>
-                    <option value="6">Sumatera Barat</option>
-                    <option value="7">Riau</option>
-                    <option value="8">Kepulauan Riau</option>
-                    <option value="9">Jambi</option>
-                    <option value="10">Sumatera Selatan</option>
-                    <option value="11">Bangka Belitung</option>
-                    <option value="12">Bengkulu</option>
-                    <option value="13">Lampung</option>
-                    <option value="14">DKI Jakarta</option>
-                    <option value="15">Banten</option>
-                    <option value="16">Bali</option>
-                    <option value="17">Nusa Tenggara Barat</option>
-                    <option value="18">Nusa Tenggara Timur</option>
-                    <option value="19">Kalimantan Barat</option>
-                    <option value="20">Kalimantan Tengah</option>
-                    <option value="21">Kalimantan Selatan</option>
-                    <option value="22">Kalimantan Timur</option>
-                    <option value="23">Kalimantan Utara</option>
-                    <option value="24">Sulawesi Utara</option>
-                    <option value="25">Gorontalo</option>
-                    <option value="26">Sulawesi Tengah</option>
-                    <option value="27">Sulawesi Selatan</option>
-                    <option value="28">Sulawesi Barat</option>
-                    <option value="29">Sulawesi Tenggara</option>
-                    <option value="30">Maluku</option>
-                    <option value="31">Maluku Utara</option>
-                    <option value="32">Papua</option>
-                    <option value="33">Papua Barat</option>
-                    <option value="34">Papua Tengah</option>
-                    <option value="35">Papua Pegunungan</option>
-                    <option value="36">Papua Selatan</option>
-                </select>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="kabupaten_kota">Kabupaten/Kota</label>
-                <select class="form-select" id="kabupaten_kota" name="kabupaten_kota">
-                    <option selected>Pilih Kabupaten/Kota</option>
+                <label for="kabupaten_kota" class="form-label">Kabupaten/Kota</label>
+                <select class="form-select" id="kabupaten_kota" name="kabupaten_kota" required>
+                    <option selected>Choose...</option>
+                    <% option_Kabupaten_Kota.forEach(option => { %>
+                        <option value="<%= option.kk_id %>"><%= option.nama_kk %></option>
+                    <% }); %>
                 </select>
             </div>
 
