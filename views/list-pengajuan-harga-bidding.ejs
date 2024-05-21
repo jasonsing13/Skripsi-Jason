@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Pengajuan Harga</title>
+    <link rel="stylesheet" href="/path/to/your/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="/path/to/logo.png" alt="Logo">
+            </div>
+            <nav class="menu">
+                <ul>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/profil-vendor">Profil Vendor</a></li>
+                    <li class="active">
+                        <a href="#pengadaan">Pengadaan</a>
+                        <ul>
+                            <li><a href="/daftar-pengadaan">Daftar Pengadaan</a></li>
+                            <li><a href="/bidding">Bidding</a></li>
+                            <li><a href="/tender">Tender</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header class="header">
+                <div class="breadcrumb">
+                    <a href="/pengadaan">Pengadaan</a> &gt;
+                    <a href="/daftar-pengadaan">Daftar Pengadaan</a> &gt;
+                    <a href="/detail-pengadaan">Detail Pengadaan</a> &gt;
+                    <a href="/bidding">Bidding</a> &gt;
+                    <span>List Pengajuan Harga</span>
+                </div>
+                <div class="user-info">
+                    <span>Wildan Saefullah</span>
+                    <span>Admin PT. Setia Berkah Abadi</span>
+                    <a href="/logout">Keluar</a>
+                </div>
+            </header>
+            <section class="content">
+                <h1>List Pengajuan Harga</h1>
+                <p>Lihat semua pengajuan harga</p>
+                <div class="pengajuan-harga">
+                    <h2>Pengajuan Harga</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Kode Vendor</th>
+                                <th>Nama Vendor</th>
+                                <th>Jenis Pengadaan</th>
+                                <th>Nama Barang</th>
+                                <th>Pengajuan Harga</th>
+                                <th>Durasi Pekerjaan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% pengajuanHarga.forEach(function(item) { %>
+                                <tr>
+                                    <td><%= item.vendor_id %></td>
+                                    <td><%= item.vendor_name %></td>
+                                    <td><%= item.nama_jenis_pengadaan %></td>
+                                    <td><%= item.nama_item %></td>
+                                    <td><%= item.pengajuan_harga %></td>
+                                    <td><%= item.durasi_pekerjaan %></td>
+                                    <td><button class="btn-set-pemenang">Set Pemenang</button></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

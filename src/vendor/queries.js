@@ -22,73 +22,93 @@ FROM public.bank;
 `;
 
 
-const addVendor = `INSERT INTO public.vendor( 
+
+const addVendor = `
+INSERT INTO public.vendor( 
+  vendor_id,
   nama_vendor,
-  jenis_vendor_id,
   email_perusahaan,
+  jenis_vendor_id,
   status_kantor,
   alamat_perusahaan,
   nama_direktur,
   no_telp,
   negara,
-  create_date,
+  provinsi_id,
+  kk_id,
   create_by,
-  kk_id
+  create_date
 ) VALUES (
+  gen_random_uuid(), --vendor_id
   $1,  -- nama_vendor
-  $2,  -- jenis_vendor_id
-  $3,  -- email_perusahaan
+  $2,  -- email_perusahaan
+  $3,  -- jenis_vendor_id
   $4,  -- status_kantor
   $5,  -- alamat_perusahaan
   $6,  -- nama_direktur
   $7,  -- no_telp
   $8,  -- negara
-  CURRENT_TIMESTAMP,  -- create_date
-  $9, -- create_by
+  $9, -- provinsi_id
   $10, -- kk_id
-);`
+  $11 -- create_by
+  now() -- create_date
+) RETURNING vendor_id;`
+
+// const addAccount = `
+// INSERT INTO public.vendor
+// (
+//   username, 
+//   password) 
+//   VALUES ($1, $2)
+// `;
+
 
 const removeVendor = ` delete from vendor where vendor_id = $1 `;
 
-const updateVendor1 = 
-` UPDATE vendor
+const addRekening_Vendor = 
+` INSERT INTO public.rekening
+  (rekening_id, nama_pemilik_rekening, no_rekening, bank_id)
+  VALUES (gen_random_uuid(), $2, $3, $4) 
+  `;
+
+const updateRekening_Vendor = `
+  UPDATE public.vendor
   SET 
-  nama_bank = $2,
-  nama_pemilik_rekening = $3,
-  no_rek = $4
-WHERE vendor_id = $1;
+    rekening_id =$1
+  WHERE vendor_id = $2;
 `;
 
-const updateVendor2 = 
-` UPDATE vendor
+const updateTax_Vendor = `
+  UPDATE public.vendor
   SET 
-  no_npwp = $2,
-WHERE vendor_id = $1;
-`;
-
-const updateVendor3 = 
-`
-UPDATE vendor
- SET
-  no_nibrba = $2,
-  no_ktp_direktur = $3
- WHERE vendor_id = $1;
-`
-const updateVendor4 = 
-` UPDATE vendor
-  SET 
-  url_ktp_direktur = $2,
-  url_nibrba = $3,
-  url_akta_pendirian = $4,
-  url_akta_perubahan = $5,
-  url_dokumen_ijin_lain = $6,
-  url_dokumen_npwp = $7, 
-  url_buku_akun_bank = $8, 
-  url_profil_perusahaan = $9, 
-WHERE vendor_id = $1;
+    no_npwp = $1,
+    status_pkp = $2
+  WHERE vendor_id = $3;
 `;
 
 
+const updateLegal_Vendor = `
+  UPDATE public.vendor
+  SET
+    no_nibrba = $1,
+    no_ktp_direktur = $2
+  WHERE vendor_id = $3;
+`;
+
+const updateVendorURL = 
+` UPDATE public.vendor
+  SET 
+  url_buku_akun_bank = 2,
+  url_dokumen_npwp = $3, 
+  url_dokumen_ppkp = $4, 
+  url_ktp_direktur = $5,
+  url_akta_perubahan = $6,
+  url_akta_pendirian = $7,
+  url_nibrba = $8,
+  url_dokumen_ijin_lain = $9,
+  url_profil_perusahaan = $10, 
+  WHERE vendor_id = $1;
+`;
 
 module.exports = {
     getVendor,
@@ -98,9 +118,12 @@ module.exports = {
     option_Bank,
     getVendorById,
     addVendor,
+    // addAccount,
     removeVendor,
-    updateVendor1,
-    updateVendor2,
-    updateVendor3,
-    updateVendor4
+    addRekening_Vendor,
+    updateRekening_Vendor,
+    updateTax_Vendor,
+    updateLegal_Vendor,
+    updateVendorURL
 };
+

@@ -4,6 +4,7 @@ var db = require("../database/db")
 var { saveAllVendorInformation } = require("../database/db");
 var multer = require('multer');
 var upload = multer({ dest: 'uploads/' });
+const bodyParser = require('body-parser'); // Jika Anda menggunakan express versi lama
 var bidding_tenderController = require('../src/bidding_tender/controller');
 var detail_bidding_tenderController = require('../src/detail_bidding_tender/controller');
 //var detail_template_vsController = require('../src/detail_template_vs/controller');
@@ -25,12 +26,40 @@ const { option_Tipe_Pemilihan } = require('../src/pengadaan/queries');
 const { option_Jenis_Vendor } = require('../src/jenis_vendor/queries');
 const { option_Jenis_Pengadaan } = require('../src/jenis_pengadaan/queries');
 
-
 /* GET home page. */
-router.get('/', function(req, res) {
-  res.render('index', {
-    title: 'MPM - Smart Mobility'
-    });  
+router.get('/login', function(req, res) {
+  res.render('login', {
+    title: 'Login Page'
+  });
+});
+
+
+// // POST login form data
+// router.post('/login', function(req, res) {
+//   const { email, password } = req.body;
+//   console.log(req.body);
+//     try{
+//       await vendorController.addAccount(req, res);
+//   res.redirect(`/registration`);
+//     }
+//       catch (error)  {    
+//          // Log the error and send a 500 response if an error occurs
+//       console.error('Error saving vendor information:', error);
+//       res.status(500).send('An error occurred during registration: ' + error.message);
+//   }
+// });
+
+
+
+router.get('/kabupaten-kota', async function(req, res) {
+  const provinsi_id = req.query.provinsi_id;
+  try {
+      const option_Kabupaten_Kota = await vendorController.option_Kabupaten_Kota(provinsi_id);
+      res.json(option_Kabupaten_Kota);
+  } catch (error) {
+      console.error('Error fetching kabupaten/kota data:', error);
+      res.status(500).send('Error fetching kabupaten/kota data');
+  }
 });
 
 /* GET registration page. */
@@ -46,52 +75,66 @@ router.get('/registration', async function(req, res) {
   });
 });
 
-/* POST registration page. */
+
+
+const idMiddleware = (req, res, next) => {
+  if (req.query.id) {
+    req.session = req.session || {};
+    req.session.vendor_id = req.query.id;
+  } else if (req.body.vendor_id) {
+    req.session = req.session || {};
+    req.session.vendor_id = req.body.vendor_id;
+  }
+  next();
+};
+
+
+
 router.post('/registration', async function(req, res) {
-  const { nama_vendor, nama_jenis_vendor, email_perusahaan, status_kantor, alamat_perusahaan, nama_direktur, no_telp, kk_id, } = req.body;
+  const { 
+      // nama_vendor,
+      // jenis_vendor_id,
+      // email_perusahaan,
+      // status_kantor,
+      // alamat_perusahaan,
+      // nama_direktur,
+      // no_telp,
+      // negara,
+      // provinsi_id,
+      // kk_id,
+      // create_by
+  } = req.body;
+  console.log(req.body);
   try {
-    // Await the Promise returned by saveVendorInformation
-    await vendorController.addVendor({
-      nama_vendor,
-      nama_jenis_vendor,
-      email_perusahaan,
-      status_kantor,
-      alamat_perusahaan,
-      nama_direktur,
-      no_telp,
-      negara,
-      kk_id,
-    });
-    // Redirect to the next page if the save is successful
-    res.redirect('/bank-info');
+      // Panggil fungsi addVendor dengan parameter yang benar
+      const vendor_id = await vendorController.addVendor(req, res);
+      // Redirect to the next page if the save is successful
+      res.redirect(`/bank-info?id=${vendor_id}`);
   } catch (error) {
-    // Log the error and send a 500 response if an error occurs
-    console.error('Error saving vendor information:', error);
-    res.status(500).send('An error occurred during registration: ' + error.message);
+      // Log the error and send a 500 response if an error occurs
+      console.error('Error saving vendor information:', error);
+      res.status(500).send('An error occurred during registration: ' + error.message);
   }
 });
 
+
 /* GET bank-info page. */
-router.get('/bank-info', async function(req, res) {
+router.get('/bank-info', idMiddleware, async function(req, res) {
   const option_Bank = await vendorController.option_Bank();
-  res.render('/bank-info', {
+  const vendor_id = req.query.id;
+  res.render('bank-info', {
     title: 'Bank Information',
-    option_Bank
+    option_Bank,
+    vendor_id
   });
 });
 
 /* POST bank-info page. */
 router.post('/bank-info', async function(req, res) {
-  const { nama_bank, no_rek, nama_rek } = req.body;
-
+  const { no_rekening, nama_pemilik_rekening, bank_id} = req.body;
+  console.log(req.body);
   try {
-    // Await the Promise returned by saveVendorInformation
-    await vendorController.updateVendor1({
-      nama_bank,
-      no_rek,
-      nama_renamk
-    });
-
+    await vendorController.addRekening_Vendor(req, res);
     // Redirect to the next page if the save is successful
     res.redirect('/tax-info');
   } catch (error) {
@@ -102,21 +145,21 @@ router.post('/bank-info', async function(req, res) {
 });
 
 /* GET tax-info page. */
-router.get('/tax-info', function(req, res) {
+router.get('/tax-info',  function(req, res) {
   res.render('tax-info');
 });
 
 /* POST tax-info page. */
-router.post('/tax-info', async function(req, res) {
-  const { no_npwp } = req.body;
-
+router.post('/tax-info', idMiddleware, async function(req, res) {
+  const { no_npwp, status_pkp, vendor_id } = req.body;
+  console.log(req.body);
   try {
     // Await the Promise returned by saveVendorInformation
-    await vendorController.updateVendor2({
-      no_npwp,
-    });
-
+    await vendorController.updateTax_Vendor(req, res);
     // Redirect to the next page if the save is successful
+       // Store ID in session
+       req.session = req.session || {};
+       req.session.id = vendor_id;
     res.redirect('/legal-info');
   } catch (error) {
     // Log the error and send a 500 response if an error occurs
@@ -126,25 +169,25 @@ router.post('/tax-info', async function(req, res) {
 });
 
 /* GET legal-info page. */
-router.get('/legal-info', function(req, res) {
+router.get('/legal-info', idMiddleware, function(req, res) {
   res.render('legal-info');
 });
 
 /* POST legal-info page. */
-router.post('/legal-info', async function(req, res) {  
-  const { no_nibrba, no_ktp_direktur } = req.body;
-    
+router.post('/legal-info', idMiddleware, async function(req, res) {  
+  const { no_nibrba, no_ktp_direktur, vendor_id } = req.body;
+  console.log(req.body);
   try {
-
-    await vendorController.updateVendor3({
-      no_nibrba,
-      no_ktp_direktur
-    });
-
-  res.redirect('/profil-informasi'); // Redirect to a profil-informasi page
+    // Await the Promise returned by saveVendorInformation
+    await vendorController.updateLegal_Vendor(req, res);
+    // Redirect to the next page if the save is successful
+       // Store ID in session
+       req.session = req.session || {};
+       req.session.id = vendor_id;
+    res.redirect('/profil-informasi');
   } catch(error) {
       console.error('Error saving final vendor information:', error);
-      res.status(500).send('An error occurred during registration.');
+      res.status(500).send('An error occurred during registration.' + error.message);
   }
 });
 
@@ -242,7 +285,7 @@ router.post('/upload-dokumen-vendor', async function(req, res) {
   const { url_buku_akun_bank, url_npwp, url_pkp, url_ktp_direktur, url_akta_perubahan, url_akta_pendirian, url_nibrba, url_dokumen_ijin_lain, url_profile_perusahaan } = req.body;
   try {
     // Await the Promise returned by saveVendorInformation
-    await vendorController.updateVendor4({
+    await vendorController.updateVendorURL({
       url_buku_akun_bank, 
       url_npwp, url_pkp, 
       url_ktp_direktur, 
@@ -582,11 +625,11 @@ router.get('/dokumen-purchase-order-approved', function(req, res) {
 });
 
 // GET route for the goods received page
-router.get('/goods-received_vendor', (req, res) => {
-  res.render('goods_received_vendor');
+router.get('/goods-received-vendor', (req, res) => {
+  res.render('goods-received-vendor');
 });
 
-router.post('/goods-received_vendor', 
+router.post('/goods-received-vendor', 
 upload.fields([{ name: 'invoice' }, { name: 'surat_jalan' }]), async (req, res) => {
   try {
     // Extract file paths from the uploaded files
@@ -602,5 +645,25 @@ upload.fields([{ name: 'invoice' }, { name: 'surat_jalan' }]), async (req, res) 
   }
 });
 
+// GET route for the goods received page
+router.get('/goods-received-admin', (req, res) => {
+  res.render('goods-received-admin');
+});
+
+router.post('/goods-received-admin', 
+upload.fields([{ name: 'invoice' }, { name: 'surat_jalan' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_invoice = req.files['invoice'][0].path;
+    const url_surat_jalan = req.files['surat_jalan'][0].path;
+
+    // Assuming you have a function to insert data into the database
+    await goods_receivedController.addGoods_Received(url_invoice, url_surat_jalan);
+    res.redirect('/daftar-pengadaan-vendor'); // Redirect to the list page after successful insertion
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
 
 module.exports = router;

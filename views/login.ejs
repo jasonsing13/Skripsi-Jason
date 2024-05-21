@@ -7,12 +7,12 @@
     <div class="login-box">
         <h2>Selamat Datang!</h2>
         <p>Selamat datang di layanan E-Procurement MPM.</p>
-        <form>
-            <input type="email" class="form-control" placeholder="Masukan E-mail">
-            <input type="password" class="form-control" placeholder="Masukan Kata Sandi">
+        <form action="/login" method="post">
+            <input type="email" class="form-control" id="email" placeholder="Masukan E-mail">
+            <input type="password" class="form-control" id="password" placeholder="Masukan Kata Sandi">
             <button type="submit" class="btn btn-orange w-100">Masuk</button>
         </form>
-        <p class="text-center mt-3">Anda Vendor dan belum punya akun? <a href="/register">Daftar Sekarang</a></p>  
+        <p class="text-center mt-3">Anda Vendor dan belum punya akun? <a type="submit" href="/registration">Daftar Sekarang</a></p>  
       </div>
   </div>
 </div>

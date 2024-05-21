@@ -29,15 +29,10 @@ const addPengadaan =`INSERT INTO public.pengadaan (
     tanggal_pemilihan_selesai, 
     harga, 
     validator_1, 
-    validator_2, 
-    validator_3, 
-    validator_4, 
     create_date, 
     create_by, 
     modif_date, 
     modif_by, 
-    pic, 
-    vendor_pemenang
 ) 
 VALUES (
     $1, -- nama_pengadaan
@@ -82,7 +77,19 @@ VALUES ($1, $2, $3);`
 
 
 const removePengadaan = ` delete from pengadaan where pengadaan_id = $1 `;
-const updatePengadaan = `update pengadaan set nama_pengadaan =$1 where pengadaan_id = $2 `;
+const updatePengadaan = ` UPDATE pengadaan
+SET 
+url_ktp_direktur = $2,
+url_nibrba = $3,
+url_akta_pendirian = $4,
+url_akta_perubahan = $5,
+url_dokumen_ijin_lain = $6,
+url_dokumen_npwp = $7, 
+url_buku_akun_bank = $8, 
+url_profil_perusahaan = $9, 
+WHERE vendor_id = $1;
+`
+;
 
 
 module.exports = {

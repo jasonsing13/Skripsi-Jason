@@ -84,12 +84,19 @@
             </div>
 
             <div class="col-md-6 mb-3">
+                <label for="provinsi" class="form-label">Provinsi</label>
+                <select class="form-select" id="provinsi" name="provinsi" required>
+                    <option selected>Choose...</option>
+                    <% option_Provinsi.forEach(option => { %>
+                        <option value="<%= option.provinsi_id %>"><%= option.nama_provinsi %></option>
+                    <% }); %>
+                </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
                 <label for="kabupaten_kota" class="form-label">Kabupaten/Kota</label>
                 <select class="form-select" id="kabupaten_kota" name="kabupaten_kota" required>
                     <option selected>Choose...</option>
-                    <% option_Kabupaten_Kota.forEach(option => { %>
-                        <option value="<%= option.kk_id %>"><%= option.nama_kk %></option>
-                    <% }); %>
                 </select>
             </div>
 
@@ -97,5 +104,30 @@
         </form>
     </div>
 </body>
+<script>
+    document.getElementById('provinsi').addEventListener('change', async function() {
+        const provinsi_id = this.value;
+        const kabupatenKotaSelect = document.getElementById('kabupaten_kota');
+
+        // Hapus semua opsi saat ini
+        kabupatenKotaSelect.innerHTML = '<option selected>Choose...</option>';
+
+        if (provinsi_id) {
+            try {
+                const response = await fetch(`/kabupaten-kota?provinsi_id=${provinsi_id}`);
+                const options = await response.json();
+
+                options.forEach(option => {
+                    const opt = document.createElement('option');
+                    opt.value = option.kk_id;
+                    opt.textContent = option.nama_kk;
+                    kabupatenKotaSelect.appendChild(opt);
+                });
+            } catch (error) {
+                console.error('Error fetching kabupaten/kota:', error);
+            }
+        }
+    });
+</script>
 <%- include('partials/footer.ejs') %>
 </html>

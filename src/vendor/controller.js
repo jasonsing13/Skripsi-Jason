@@ -16,44 +16,70 @@ async function getVendor() {
 
 const getVendorById = (req,res)=>{
     const id = req.params.id;
-    pool.query(queries.getVendorById,[id], (error, results)=>{
+    db.pool.query(queries.getVendorById,[id], (error, results)=>{
         if(error) throw error;
         res.status(200).json(results.rows);
     })
 };
 
 const addVendor = (req,res)=>{
-    const {  nama_vendor,
-        jenis_vendor_id,
+    const {  
+        nama_vendor,
         email_perusahaan,
+        jenis_vendor_id,
         status_kantor,
         alamat_perusahaan,
         nama_direktur,
         no_telp,
         negara,
-        create_date,
+        provinsi_id,
+        kk_id,
         create_by,
-        kk_id
+        create_date
     } = req.body;
-    pool.query(
+    console.log( req.body);
+    db.pool.query(
         queries.addVendor,
-        [  nama_vendor,
-            jenis_vendor_id,
-            email_perusahaan,
-            status_kantor,
-            alamat_perusahaan,
-            nama_direktur,
-            no_telp,
-            negara,
-            create_date,
-            create_by,
-            kk_id],
+        [  
+            req.body.nama_vendor,
+            req.body.email_perusahaan,
+            req.body.jenis_vendor_id,
+            req.body.status_kantor,
+            req.body.alamat_perusahaan,
+            req.body.nama_direktur,
+            req.body.no_telp,
+            req.body.negara,
+            req.body.provinsi_id,
+            req.body.kk_id,
+            req.body.create_by,
+            req.body.create_date],
         (error, results) => {
-            if (error) throw error;
-            res.status(201).send("Vendor created success")
+
+            if (error) console.log(error);
+            else return results.rows[0].vendor_id;
         }
     );
 };
+
+// const addAccount = (req,res)=>{
+//     const {  
+//         email_perusahaan,
+//         password,
+//     } = req.body;
+//     console.log(req.body);
+//     db.pool.query(
+//         queries.addAccount,
+//         [  
+//             email_perusahaan,
+//             password],
+//         (error, results) => {
+
+//             if (error) console.log(error);
+//             else return results.rows[0].vendor_id;
+//         }
+//     );
+// };
+
 
 async function option_Jenis_Vendor() {
     const client = await db.pool.connect();
@@ -82,10 +108,10 @@ async function option_Provinsi() {
     }
   }
 
-  async function option_Kabupaten_Kota() {
+  async function option_Kabupaten_Kota(provinsi_id) {
     const client = await db.pool.connect();
     try {
-        const result = await client.query(queries.option_Kabupaten_Kota); // Adjust the SQL query based on your actual table and data structure
+        const result = await client.query(queries.option_Kabupaten_Kota, [provinsi_id]); // Adjust the SQL query based on your actual table and data structure
         return result.rows;
     } catch (error) {
         console.error('Error executing query', error.stack);
@@ -110,7 +136,7 @@ async function option_Provinsi() {
 
 const removeVendor = (req,res)=>{
     const id = req.params.id;
-    pool.query(queries.removeVendor, [id], (error, result)=>{
+    db.pool.query(queries.removeVendor, [id], (error, result)=>{
         if (error) {
             // Handle error
             console.error('Error:', error);
@@ -129,45 +155,71 @@ const removeVendor = (req,res)=>{
 };
 
 
-const updateVendor1 = (req, res) => {
-    const id = req.params.id;
-    const {   nama_bank, nama_pemilik_rekening, no_rek } = req.body;
-    const queryParams = [id, nama_bank, nama_pemilik_rekening, no_rek];
+const addRekening_Vendor = (req, res) => {
+    const { no_rekening, nama_pemilik_rekening, bank_id, vendor_id } = req.body;
+    const queryParams = [no_rekening, nama_pemilik_rekening, bank_id, req.query.id];
+    console.log(queryParams);
+    db.pool.query(queries.addRekening_Vendor, queryParams)
+        .then(result => {
+            // Lakukan sesuatu jika query berhasil dieksekusi
+            console.log("Tambah Rekening-Vendor berhasil");
+            // Lanjutkan dengan mengupdate Rekening-Vendor
+        db.pool.query(queries.updateRekening_Vendor, queryParams);
+        })
+        .then(result => {
+            // Lakukan sesuatu jika query update berhasil dieksekusi
+            console.log("Update Rekening-Vendor berhasil");
+        })
+        .catch(error => {
+            // Tangani kesalahan di sini
+            console.error("Terjadi kesalahan:", error);
+        });
+};
 
-    pool.query(queries.updateVendor1, queryParams, (error, result) => {
+// const addRekening_Vendor = async (req, res) => {
+//     const { no_rekening, nama_pemilik_rekening, bank_id } = req.body;
+//     // const vendor_id = req.session.vendor_id;
+//     const queryParams = [no_rekening, nama_pemilik_rekening, bank_id, vendor_id];
+//     console.log(req.body);
+//     try {
+//         await db.pool.query(queries.addRekening_Vendor, queryParams);
+//         console.log("Tambah Rekening-Vendor berhasil");
+
+//         await db.pool.query(queries.updateRekening_Vendor, queryParams);
+//         console.log("Update Rekening-Vendor berhasil");
+//     } catch (error) {
+//         console.error("Terjadi kesalahan:", error);
+//     }
+// };
+
+
+const updateTax_Vendor = (req, res) => {
+    const id = req.params.id;
+    const { no_npwp, status_pkp, vendor_id} = req.body;
+    const queryParams = [no_npwp, status_pkp, vendor_id];
+    console.log(req.body);
+    db.pool.query(queries.updateTax_Vendor, queryParams, (error, result) => {
         if (error) throw error;
-        res.status(200).send("Akun bank updated successfully");
     });
 };
 
-const updateVendor2 = (req, res) => {
+const updateLegal_Vendor = (req, res) => {
     const id = req.params.id;
-    const { no_npwp } = req.body;
-    const queryParams = [id, no_npwp];
-
-    pool.query(queries.updateVendor2, queryParams, (error, result) => {
-        if (error) throw error;
-        res.status(200).send("Akun perpajakan updated successfully");
+    const { no_nibrba, no_ktp_direktur, vendor_id } = req.body;
+    const queryParams = [id, no_nibrba, no_ktp_direktur, vendor_id];
+    console.log(req.body);
+    db.pool.query(queries.updateLegal_Vendor, queryParams, (error, result) => {
+      if (error) throw error;
     });
-};
+  };
+  
 
-const updateVendor3 = (req, res) => {
-    const id = req.params.id;
-    const { no_nibrba, no_ktp_direktur } = req.body;
-    const queryParams = [id, no_nibrba, no_ktp_direktur];
-
-    pool.query(queries.updateVendor3, queryParams, (error, result) => {
-        if (error) throw error;
-        res.status(200).send("Vendor procurement and office status updated successfully");
-    });
-};
-
-const updateVendor4 = (req, res) => {
+const updateVendorURL = (req, res) => {
     const id = req.params.id;
     const { url_ktp_direktur, url_nibrba, url_akta_pendirian, url_akta_perubahan, url_dokumen_ijin_lain, url_dokumen_npwp, url_buku_akun_bank, url_profil_perusahaan } = req.body;
     const queryParams = [url_ktp_direktur, url_nibrba, url_akta_pendirian, url_akta_perubahan, url_dokumen_ijin_lain, url_dokumen_npwp, url_buku_akun_bank, url_profil_perusahaan];
 
-    pool.query(queries.updateVendor4, queryParams, (error, result) => {
+    pool.query(queries.updateVendorURL, queryParams, (error, result) => {
         if (error) throw error;
         res.status(200).send("Vendor director details updated successfully");
     });
@@ -181,10 +233,11 @@ module.exports = {
     option_Bank,
     getVendorById,
     addVendor,
+    // addAccount,
     removeVendor,
-    updateVendor1,
-    updateVendor2,
-    updateVendor3,
-    updateVendor4
+    addRekening_Vendor,
+    updateTax_Vendor,
+    updateLegal_Vendor,
+    updateVendorURL
 };
 

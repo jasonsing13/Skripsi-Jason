@@ -88,13 +88,6 @@ const addPengadaan = (req,res)=>{
             res.status(201).send("Pengadaan created success")
         }
     );
-    pool.query(
-        queries.addPengadaan_Insert_Pengadaan,
-        [nama_pengadaan, tanggal_pemilihan, tanggal_pemilihan_selesai, harga, termin_pembayaran], (error, results) => {
-            if (error) throw error;
-            res.status(201).send("Pengadaan created success")
-        }
-    );
 };
 
 
