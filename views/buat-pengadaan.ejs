@@ -23,30 +23,33 @@
                         <select class="form-select" id="tipe_pemilihan" name="tipe_pemilihan" required>
                             <option selected>Choose...</option>
                             <% option_Tipe_Pemilihan.forEach(option => { %>
-                                <option value="<%= option.nama_tipe_pemilihan %>"><%= option.nama_tipe_pemilihan %></option>
+                                <option value="<%= option.tipe_pemilihan_id %>"><%= option.nama_tipe_pemilihan %></option>
                             <% }); %>
                         </select>
                     </div>
+                    <div class = "mb-3">
                     <label for="jenis_pengadaan" class="form-label">Jenis Pengadaan*</label>
                     <select class="form-select" id="jenis_pengadaan" name="jenis_pengadaan" required>
                         <option selected>Choose...</option>
                         <% option_Jenis_Pengadaan.forEach(option => { %>
-                            <option value="<%= option.nama_jenis_pengadaan %>"><%= option.nama_jenis_pengadaan %></option>
+                            <option value="<%= option.jenis_pengadaan_id %>"><%= option.nama_jenis_pengadaan %></option>
                         <% }); %>
                     </select>
+                    </div>
                 </div>
+                
                     <div class="mb-3">
                         <label for="jenis_vendor" class="form-label">Jenis Vendor*</label>
                         <select class="form-select" id="jenis_vendor" name="jenis_vendor" required>
                             <option selected>Choose...</option>
                             <% option_Jenis_Vendor.forEach(option => { %>
-                                <option value="<%= option.nama_jenis_vendor %>"><%= option.nama_jenis_vendor %></option>
+                                <option value="<%= option.jenis_vendor_id %>"><%= option.nama_jenis_vendor %></option>
                             <% }); %>
                         </select>                    
                     </div>
 
                     <div class="mb-3">
-                        <label for="termin_pembayaran" class="form-label">Termin Pembayaran</label>
+                        <label for="termin_pembayaran" class="form-label">Termin Pembayaran* (hari)</label>
                         <input type="text" class="form-control" id="termin_pembayaran" name="termin_pembayaran">
                     </div>
                     <button type="submit" class="btn btn-primary">Buat Pengadaan</button>
@@ -78,17 +81,17 @@
             const namaBarang = document.getElementById('nama_barang').value;
             const hargaBarang = document.getElementById('harga_barang').value;
             const jumlahBarang = document.getElementById('jumlah_barang').value;
-    
+
             if (namaBarang && hargaBarang && jumlahBarang) {
                 const table = document.getElementById('itemTable').getElementsByTagName('tbody')[0];
                 const newRow = table.insertRow(table.rows.length);
                 newRow.innerHTML = `
-                    <td>${table.rows.length}</td>
+                    <td>${table.rows.length + 1}</td>
                     <td>${namaBarang}</td>
                     <td>${hargaBarang}</td>
                     <td>${jumlahBarang}</td>
                 `;
-    
+
                 // Clear the input fields after adding the item
                 document.getElementById('nama_barang').value = '';
                 document.getElementById('harga_barang').value = '';
@@ -98,6 +101,5 @@
             }
         }
     </script>
-</script>
 </body>
 </html>

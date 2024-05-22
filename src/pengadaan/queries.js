@@ -19,65 +19,35 @@ FROM public.jenis_vendor;
 
 const getPengadaanById = `select * from pengadaan where pengadaan_id = $1`;
 
-const addPengadaan =`INSERT INTO public.pengadaan (
-    nama_pengadaan, 
-    nama_jenis_pengadaan, 
-    nama_jenis_vendor, 
-    termin_pembayaran,
-    tanggal_permintaan, 
-    tanggal_pemilihan, 
-    tanggal_pemilihan_selesai, 
-    harga, 
-    validator_1, 
-    create_date, 
-    create_by, 
-    modif_date, 
-    modif_by, 
-) 
-VALUES (
-    $1, -- nama_pengadaan
-    $2, -- nama_jenis_pengadaan
-    $3, -- nama_jenis_vendor
-    $4, -- termin_pembayaran
-    $now(), -- tanggal_permintaan
-    $9, -- tanggal_pemilihan
-    $10, -- tanggal_pemilihan_selesai
-    $11, -- harga
-    $12, -- validator_1
-    $13, -- validator_2
-    $14, -- validator_3
-    $15, -- validator_4
-    $now(), -- create_date
-    $17, -- create_by
-    $now(), -- modif_date
-    $19, -- modif_by
-    $20, -- pic
-    $21 -- vendor_pemenang
-);
-
--- Operasi INSERT untuk tabel item
-INSERT INTO public.item (nama_item, harga_item, jumlah_item)
-VALUES ($5, $6, $7);
+const addPengadaan = `
+    INSERT INTO public.pengadaan (
+        nama_pengadaan, 
+        tipe_pemilihan_id, 
+        jenis_pengadaan_id, 
+        jenis_vendor_id, 
+        termin_pembayaran,
+        tanggal_permintaan,  
+        create_date, 
+        create_by
+    ) 
+    VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $6)
+    RETURNING pengadaan_id;
 `;
 
-const addPengadaan_Insert_Jenis_Vendor = `
--- Insert into public.pengadaan
-INSERT INTO jenis_vendor (nama_jenis_vendor)
-VALUES ($1);`
-
-const addPengadaan_Insert_Jenis_Pengadaan = `
--- Insert into public.jenis_pengadaan
-INSERT INTO jenis_pengadaan (nama_jenis_pengadaan)
-VALUES ($1);`
-
-const addPengadaan_Insert_Item=`
--- Insert into public.item 
-INSERT INTO item (nama_item, harga_item, jumlah_item)
-VALUES ($1, $2, $3);`
+const addItem= `
+    INSERT INTO public.item (
+        pengadaan_id,
+        nama_item,
+        harga_item,
+        jumlah_item,
+        url_foto_item
+    ) 
+    VALUES ($1, $2, $3, $4, $5);
+`;
 
 
 const removePengadaan = ` delete from pengadaan where pengadaan_id = $1 `;
-const updatePengadaan = ` UPDATE pengadaan
+const validasiPengadaan = ` UPDATE pengadaan
 SET 
 url_ktp_direktur = $2,
 url_nibrba = $3,
@@ -98,10 +68,9 @@ module.exports = {
     option_Tipe_Pemilihan,
     option_Jenis_Pengadaan,
     option_Jenis_Vendor,
-    addPengadaan_Insert_Item,
-    addPengadaan_Insert_Jenis_Pengadaan,
-    addPengadaan_Insert_Jenis_Vendor,
+    addPengadaan,
+    addItem,
     removePengadaan,
-    updatePengadaan,
+    validasiPengadaan,
 };
 

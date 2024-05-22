@@ -62,30 +62,70 @@ const getPengadaanById = (req,res)=>{
     })
 };
 
+// const addPengadaan = (req,res)=>{ 
+//     const {
+//         nama_pengadaan,
+//         tipe_pemilihan_id, 
+//         jenis_pengadaan_id, 
+//         jenis_vendor_id, 
+//         termin_pembayaran,
+//         tanggal_pemilihan, 
+//         create_date,
+//         create_by,
+//         modif_date,
+//         modif_by
+//     } = req.body;
+//     const {id} = req.session;
+//     console.log(req.body)
+//     pool.query(
+//         queries.addPengadaan_Insert_Jenis_Vendor,
+//         [nama_jenis_vendor,], (error, results) => {
+//             if (error) throw error;
+//             res.status(201).send("Pengadaan created success")
+//         }
+//     );
+//     pool.query(
+//         queries.addPengadaan_Insert_Jenis_Pengadaan,
+//         [nama_jenis_pengadaan,], (error, results) => {
+//             if (error) throw error;
+//             res.status(201).send("Pengadaan created success")
+//         }
+//     );
+//     pool.query(
+//         queries.addPengadaan_Insert_Item,
+//         [nama_item, harga_item, jumlah_item], (error, results) => {
+//             if (error) throw error;
+//             res.status(201).send("Pengadaan created success")
+//         }
+//     );
+// };
+
+
 const addPengadaan = (req,res)=>{ 
-    const {nama_jenis_pengadaan, nama_jenis_vendor, nama_item, harga_item, jumlah_item, nama_pengadaan, tanggal_pemilihan, tanggal_pemilihan_selesai, harga, termin_pembayaran
+    const {
+        nama_pengadaan,
+        tipe_pemilihan_id, 
+        jenis_pengadaan_id, 
+        jenis_vendor_id, 
+        termin_pembayaran,
+        tanggal_pemilihan, 
+        create_date,
+        create_by
     } = req.body;
-    const {id} = req.session;
     console.log(req.body)
-    pool.query(
-        queries.addPengadaan_Insert_Jenis_Vendor,
-        [nama_jenis_vendor,], (error, results) => {
-            if (error) throw error;
-            res.status(201).send("Pengadaan created success")
-        }
-    );
-    pool.query(
-        queries.addPengadaan_Insert_Jenis_Pengadaan,
-        [nama_jenis_pengadaan,], (error, results) => {
-            if (error) throw error;
-            res.status(201).send("Pengadaan created success")
-        }
-    );
-    pool.query(
-        queries.addPengadaan_Insert_Item,
-        [nama_item, harga_item, jumlah_item], (error, results) => {
-            if (error) throw error;
-            res.status(201).send("Pengadaan created success")
+    db.pool.query(
+        queries.addPengadaan,
+        [
+            req.body.nama_pengadaan,
+            req.body.tipe_pemilihan_id,
+            req.body.jenis_pengadaan_id,
+            req.body.jenis_vendor_id,
+            req.body.termin_pembayaran,
+            req.body.create_by,
+        ], (error, results) => {
+            console.log(results)
+            if (error) console.log(error);
+            else return results.rows[0].pengadaan_id;        
         }
     );
 };
@@ -116,7 +156,7 @@ const removePengadaan = (req,res)=>{
     });
 };
 
-const updatePengadaan = (req, res) => {
+const validasiPengadaan = (req, res) => {
     const id = req.params.id;
     const { username } = req.body;
 
@@ -134,6 +174,6 @@ module.exports = {
     getPengadaanById,
     addPengadaan,
     removePengadaan,
-    updatePengadaan,
+    validasiPengadaan,
 };
 

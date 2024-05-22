@@ -527,15 +527,79 @@ router.get('/buat-pengadaan', async function(req, res) {
   res.render('buat-pengadaan', { option_Tipe_Pemilihan, option_Jenis_Pengadaan, option_Jenis_Vendor });
 });
 
-router.post('/buat-pengadaan', async function(req, res) {
-  const { nama_pengadaan, nama_jenis_pengadaan, jenis_vendor, termin_pembayaran, nama_item, harga_item, jumlah_item } = req.body;
+// router.post('/buat-pengadaan', async function(req, res) {
+//   const { 
+//           // nama_pengadaan, 
+//           // tipe_pemilihan_id, 
+//           // jenis_pengadaan_id, 
+//           // jenis_vendor_id, 
+//           // termin_pembayaran, 
+//           // tanggal_pemilihan, 
+//           // create_date, 
+//           // create_by, 
+//           // modif_date, 
+//           // modif_by 
+//         } = req.body;
+//         console.log(req.body);
+//   try {
+//       // Assuming you have a function to insert data into the database
+//       const pengadaan_id = await pengadaanController.addPengadaan(req, res);
+//       res.redirect('/daftar-pengadaan-admin'); // Redirect to the list page after successful insertion
+//   } catch (error) {
+//       console.error('Failed to add new pengadaan:', error);
+//       res.status(500).send('Error adding new pengadaan');
+//   }
+// });
+
+router.post('/buat-pengadaan', async (req, res) => {
+  const {
+      nama_pengadaan,
+      tipe_pemilihan_id,
+      jenis_pengadaan_id,
+      jenis_vendor_id,
+      termin_pembayaran,
+      nama_barang,
+      harga_barang,
+      jumlah_barang,
+      url_foto_item,
+      create_by
+  } = req.body;
+
   try {
-      // Assuming you have a function to insert data into the database
-      await pengadaanController.addPengadaan(nama_pengadaan, nama_jenis_pengadaan, jenis_vendor, termin_pembayaran, nama_item, harga_item, jumlah_item);
-      res.redirect('/daftar-pengadaan-admin'); // Redirect to the list page after successful insertion
+      const client = await pool.connect();
+      try {
+          await client.query('BEGIN');
+          const result = await client.query(addPengadaan, [
+              nama_pengadaan,
+              tipe_pemilihan_id,
+              jenis_pengadaan_id,
+              jenis_vendor_id,
+              termin_pembayaran,
+              create_by
+          ]);
+
+          const pengadaan_id = result.rows[0].pengadaan_id;
+
+          await client.query(addItem, [
+              pengadaan_id,
+              nama_barang,
+              harga_barang,
+              jumlah_barang,
+              url_foto_item
+          ]);
+
+          await client.query('COMMIT');
+          res.redirect('/daftar-pengadaan-admin');
+      } catch (error) {
+          await client.query('ROLLBACK');
+          console.error('Error during transaction', error);
+          res.status(500).send('Something went wrong');
+      } finally {
+          client.release();
+      }
   } catch (error) {
-      console.error('Failed to add new pengadaan:', error);
-      res.status(500).send('Error adding new pengadaan');
+      console.error('Database connection error', error);
+      res.status(500).send('Something went wrong');
   }
 });
 

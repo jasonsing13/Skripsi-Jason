@@ -21,8 +21,6 @@ const option_Bank = `SELECT bank_id, nama_bank
 FROM public.bank;
 `;
 
-
-
 const addVendor = `
 INSERT INTO public.vendor( 
   vendor_id,
@@ -53,6 +51,8 @@ INSERT INTO public.vendor(
   $11 -- create_by
   now() -- create_date
 ) RETURNING vendor_id;`
+
+
 
 // const addAccount = `
 // INSERT INTO public.vendor
