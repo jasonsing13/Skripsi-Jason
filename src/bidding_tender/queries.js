@@ -6,6 +6,57 @@ INNER JOIN pengadaan ON bidding_tender.pengadaan_id = pengadaan.pengadaan_id
 INNER JOIN item ON bidding_tender.item_id = item.item_id
 INNER JOIN jenis_pengadaan ON bidding_tender.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id;
 `;
+
+const getBidding = `
+SELECT 
+bidding_tender.*, 
+pengadaan.nama_pengadaan, 
+item.nama_item, 
+item.harga_item, 
+item.jumlah_item, 
+jenis_pengadaan.nama_jenis_pengadaan
+FROM 
+bidding_tender
+INNER JOIN 
+pengadaan ON bidding_tender.pengadaan_id = pengadaan.pengadaan_id
+INNER JOIN 
+item ON bidding_tender.item_id = item.item_id
+INNER JOIN 
+jenis_pengadaan ON bidding_tender.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id
+INNER JOIN 
+tipe_pemilihan ON pengadaan.tipe_pemilihan_id = tipe_pemilihan.tipe_pemilihan_id
+WHERE 
+tipe_pemilihan.tipe_pemilihan_id = '4ff07c90-7efb-4a4a-8715-d53748a387d6';
+`
+;
+
+const getTender = `SELECT 
+bidding_tender.*, 
+pengadaan.nama_pengadaan, 
+item.nama_item, 
+item.harga_item, 
+item.jumlah_item, 
+jenis_pengadaan.nama_jenis_pengadaan
+FROM 
+bidding_tender
+INNER JOIN 
+pengadaan ON bidding_tender.pengadaan_id = pengadaan.pengadaan_id
+INNER JOIN 
+item ON bidding_tender.item_id = item.item_id
+INNER JOIN 
+jenis_pengadaan ON bidding_tender.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id
+INNER JOIN 
+tipe_pemilihan ON pengadaan.tipe_pemilihan_id = tipe_pemilihan.tipe_pemilihan_id
+WHERE 
+tipe_pemilihan.tipe_pemilihan_id = 'b8649cf1-3da3-4258-8e2d-459e10b1b95f';
+`
+;
+
+const getLinkZoom = `
+SELECT link_zoom 
+FROM bidding_tender 
+WHERE bt_id = $1`;
+
 const getBidding_TenderById = `select * from public.bidding_tender where bt_id = $1`;
 const addBidding_Tender = `INSERT INTO public.bidding_tender (bt_id, pengadaan_id, evaluasi_vendor, link_zoom)
 VALUES ($1, $2, $3, $4);`
@@ -15,6 +66,9 @@ const updateBidding_Tender = `update public.bidding_tender set username =$1 wher
 
 module.exports = {
     getBidding_Tender,
+    getBidding,
+    getTender,
+    getLinkZoom,
     getBidding_TenderById,
     addBidding_Tender,
     removeBidding_Tender,   

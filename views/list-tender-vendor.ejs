@@ -7,7 +7,7 @@
 </head>
 <body>
     <%- include('partials/sidebar.ejs') %>
-    <div class="container p-4">
+    <div class="container mt-4">
         <h2>Tender</h2>
         <p>Lihat semua Tender</p>
         <div class="tab">
@@ -27,14 +27,14 @@
                 </tr>
             </thead>
             <tbody>
-                <% bids.forEach(function(bid) { %>
+                <% bidding_tender.forEach(function(bidding_tender) { %>
                 <tr>
-                    <td><%= bid.bidNumber %></td>
-                    <td><%= bid.procurementName %></td>
-                    <td><%= bid.procurementType %></td>
-                    <td><%= bid.itemName %></td>
-                    <td><%= bid.recommendedPrice %></td>
-                    <td><%= bid.quantity %></td>
+                    <td><%= bidding_tender.bt_id %></td>
+                    <td><%= bidding_tender.nama_pengadaan %></td>
+                    <td><%= bidding_tender.nama_jenis_pengadaan %></td>
+                    <td><%= bidding_tender.nama_item %></td>
+                    <td><%= bidding_tender.harga_item %></td>
+                    <td><%= bidding_tender.jumlah_item %></td>
                     <td>
                         <form action="/form-tender-vendor.ejs" method="get">
                             <button type="submit" class="btn btn-primary">Ajukan</button>
@@ -44,6 +44,15 @@
                 <% }); %>
             </tbody>
         </table>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
     </div>
 </body>
 </html>

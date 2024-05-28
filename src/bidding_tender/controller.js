@@ -1,4 +1,4 @@
-const pool = require('../../database/db');
+const db = require('../../database/db');
 const queries = require('../bidding_tender/queries');
 
 async function getBidding_Tender() {
@@ -13,6 +13,89 @@ async function getBidding_Tender() {
         client.release();
     }
   }
+
+//   async function getBidding() {
+//     const client = await db.pool.connect();
+//     try {
+//         console.log('Executing query:', queries.getBidding); // Log query yang akan dijalankan
+//         const result = await client.query(queries.getBidding);
+//         console.log('Query result:', result.rows); // Log hasil query
+//         return result.rows;
+//     } catch (error) {
+//         console.error('Error executing query', error.stack); // Log error yang lebih detail
+//         throw error;
+//     } finally {
+//         client.release();
+//     }
+// }
+
+async function getBidding() {
+    const client = await db.pool.connect();
+    try {
+        console.log('Executing query:', queries.getBidding); // Log query yang akan dijalankan
+        const result = await client.query(queries.getBidding);
+        console.log('Query result:', result.rows); // Log hasil query
+
+        // Trim spasi berlebih dari hasil query
+        // const trimmedResult = result.rows.map(row => {
+        //     return {
+        //         ...row,
+        //         nama_pengadaan: row.nama_pengadaan.trim(),
+        //         nama_item: row.nama_item.trim(),
+        //         nama_jenis_pengadaan: row.nama_jenis_pengadaan.trim()
+        //     };
+        // });
+
+        // console.log('Trimmed result:', trimmedResult); // Log hasil yang sudah di-trim
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error); // Log error yang lebih detail
+        return null;
+    } finally {
+        client.release();
+    }
+}
+
+
+async function getTender() {
+    const client = await db.pool.connect();
+    try {
+        console.log('Executing query:', queries.getTender); // Log query yang akan dijalankan
+        const result = await client.query(queries.getTender);
+        console.log('Query result:', result.rows); // Log hasil query
+
+        // Trim spasi berlebih dari hasil query
+        // const trimmedResult = result.rows.map(row => {
+        //     return {
+        //         ...row,
+        //         nama_pengadaan: row.nama_pengadaan.trim(),
+        //         nama_item: row.nama_item.trim(),
+        //         nama_jenis_pengadaan: row.nama_jenis_pengadaan.trim()
+        //     };
+        // });
+
+        // console.log('Trimmed result:', trimmedResult); // Log hasil yang sudah di-trim
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error); // Log error yang lebih detail
+        return null;
+    } finally {
+        client.release();
+    }
+}
+
+async function getLinkZoom() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getBidding);
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing getBidding query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
 
 const getBidding_TenderById = (req,res)=>{
     const id = req.params.id;
@@ -71,6 +154,9 @@ const updateBidding_Tender = (req, res) => {
 
 module.exports = {
     getBidding_Tender,
+    getBidding,
+    getTender,
+    getLinkZoom,
     getBidding_TenderById,
     addBidding_Tender,
     removeBidding_Tender,

@@ -1,13 +1,121 @@
-const getVendor = `SELECT vendor.*, status.nama_status, jenis_pengadaan.nama_jenis_pengadaan, jenis_vendor.nama_jenis_vendor
-FROM vendor
-INNER JOIN status ON vendor.status_id = status.status_id
-INNER JOIN jenis_pengadaan ON vendor.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id
-INNER JOIN jenis_vendor ON vendor.jenis_vendor_id = jenis_vendor.jenis_vendor_id`;
+const getVendor = `SELECT 
+i.vendor_id,
+r.rekening_id,
+r.nama_pemilik_rekening,
+r.no_rekening,
+r.bank_id,
+s.nama_status, 
+jp.nama_jenis_pengadaan, 
+jv.nama_jenis_vendor, 
+kv.nama_kategori_vendor,
+v.nama_vendor,
+v.nama_direktur,
+v.status_kantor,
+v.username,
+v.password,
+v.email_perusahaan,
+v.alamat_perusahaan,
+v.url_ktp_direktur,
+v.url_ktp_penerima_kuasa,
+v.url_nibrba,
+v.url_akta_pendirian,
+v.url_akta_perubahan,
+v.url_dokumen_ijin_lain,
+v.url_dokumen_npwp,
+v.url_buku_akun_bank,
+v.create_date,
+v.create_by,
+v.modif_date,
+v.modif_by,
+v.negara,
+v.no_npwp,
+v.url_profil_perusahaan,
+v.jenis_vendor_id,
+v.no_nibrba,
+v.kk_id,
+v.rekening_id,
+v.provinsi_id,
+v.url_dokumen_ppkp,
+v.status_pkp,
+v.no_ktp_direktur,
+v.status_id,
+v.no_telp,
+v.kategori_vendor_id
+FROM 
+public.vendor i
+JOIN 
+public.status s ON i.status_id = s.status_id
+JOIN 
+public.jenis_pengadaan jp ON i.jenis_pengadaan_id = jp.jenis_pengadaan_id
+JOIN 
+public.jenis_vendor jv ON i.jenis_vendor_id = jv.jenis_vendor_id
+JOIN 
+public.kategori_vendor kv ON i.kategori_vendor_id = kv.kategori_vendor_id
+JOIN 
+public.vendor v ON i.vendor_id = v.vendor_id
+JOIN
+public.rekening r ON i.rekening_id = r.rekening_id
+`;
+
+const getProfilInformasi = `
+  SELECT  
+    vendor.vendor_id, 
+    vendor.nama_vendor, 
+    vendor.status_kantor,
+    vendor.nama_direktur,
+    vendor.no_telp,
+    vendor.email_perusahaan,
+    vendor.alamat_perusahaan,
+    vendor.negara,
+    p.nama_provinsi,
+    kk.nama_kk
+  FROM 
+    public.vendor 
+  JOIN
+    public.kabupaten_kota kk ON vendor.kk_id = kk.kk_id
+  JOIN
+    public.provinsi p ON kk.provinsi_id = p.provinsi_id
+  WHERE 
+    vendor.vendor_id = $1
+`;
+
+const getProfilAkunBank = `SELECT
+v.vendor_id,
+r.rekening_id,
+r.nama_pemilik_rekening,
+r.no_rekening,
+r.bank_id
+FROM 
+public.vendor v
+JOIN
+public.rekening r ON v.rekening_id = r.rekening_id
+WHERE 
+v.vendor_id = $1;
+`
+
+const getProfilPerpajakan = `SELECT
+no_npwp,
+status_pkp,
+nppkp
+FROM public.vendor
+WHERE vendor_id = $1;
+`
+
+const getProfilLegalitas = `SELECT
+no_nibrba,
+no_ktp_direktur
+FROM public.vendor
+WHERE vendor_id = $1;
+`
 
 const getVendorById = `select * from vendor where vendor_id = $1`;
 
 const option_Jenis_Vendor = `SELECT jenis_vendor_id, nama_jenis_vendor
 FROM public.jenis_vendor;
+`;
+
+const option_kategori_vendor = `SELECT kategori_vendor_id, nama_kategori_vendor
+FROM public.kategori_vendor;
 `;
 
 const option_Provinsi = `SELECT provinsi_id, nama_provinsi
@@ -20,6 +128,7 @@ FROM public.kabupaten_kota WHERE provinsi_id = $1`;
 const option_Bank = `SELECT bank_id, nama_bank
 FROM public.bank;
 `;
+
 
 const addVendor = `
 INSERT INTO public.vendor( 
@@ -98,32 +207,45 @@ const updateLegal_Vendor = `
 const updateVendorURL = 
 ` UPDATE public.vendor
   SET 
-  url_buku_akun_bank = 2,
-  url_dokumen_npwp = $3, 
-  url_dokumen_ppkp = $4, 
-  url_ktp_direktur = $5,
-  url_akta_perubahan = $6,
-  url_akta_pendirian = $7,
-  url_nibrba = $8,
-  url_dokumen_ijin_lain = $9,
-  url_profil_perusahaan = $10, 
-  WHERE vendor_id = $1;
+  url_buku_akun_bank = 1,
+  url_dokumen_npwp = $2, 
+  url_dokumen_ppkp = $3, 
+  url_ktp_direktur = $4,
+  url_akta_perubahan = $5,
+  url_akta_pendirian = $6,
+  url_nibrba = $7,
+  url_dokumen_ijin_lain = $8,
+  url_profil_perusahaan = $9, 
+  WHERE vendor_id = $10;
+`;
+
+const updateStatus_Vendor = `
+  UPDATE public.vendor
+  SET
+    status_id = $1
+  WHERE vendor_id = $2;
 `;
 
 module.exports = {
     getVendor,
+    getProfilInformasi,
+    getProfilAkunBank,
+    getProfilPerpajakan,
+    getProfilLegalitas,
     option_Jenis_Vendor,
     option_Provinsi,
     option_Kabupaten_Kota,
     option_Bank,
     getVendorById,
     addVendor,
+    option_kategori_vendor,
     // addAccount,
     removeVendor,
     addRekening_Vendor,
     updateRekening_Vendor,
     updateTax_Vendor,
     updateLegal_Vendor,
-    updateVendorURL
+    updateVendorURL,
+    updateStatus_Vendor
 };
 

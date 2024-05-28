@@ -14,6 +14,58 @@ async function getVendor() {
     }
   }
 
+  async function getProfilInformasi(vendor_id) {
+    const client = await db.pool.connect();
+    try {
+      const result = await client.query(queries.getProfilInformasi, [vendor_id]);
+      return result.rows[0]; // Asumsi Anda hanya mengambil satu baris data
+    } catch (error) {
+      console.error('Error executing query', error.stack);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async function getProfilAkunBank(vendor_id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getProfilAkunBank, [vendor_id]); // Adjust the SQL query based on your actual table and data structure
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
+
+  async function getProfilPerpajakan(vendor_id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getProfilPerpajakan, [vendor_id]); // Adjust the SQL query based on your actual table and data structure
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
+
+  async function getProfilLegalitas(vendor_id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getProfilLegalitas, [vendor_id]); // Adjust the SQL query based on your actual table and data structure
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
+
 const getVendorById = (req,res)=>{
     const id = req.params.id;
     db.pool.query(queries.getVendorById,[id], (error, results)=>{
@@ -94,6 +146,19 @@ async function option_Jenis_Vendor() {
     }
   }
 
+  
+async function option_kategori_vendor() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.option_kategori_vendor); // Adjust the SQL query based on your actual table and data structure
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
   
 async function option_Provinsi() {
     const client = await db.pool.connect();
@@ -216,28 +281,44 @@ const updateLegal_Vendor = (req, res) => {
 
 const updateVendorURL = (req, res) => {
     const id = req.params.id;
-    const { url_ktp_direktur, url_nibrba, url_akta_pendirian, url_akta_perubahan, url_dokumen_ijin_lain, url_dokumen_npwp, url_buku_akun_bank, url_profil_perusahaan } = req.body;
-    const queryParams = [url_ktp_direktur, url_nibrba, url_akta_pendirian, url_akta_perubahan, url_dokumen_ijin_lain, url_dokumen_npwp, url_buku_akun_bank, url_profil_perusahaan];
-
-    pool.query(queries.updateVendorURL, queryParams, (error, result) => {
+    const { url_ktp_direktur, url_nibrba, url_akta_pendirian, url_akta_perubahan, url_dokumen_ijin_lain, url_dokumen_npwp, url_buku_akun_bank, url_profil_perusahaan, vendor_id } = req.body;
+    const queryParams = [url_ktp_direktur, url_nibrba, url_akta_pendirian, url_akta_perubahan, url_dokumen_ijin_lain, url_dokumen_npwp, url_buku_akun_bank, url_profil_perusahaan, req.query.id];
+    console.log(req.body)
+    db.pool.query(queries.updateVendorURL, queryParams, (error, result) => {
         if (error) throw error;
-        res.status(200).send("Vendor director details updated successfully");
     });
 };
 
+const updateStatus_Vendor = (req, res) => {
+    const id = req.params.id;
+    const { status_id, vendor_id } = req.body;
+    const queryParams = [status_id, vendor_id];
+    console.log(req.body);
+    db.pool.query(queries.updateStatus_Vendor, queryParams, (error, result) => {
+      if (error) throw error;
+    });
+  };
+
+
+
 module.exports = {
     getVendor,
+    getProfilInformasi,
+    getProfilAkunBank,
+    getProfilPerpajakan,
+    getProfilLegalitas,
     option_Jenis_Vendor,
     option_Provinsi,
     option_Kabupaten_Kota,
     option_Bank,
     getVendorById,
     addVendor,
-    // addAccount,
+    option_kategori_vendor,
     removeVendor,
     addRekening_Vendor,
     updateTax_Vendor,
     updateLegal_Vendor,
-    updateVendorURL
+    updateVendorURL,
+    updateStatus_Vendor
 };
 

@@ -5,10 +5,75 @@ INNER JOIN jenis_pengadaan ON pengadaan.jenis_pengadaan_id = jenis_pengadaan.jen
 INNER JOIN jenis_vendor ON pengadaan.jenis_vendor_id = jenis_vendor.jenis_vendor_id;
 `;
 
-const option_Tipe_Pemilihan = `SELECT tipe_pemilihan_id, nama_tipe_pemilihan
+const getItem = `
+SELECT i.item_id, i.nama_item, i.quantity, i.harga_item, li.harga_total
+FROM public.item i
+JOIN public.mapping_item_list_item mili ON i.item_id = mili.item_id
+JOIN public.list_item li ON mili.list_item_id = li.list_item_id
+WHERE li.pengadaan_id = $1
+`;
+
+
+const addListItem = `
+    INSERT INTO public.list_item (
+        list_item_id,
+        pengadaan_id,
+        quantity,
+        harga_total
+    ) 
+    VALUES ($1, $2, $3, $4)
+    RETURNING list_item_id;
+`;
+
+const addMappingItemListItem = `
+    INSERT INTO public.mapping_item_list_item (
+        mapping_id,
+        list_item_id,
+        item_id
+    ) 
+    VALUES ($1, $2, $3);
+`;
+
+const getItemsByPengadaanId = `
+    SELECT i.*
+    FROM public.item i
+    INNER JOIN public.mapping_item_list_item m ON i.item_id = m.item_id
+    INNER JOIN public.list_item l ON m.list_item_id = l.list_item_id
+    WHERE l.pengadaan_id = $1;
+`;
+
+const option_PIC = `
+SELECT 
+user_id, 
+first_name, 
+last_name, 
+role_id from public.user;`;
+
+
+const update_PIC = `
+  UPDATE public.pengadaan
+  SET 
+    pic =$1
+  WHERE user_id = $2;
+`;
+
+const option_Vendor =`
+SELECT vendor_id, nama_vendor
+FROM public.vendor
+WHERE vendor_id =$1
+;
+`;
+
+const option_Tipe_Pemilihan1 = `SELECT tipe_pemilihan_id, nama_tipe_pemilihan
 FROM public.tipe_pemilihan
 WHERE nama_tipe_pemilihan IN ('penunjukkan_langsung', 'vendor_scoring');
 `;
+
+
+const option_Tipe_Pemilihan2 = `SELECT tipe_pemilihan_id, nama_tipe_pemilihan
+FROM public.tipe_pemilihan;
+`;
+
 
 const option_Jenis_Pengadaan = `Select jenis_pengadaan_id, nama_jenis_pengadaan from jenis_pengadaan;
 `;
@@ -21,6 +86,7 @@ const getPengadaanById = `select * from pengadaan where pengadaan_id = $1`;
 
 const addPengadaan = `
     INSERT INTO public.pengadaan (
+        pengadaan_id,
         nama_pengadaan, 
         tipe_pemilihan_id, 
         jenis_pengadaan_id, 
@@ -30,46 +96,54 @@ const addPengadaan = `
         create_date, 
         create_by
     ) 
-    VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $6)
+    VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $6)
     RETURNING pengadaan_id;
 `;
 
-const addItem= `
+const addItem = `
     INSERT INTO public.item (
-        pengadaan_id,
+        item_id,
         nama_item,
-        harga_item,
         jumlah_item,
-        url_foto_item
+        harga_item,
+        pengadaan_id,
     ) 
-    VALUES ($1, $2, $3, $4, $5);
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING item_id;
 `;
 
 
 const removePengadaan = ` delete from pengadaan where pengadaan_id = $1 `;
-const validasiPengadaan = ` UPDATE pengadaan
+
+const validasiPengadaan = ` 
+UPDATE public.pengadaan
 SET 
-url_ktp_direktur = $2,
-url_nibrba = $3,
-url_akta_pendirian = $4,
-url_akta_perubahan = $5,
-url_dokumen_ijin_lain = $6,
-url_dokumen_npwp = $7, 
-url_buku_akun_bank = $8, 
-url_profil_perusahaan = $9, 
-WHERE vendor_id = $1;
-`
+tanggal_pemilihan = $1, 
+tanggal_pemilihan_selesai = $3, 
+pic = $4, 
+jenis_pengadaan_id = $5, 
+vendor_id = $6
+WHERE pengadaan_id = $7;
+;`
 ;
 
 
 module.exports = {
     getPengadaan,
+    option_PIC,
+    update_PIC,
+    option_Vendor,
     getPengadaanById,
-    option_Tipe_Pemilihan,
+    option_Tipe_Pemilihan1,
+    option_Tipe_Pemilihan2,
     option_Jenis_Pengadaan,
     option_Jenis_Vendor,
     addPengadaan,
     addItem,
+    addListItem,
+    addMappingItemListItem,
+    getItemsByPengadaanId,
+    getItem,
     removePengadaan,
     validasiPengadaan,
 };

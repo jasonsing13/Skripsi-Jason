@@ -37,14 +37,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% items.forEach(function(item) { %>
+                        <% item.forEach(function(item) { %>
                         <tr>
-                            <td><%= item.itemNumber %></td>
-                            <td><%= item.itemName %></td>
+                            <td><%= item.item_id %></td>
+                            <td><%= item.nama_item %></td>
                             <td><%= item.quantity %></td>
-                            <td><%= item.price %></td>
-                            <td><%= item.discount %></td>
-                            <td><%= item.netAmount %></td>
+                            <td><%= item.harga_item %></td>
                         </tr>
                         <% }); %>
                     </tbody>

@@ -8,30 +8,33 @@
 </head>
 <body>
     <%- include('partials/sidebar.ejs') %>
-    <div class="container">
+    <div class="container mt-4">
         <h1>List Vendor</h1>
         <p>List Vendor Aktif</p>
-        <table>
+        <table class="table">
             <thead>
                 <tr>
                     <th>Kode Vendor</th>
-                    <th>Kategori Vendor</th>
                     <th>Nama Vendor</th>
+                    <th>Kategori Vendor</th>
                     <th>Jenis Vendor</th>
                     <th>Status</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                <% vendors.forEach(function(vendor) { %>
+                <% vendor.forEach(function(vendor) { %>
                     <tr>
-                        <td><%= vendor.kode %></td>
-                        <td><%= vendor.kategori %></td>
-                        <td><%= vendor.nama %></td>
-                        <td><%= vendor.jenis %></td>
-                        <td><%= vendor.status %></td>
+                        <td><%= vendor.vendor_id %></td>
+                        <td><%= vendor.nama_vendor %></td>
+                        <td><%= vendor.nama_kategori_vendor %></td>
+                        <td><%= vendor.nama_jenis_vendor %></td>
+                        <td><%= vendor.status_vendor %></td>
                         <td>
-                            <button onclick="location.href='/vendor-detail/' + <%= vendor.id %>">Detail</button>
+                            <form action="/approval-vendor-admin" method="get">
+                                <input type="hidden" name="vendor_id" value="<%= vendor.vendor_id %>">
+                                <button type="submit" class="btn btn-primary">Detail</button>
+                            </form>
                         </td>
                     </tr>
                 <% }); %>

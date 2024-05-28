@@ -1,6 +1,6 @@
 const db = require('../../database/db');
 const queries = require('../pengadaan/queries');
-
+const { v4: uuidv4 } = require('uuid');
 
     async function getPengadaan() {
     const client = await db.pool.connect();
@@ -15,10 +15,76 @@ const queries = require('../pengadaan/queries');
     }
   }
 
-  async function option_Tipe_Pemilihan() {
+    const getItem = async (req, res) => {
+    const pengadaan_id = req.params.pengadaan_id;
+
+    try {
+        const client = await db.pool.connect();
+        const result = await client.query(queries.getItem, [pengadaan_id]);
+        client.release();
+        
+        res.render('item-pengadaan', { item: result.rows });
+    } catch (error) {
+        console.error('Error executing query:', error.stack);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+    async function option_PIC() {
+  const client = await db.pool.connect();
+  try {
+      const result = await client.query(queries.option_PIC); // Adjust the SQL query based on your actual table and data structure
+      return result.rows;
+  } catch (error) {
+      console.error('Error executing query', error.stack);
+      throw error;
+  } finally {
+      client.release();
+  }
+}
+
+const update_PIC = (req, res) => {
+    const id = req.params.id;
+    const { pic, user_id} = req.body;
+    const queryParams = [pic, user_id];
+    console.log(req.body);
+    db.pool.query(queries.update_PIC, queryParams, (error, result) => {
+        if (error) throw error;
+    });
+};
+
+async function option_Vendor(vendor_id) {
+    const client = await db.pool.connect();
+    console.log(client);
+    try {
+        const result = await client.query(queries.option_Vendor, [vendor_id]); // Adjust the SQL query based on your actual table and data structure
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
+
+
+  async function option_Tipe_Pemilihan1() {
     const client = await db.pool.connect();
     try {
-        const result = await client.query(queries.option_Tipe_Pemilihan); // Adjust the SQL query based on your actual table and data structure
+        const result = await client.query(queries.option_Tipe_Pemilihan1); // Adjust the SQL query based on your actual table and data structure
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
+
+  async function option_Tipe_Pemilihan2() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.option_Tipe_Pemilihan2); // Adjust the SQL query based on your actual table and data structure
         return result.rows;
     } catch (error) {
         console.error('Error executing query', error.stack);
@@ -71,66 +137,82 @@ const getPengadaanById = (req,res)=>{
 //         termin_pembayaran,
 //         tanggal_pemilihan, 
 //         create_date,
-//         create_by,
-//         modif_date,
-//         modif_by
+//         create_by
 //     } = req.body;
-//     const {id} = req.session;
 //     console.log(req.body)
-//     pool.query(
-//         queries.addPengadaan_Insert_Jenis_Vendor,
-//         [nama_jenis_vendor,], (error, results) => {
-//             if (error) throw error;
-//             res.status(201).send("Pengadaan created success")
-//         }
-//     );
-//     pool.query(
-//         queries.addPengadaan_Insert_Jenis_Pengadaan,
-//         [nama_jenis_pengadaan,], (error, results) => {
-//             if (error) throw error;
-//             res.status(201).send("Pengadaan created success")
-//         }
-//     );
-//     pool.query(
-//         queries.addPengadaan_Insert_Item,
-//         [nama_item, harga_item, jumlah_item], (error, results) => {
-//             if (error) throw error;
-//             res.status(201).send("Pengadaan created success")
+//     db.pool.query(
+//         queries.addPengadaan,
+//         [
+//             req.body.nama_pengadaan,
+//             req.body.tipe_pemilihan_id,
+//             req.body.jenis_pengadaan_id,
+//             req.body.jenis_vendor_id,
+//             req.body.termin_pembayaran,
+//             req.body.create_by,
+//         ], (error, results) => {
+//             console.log(results)
+//             if (error) console.log(error);
+//             else return results.rows[0].pengadaan_id;        
 //         }
 //     );
 // };
 
-
-const addPengadaan = (req,res)=>{ 
+const addPengadaan = async (req, res) => {
     const {
         nama_pengadaan,
-        tipe_pemilihan_id, 
-        jenis_pengadaan_id, 
-        jenis_vendor_id, 
+        tipe_pemilihan_id,
+        jenis_pengadaan_id,
+        jenis_vendor_id,
         termin_pembayaran,
-        tanggal_pemilihan, 
         create_date,
         create_by
     } = req.body;
-    console.log(req.body)
-    db.pool.query(
-        queries.addPengadaan,
-        [
-            req.body.nama_pengadaan,
-            req.body.tipe_pemilihan_id,
-            req.body.jenis_pengadaan_id,
-            req.body.jenis_vendor_id,
-            req.body.termin_pembayaran,
-            req.body.create_by,
-        ], (error, results) => {
-            console.log(results)
-            if (error) console.log(error);
-            else return results.rows[0].pengadaan_id;        
-        }
-    );
+
+    const pengadaan_id = uuidv4(); // Generate a new UUID
+
+    try {
+        const client = await db.pool.connect();
+        await client.query(queries.addPengadaan, [
+            pengadaan_id,
+            nama_pengadaan,
+            tipe_pemilihan_id,
+            jenis_pengadaan_id,
+            jenis_vendor_id,
+            termin_pembayaran,
+            create_date,
+            create_by,
+        ]);
+        client.release();
+        return pengadaan_id;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    }
 };
 
+const addItem = async (pengadaan_id, item) => {
+    const {
+        nama_item,
+        harga_item,
+        jumlah_item,
+    } = item;
 
+    const item_id = uuidv4(); // Generate a new UUID for the item
+
+    try {
+        const client = await db.pool.connect();
+        await client.query(queries.addItem, [
+            item_id,
+            nama_item,
+            harga_item,
+            jumlah_item,
+            pengadaan_id        ]);
+        client.release();
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    }
+};
 
 const removePengadaan = (req,res)=>{
     const id = req.params.id;
@@ -158,21 +240,27 @@ const removePengadaan = (req,res)=>{
 
 const validasiPengadaan = (req, res) => {
     const id = req.params.id;
-    const { username } = req.body;
-
-    pool.query(queries.updateUser, [username, id], (error, result) => {
+    const { tipe_pemilihan_id, tanggal_pemilihan, tanggal_pemilihan_selesai, pic, vendor_id } = req.body;
+    const queryParams = [tipe_pemilihan_id, tanggal_pemilihan, tanggal_pemilihan_selesai, pic, vendor_id, id];
+    console.log(queryParams);
+    db.pool.query(queries.validasiPengadaan, queryParams, (error, result) => {
         if (error) throw error;
-        res.status(200).send("Pembaruan pengadaan berhasil");
     });
 };
 
 module.exports = {
     getPengadaan,
-    option_Tipe_Pemilihan,
+    option_PIC,
+    update_PIC,
+    option_Vendor,
+    option_Tipe_Pemilihan1,
+    option_Tipe_Pemilihan2,
     option_Jenis_Pengadaan,
     option_Jenis_Vendor,
     getPengadaanById,
     addPengadaan,
+    getItem,
+    addItem,
     removePengadaan,
     validasiPengadaan,
 };

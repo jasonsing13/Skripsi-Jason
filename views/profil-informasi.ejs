@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <%- include('partials/head.ejs') %>
-    <%- include('partials/style.ejs') %>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vendor Profile</title>
+    <title>Profil Informasi</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <%- include('partials/style.ejs') %> 
     <style>
         body {
             padding: 20px;
@@ -29,23 +29,27 @@
 </head>
 <body>
     <%- include('partials/sidebar.ejs') %>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3">
-                <!-- Sidebar -->
-                <div class="d-flex flex-column align-items-start">
-                    <h4>Profil Vendor</h4>
-                    <a href="/profil-informasi">Profil</a>
-                    <a href="/profil-akun-bank">Akun Bank</a>
-                    <a href="/profil-perpajakan">Perpajakan</a>
-                    <a href="/profil-legalitas">Legalitas</a>
-                </div>
-            </div>
-            <div class="col-md-9">
+    <div class="container mt-4">
+        <h1>Vendor Profile</h1>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" href="/profil-informasi?id=<%= vendor_id %>">Informasi Vendor</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/profil-bank?id=<%= vendor_id %>">Akun Bank</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/profil-perpajakan?id=<%= vendor_id %>">Perpajakan</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/profil-legalitas?id=<%= vendor_id %>">Legalitas</a>
+            </li>
+          </ul>
+          <div class="col-md-9">
                 <!-- Main Content -->
                 <div class="alert">
-                    <a href="/upload-dokumen-vendor" class="btn btn-primary">Lengkapi Dokumen Vendor</a>                  
-                        <p>Segera lengkapi dokumen vendor untuk bisa bergabung dalam pengadaan MPM</p>
+                    <a href="/upload-dokumen-vendor?id=<%= vendor_id %>" class="btn btn-primary">Lengkapi Dokumen Vendor</a>                  
+                    <p>Segera lengkapi dokumen vendor untuk bisa bergabung dalam pengadaan MPM</p>
                 </div>
                 <h3>PT. Setia Berkah Abadi</h3>
                 <p>Status Verifikasi: <span class="badge bg-success">Data Belum Lengkap</span></p>
@@ -60,12 +64,12 @@
                     </div>
                     <div class="col-md-6">
                         <h4>Email Perusahaan</h4>
-                        <p><%= vendor.email_perusahaan %></p>
+                        <p>Email Perusahaan: <%= vendor.email_perusahaan %></p>
                         <h4>Alamat Perusahaan</h4>
-                        <p><%= vendor.alamat_perusahaan %></p>
+                        <p>Alamat Perusahaan: <%= vendor.alamat_perusahaan %></p>
                         <p>Negara: <%= vendor.negara %></p>
-                        <p>Provinsi: <%= vendor.provinsi %></p>
-                        <p>Kabupaten/Kota: <%= vendor.kabupaten_kota %></p>
+                        <p>Provinsi: <%= vendor.nama_provinsi %></p>
+                        <p>Kabupaten/Kota: <%= vendor.nama_kk %></p>
                     </div>
                 </div>
                 <button class="btn btn-primary">Update</button>

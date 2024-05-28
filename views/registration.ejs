@@ -49,13 +49,22 @@
                         <% }); %>
                     </select>
                 </div>
+                <div class="col-md-6 mb-3">
+                    <label for="kategori_vendor" class="form-label">Kategori Vendor</label>
+                    <select class="form-select" id="kategori_vendor" name="kategori_vendor" required>
+                        <option selected>Choose...</option>
+                        <% option_kategori_vendor.forEach(option => { %>
+                            <option value="<%= option.kategori_vendor_id %>"><%= option.nama_kategori_vendor %></option>
+                        <% }); %>
+                    </select>
+                </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="status_kantor" class="form-label">Status Kantor</label>
                         <select class="form-select" id="status_kantor" name="status_kantor">
                             <option selected>Pilih Status Kantor</option>
-                            <option value="1">Pusat</option>
-                            <option value="2">Cabang</option>
+                            <option value="Pusat">Pusat</option>
+                            <option value="Cabang">Cabang</option>
                         </select>
                     </div>
                     <div class="col-md-6 mb-3">
