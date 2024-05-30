@@ -6,13 +6,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profil Legalitas</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <%- include('partials/style.ejs') %> 
+  <%- include('partials/style.ejs') %>
   <style>
-    body { padding: 20px; }
-    .header { margin-bottom: 30px; text-align: center; }
-    .container { background-color: #f8f9fa; border-radius: 8px; padding: 20px; }
-    .alert { color: #856404; background-color: #fff3cd; border-color: #ffeeba; }
-  </style>
+    body {
+        padding: 20px;
+    }
+    .header {
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    .container {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+    }
+    .alert {
+        color: #856404;
+        background-color: #fff3cd;
+        border-color: #ffeeba;
+    }
+</style>
 </head>
 <body>
   <%- include('partials/sidebar.ejs') %>
@@ -35,13 +48,14 @@
     <div class="col-md-9">
                 <!-- Main Content -->
                 <div class="alert">
-                    <a href="/upload-dokumen-vendor?id=<%= vendor_id %>" class="btn btn-primary">Lengkapi Dokumen Vendor</a>                  
-                    <p>Segera lengkapi dokumen vendor untuk bisa bergabung dalam pengadaan MPM</p>
-                </div>
-      <h3>PT. Setia Berkah Abadi</h3>
-      <p>Status Verifikasi: <span class="badge bg-success">Data Belum Lengkap</span></p>
-      <div class="row">
-        <div>
+                  <a href="/upload-dokumen-vendor?id=<%= vendor_id %>" class="btn btn-primary">Lengkapi Dokumen Vendor</a>                  
+                  <p>Segera lengkapi dokumen vendor untuk bisa bergabung dalam pengadaan MPM</p>
+              </div>
+              <h3><%= vendor.nama_vendor %></h3>
+              <p>Status Verifikasi: <span class="badge bg-warning">Data Belum Lengkap</span></p>
+              <div class="row">
+        <div class="col-md-6">
+          <h4>Informasi Legalitas</h4>
           <p>Nomor NIB RBA: <%= vendor.no_nibrba %></p>
           <p>Nomor KTP Direktur/Pemilik: <%= vendor.no_ktp_direktur %></p>
         </div>

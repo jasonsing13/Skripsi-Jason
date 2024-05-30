@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <%- include('partials/head.ejs') %>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Approved Legalitas</title>
+    <title>Approved Vendor Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <%- include('partials/style.ejs') %> 
     <style>
         body {
             padding: 20px;
         }
-        .header, .container {
+        .header {
             margin-bottom: 30px;
             text-align: center;
+        }
+        .container {
             background-color: #f8f9fa;
             border-radius: 8px;
             padding: 20px;
@@ -30,25 +33,23 @@
         <h1>Vendor Profile</h1>
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link" href="/approved-vendor-profile">Informasi Vendor</a>
+                <a class="nav-link" href="/approved-vendor-profile?id=<%= vendor_id %>">Informasi Vendor</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/approved-akun-bank">Akun Bank</a>
+                <a class="nav-link" href="/approved-akun-bank?id=<%= vendor_id %>">Akun Bank</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/approved-perpajakan">Perpajakan</a>
+                <a class="nav-link" href="/approved-perpajakan?id=<%= vendor_id %>">Perpajakan</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="/approved-legalitas">Legalitas</a>
+                <a class="nav-link active" href="/approved-legalitas?id=<%= vendor_id %>">Legalitas</a>
             </li>
         </ul>
-        <div class="header">
-            <h4>Legalitas</h4>
-        </div>
+        <h3><%= vendor.nama_vendor %></h3>
+        <p>Status Verifikasi: <span class="badge bg-success">Data Sudah Lengkap</span></p>
         <div>
-            <p>Nomor NIB RBA: <%= legal.nibNumber %></p>
-            <p>Nomor KTP Direktur/Pemilik: <%= legal.ownerIdNumber %></p>
-            <p>Nomor KTP Penerima Kuasa: <%= legal.authorizedIdNumber %></p>
+            <p>Nomor NIB RBA: <%= vendor.no_nibrba %></p>
+            <p>Nomor KTP Direktur/Pemilik: <%= vendor.no_ktp_direktur %></p>
         </div>
         <button class="btn btn-primary">Update</button>
     </div>

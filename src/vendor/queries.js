@@ -80,20 +80,23 @@ const getProfilInformasi = `
 `;
 
 const getProfilAkunBank = `SELECT
+v.nama_vendor,
 v.vendor_id,
-r.rekening_id,
-r.nama_pemilik_rekening,
 r.no_rekening,
-r.bank_id
+r.nama_pemilik_rekening,
+b.nama_bank
 FROM 
 public.vendor v
 JOIN
 public.rekening r ON v.rekening_id = r.rekening_id
+JOIN
+public.bank b ON r.bank_id = b.bank_id
 WHERE 
 v.vendor_id = $1;
 `
 
 const getProfilPerpajakan = `SELECT
+nama_vendor,
 no_npwp,
 status_pkp,
 nppkp
@@ -102,6 +105,65 @@ WHERE vendor_id = $1;
 `
 
 const getProfilLegalitas = `SELECT
+nama_vendor,
+no_nibrba,
+no_ktp_direktur
+FROM public.vendor
+WHERE vendor_id = $1;
+`
+
+const getApprovedVendorProfile =`
+SELECT  
+vendor.nama_vendor, 
+vendor.vendor_id,
+vendor.status_kantor,
+vendor.nama_direktur,
+vendor.no_telp,
+vendor.email_perusahaan,
+vendor.alamat_perusahaan,
+vendor.negara,
+p.nama_provinsi,
+kk.nama_kk
+FROM 
+public.vendor 
+JOIN
+public.kabupaten_kota kk ON vendor.kk_id = kk.kk_id
+JOIN
+public.provinsi p ON kk.provinsi_id = p.provinsi_id
+WHERE 
+vendor.vendor_id = $1
+`
+
+const getApprovedAkunBank =`
+SELECT
+v.nama_vendor,
+v.vendor_id,
+r.rekening_id,
+r.nama_pemilik_rekening,
+r.no_rekening,
+b.nama_bank
+FROM 
+public.vendor v
+JOIN
+public.rekening r ON v.rekening_id = r.rekening_id
+JOIN
+public.bank b ON r.bank_id = b.bank_id
+WHERE 
+v.vendor_id = $1;
+`
+const getApprovedAkunPerpajakan = `
+SELECT
+nama_vendor,
+no_npwp,
+status_pkp,
+nppkp
+FROM public.vendor
+WHERE vendor_id = $1;
+`
+
+const getApprovedLegalitas = `
+SELECT
+nama_vendor,
 no_nibrba,
 no_ktp_direktur
 FROM public.vendor
@@ -157,7 +219,7 @@ INSERT INTO public.vendor(
   $8,  -- negara
   $9, -- provinsi_id
   $10, -- kk_id
-  $11 -- create_by
+  $11, -- create_by
   now() -- create_date
 ) RETURNING vendor_id;`
 
@@ -195,7 +257,6 @@ const updateTax_Vendor = `
   WHERE vendor_id = $3;
 `;
 
-
 const updateLegal_Vendor = `
   UPDATE public.vendor
   SET
@@ -204,18 +265,18 @@ const updateLegal_Vendor = `
   WHERE vendor_id = $3;
 `;
 
-const updateVendorURL = 
-` UPDATE public.vendor
+const updateVendorURL = ` 
+  UPDATE public.vendor
   SET 
-  url_buku_akun_bank = 1,
-  url_dokumen_npwp = $2, 
-  url_dokumen_ppkp = $3, 
-  url_ktp_direktur = $4,
-  url_akta_perubahan = $5,
-  url_akta_pendirian = $6,
-  url_nibrba = $7,
-  url_dokumen_ijin_lain = $8,
-  url_profil_perusahaan = $9, 
+    url_buku_akun_bank = $1,
+    url_dokumen_npwp = $2, 
+    url_dokumen_ppkp = $3, 
+    url_ktp_direktur = $4,
+    url_akta_perubahan = $5,
+    url_akta_pendirian = $6,
+    url_nibrba = $7,
+    url_dokumen_ijin_lain = $8,
+    url_profil_perusahaan = $9 
   WHERE vendor_id = $10;
 `;
 
@@ -232,6 +293,10 @@ module.exports = {
     getProfilAkunBank,
     getProfilPerpajakan,
     getProfilLegalitas,
+    getApprovedVendorProfile,
+    getApprovedAkunBank,
+    getApprovedAkunPerpajakan,
+    getApprovedLegalitas,
     option_Jenis_Vendor,
     option_Provinsi,
     option_Kabupaten_Kota,
@@ -239,7 +304,6 @@ module.exports = {
     getVendorById,
     addVendor,
     option_kategori_vendor,
-    // addAccount,
     removeVendor,
     addRekening_Vendor,
     updateRekening_Vendor,

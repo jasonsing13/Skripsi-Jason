@@ -35,18 +35,6 @@ async function getBidding() {
         console.log('Executing query:', queries.getBidding); // Log query yang akan dijalankan
         const result = await client.query(queries.getBidding);
         console.log('Query result:', result.rows); // Log hasil query
-
-        // Trim spasi berlebih dari hasil query
-        // const trimmedResult = result.rows.map(row => {
-        //     return {
-        //         ...row,
-        //         nama_pengadaan: row.nama_pengadaan.trim(),
-        //         nama_item: row.nama_item.trim(),
-        //         nama_jenis_pengadaan: row.nama_jenis_pengadaan.trim()
-        //     };
-        // });
-
-        // console.log('Trimmed result:', trimmedResult); // Log hasil yang sudah di-trim
         return result.rows;
     } catch (error) {
         console.error('Error executing query', error); // Log error yang lebih detail

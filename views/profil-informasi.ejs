@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil Informasi</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <%- include('partials/style.ejs') %> 
+    <%- include('partials/style.ejs') %>
     <style>
         body {
             padding: 20px;
@@ -51,8 +51,8 @@
                     <a href="/upload-dokumen-vendor?id=<%= vendor_id %>" class="btn btn-primary">Lengkapi Dokumen Vendor</a>                  
                     <p>Segera lengkapi dokumen vendor untuk bisa bergabung dalam pengadaan MPM</p>
                 </div>
-                <h3>PT. Setia Berkah Abadi</h3>
-                <p>Status Verifikasi: <span class="badge bg-success">Data Belum Lengkap</span></p>
+                <h3><%= vendor.nama_vendor %></h3>
+                <p>Status Verifikasi: <span class="badge bg-warning">Data Belum Lengkap</span></p>
                 <div class="row">
                     <div class="col-md-6">
                         <h4>Informasi Vendor</h4>

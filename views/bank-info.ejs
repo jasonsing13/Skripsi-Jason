@@ -27,34 +27,29 @@
         <div class="progress">
             <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Akun Bank</div>
         </div>
-
-        <form action="/bank-info" method="POST">
-            <div class="form-section">
-                <h3>Akun Bank</h3>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="no_rek">Nomor Rekening</label>
-                        <input type="text" class="form-control" id="no_rekening" name="no_rekening" required>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="nama_pemilik_rekening">Nama Pemilik Rekening</label>
-                        <input type="text" class="form-control" id="nama_pemilik_rekening" name="nama_pemilik_rekening" required>
-                    </div>
+    <form action="/bank-info" method="POST">
+        <div class="form-section">
+            <h3>Akun Bank</h3>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="no_rek">Nomor Rekening</label>
+                    <input type="text" class="form-control" id="no_rekening" name="no_rekening" required>
                 </div>
-                    <div class="col-md-12 mb-3">
-                        <label for="nama_bank" class="form-label">Nama Bank</label>
-                        <select class="form-select" id="nama_bank" name="nama_bank" aria-readonly="true">
-                            <option selected>Choose...</option>
-                            <% option_Bank.forEach(option => { %>
-                                <option value="<%= option.bank_id %>"><%= option.nama_bank %></option>
-                            <% }); %>
-                        </select>
-                    </div>
-                        <label for="vendor_id" class="col-sm-2 col-form-label">Vendor Id</label>
-                        <div class="col-sm-10">
-                          <input type="text" readonly class="form-control-plaintext" id="vendor_id" value="<%= vendor_id %>">
-                      </div>
+                <div class="col-md-6 mb-3">
+                    <label for="nama_pemilik_rekening">Nama Pemilik Rekening</label>
+                    <input type="text" class="form-control" id="nama_pemilik_rekening" name="nama_pemilik_rekening" required>
                 </div>
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="nama_bank" class="form-label">Nama Bank</label>
+                <select class="form-select" id="nama_bank" name="nama_bank" aria-readonly="true">
+                    <option selected>Choose...</option>
+                    <% option_Bank.forEach(option => { %>
+                        <option value="<%= option.bank_id %>"><%= option.nama_bank %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <input type="hidden" name="vendor_id" value="<%= vendor_id %>">
             <button type="button" class="btn btn-secondary" onclick="window.history.back();">Sebelumnya</button>
             <button type="submit" class="btn btn-primary">Selanjutnya</button>
         </form>

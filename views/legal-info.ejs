@@ -1,3 +1,4 @@
+<!-- legal-info.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +19,7 @@
             margin-bottom: 20px;
         }
         .progress-bar {
-            width: 100%; /* Full width as it's the final step */
+            width: 100%;
         }
     </style>
 </head>
@@ -45,7 +46,7 @@
                     <input type="text" class="form-control" id="no_ktp_direktur" name="no_ktp_direktur" required>
                 </div>
             </div>
-
+            <input type="hidden" name="vendor_id" value="<%= vendor_id %>">
             <button type="button" class="btn btn-secondary" onclick="window.history.back();">Sebelumnya</button>
             <button type="submit" class="btn btn-primary">Simpan</button>
         </form>

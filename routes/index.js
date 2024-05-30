@@ -27,6 +27,7 @@ const { option_Tipe_Pemilihan2 } = require('../src/pengadaan/queries');
 const { option_Jenis_Vendor } = require('../src/jenis_vendor/queries');
 const { option_Vendor } = require('../src/vendor/queries');
 const { option_Jenis_Pengadaan } = require('../src/jenis_pengadaan/queries');
+const { option_Select_Status} = require('../src/pengadaan/queries');
 
 /* GET home page. */
 router.get('/login', function(req, res) {
@@ -93,29 +94,38 @@ const idMiddleware = (req, res, next) => {
 };
 
 
+// router.post('/registration', async function(req, res) {
+//   const { 
+//       // nama_vendor,
+//       // jenis_vendor_id,
+//       // email_perusahaan,
+//       // status_kantor,
+//       // alamat_perusahaan,
+//       // nama_direktur,
+//       // no_telp,
+//       // negara,
+//       // provinsi_id,
+//       // kk_id,
+//       // create_by
+//   } = req.body;
+//   console.log(req.body);
+//   try {
+//       // Panggil fungsi addVendor dengan parameter yang benar
+//       const vendor_id = await vendorController.addVendor(req, res);
+//       // Redirect to the next page if the save is successful
+//       res.redirect(`/bank-info?id=${vendor_id}`);
+//   } catch (error) {
+//       // Log the error and send a 500 response if an error occurs
+//       console.error('Error saving vendor information:', error);
+//       res.status(500).send('An error occurred during registration: ' + error.message);
+//   }
+// });
 
 router.post('/registration', async function(req, res) {
-  const { 
-      // nama_vendor,
-      // jenis_vendor_id,
-      // email_perusahaan,
-      // status_kantor,
-      // alamat_perusahaan,
-      // nama_direktur,
-      // no_telp,
-      // negara,
-      // provinsi_id,
-      // kk_id,
-      // create_by
-  } = req.body;
-  console.log(req.body);
   try {
-      // Panggil fungsi addVendor dengan parameter yang benar
       const vendor_id = await vendorController.addVendor(req, res);
-      // Redirect to the next page if the save is successful
       res.redirect(`/bank-info?id=${vendor_id}`);
   } catch (error) {
-      // Log the error and send a 500 response if an error occurs
       console.error('Error saving vendor information:', error);
       res.status(500).send('An error occurred during registration: ' + error.message);
   }
@@ -134,76 +144,98 @@ router.get('/bank-info', idMiddleware, async function(req, res) {
 });
 
 /* POST bank-info page. */
+// router.post('/bank-info', async function(req, res) {
+//   const { no_rekening, nama_pemilik_rekening, bank_id, vendor_id} = req.body;
+//   console.log(req.body);
+//   try {
+//     await vendorController.addRekening_Vendor(req, res);
+//     // Redirect to the next page if the save is successful
+//     res.redirect(`/tax-info?id=${vendor_id}`);
+//   } catch (error) {
+//     // Log the error and send a 500 response if an error occurs
+//     console.error('Error saving vendor information:', error);
+//     res.status(500).send('An error occurred during registration: ' + error.message);
+//   }
+// });
+
+/* POST bank-info page. */
 router.post('/bank-info', async function(req, res) {
-  const { no_rekening, nama_pemilik_rekening, bank_id, vendor_id} = req.body;
-  console.log(req.body);
   try {
-    await vendorController.addRekening_Vendor(req, res);
-    // Redirect to the next page if the save is successful
-    res.redirect(`/tax-info?id=${vendor_id}`);
+      await vendorController.addRekening_Vendor(req, res);
+      res.redirect(`/tax-info?id=${req.body.vendor_id}`);
   } catch (error) {
-    // Log the error and send a 500 response if an error occurs
-    console.error('Error saving vendor information:', error);
-    res.status(500).send('An error occurred during registration: ' + error.message);
+      console.error('Error saving bank information:', error);
+      res.status(500).send('An error occurred during registration: ' + error.message);
   }
 });
 
 /* GET tax-info page. */
-router.get('/tax-info',  function(req, res) {
-  res.render('tax-info');
+router.get('/tax-info', function(req, res) {
+  const vendor_id = req.query.id;
+  res.render('tax-info', {
+    vendor_id
+  });
 });
 
-
 /* POST tax-info page. */
-router.post('/tax-info', idMiddleware, async function(req, res) {
+router.post('/tax-info', async function(req, res) {
   const { no_npwp, status_pkp, vendor_id } = req.body;
   console.log(req.body);
   try {
-    // Await the Promise returned by saveVendorInformation
     await vendorController.updateTax_Vendor(req, res);
-    // Redirect to the next page if the save is successful
     res.redirect(`/legal-info?id=${vendor_id}`);
   } catch (error) {
-    // Log the error and send a 500 response if an error occurs
     console.error('Error saving vendor information:', error);
     res.status(500).send('An error occurred during registration: ' + error.message);
   }
 });
 
 /* GET legal-info page. */
-router.get('/legal-info', idMiddleware, function(req, res) {
-  res.render('legal-info');
+router.get('/legal-info', function(req, res) {
+  const vendor_id = req.query.id;
+  res.render('legal-info', {
+    vendor_id
+  });
 });
 
 /* POST legal-info page. */
-router.post('/legal-info', idMiddleware, async function(req, res) {  
+router.post('/legal-info', async function(req, res) {  
   const { no_nibrba, no_ktp_direktur, vendor_id } = req.body;
   console.log(req.body);
   try {
-    // Await the Promise returned by saveVendorInformation
     await vendorController.updateLegal_Vendor(req, res);
-    // Redirect to the next page if the save is successful
-       // Store ID in session
-       req.session = req.session || {};
-       req.session.id = vendor_id;
-    res.redirect(`/profil-informasi?id=${vendor_id}`);
+    res.redirect(`/profilVendor/${vendor_id}`);
   } catch(error) {
-      console.error('Error saving final vendor information:', error);
-      res.status(500).send('An error occurred during registration.' + error.message);
+    console.error('Error saving final vendor information:', error);
+    res.status(500).send('An error occurred during registration.' + error.message);
   }
 });
 
 
-router.get('/profil-informasi', async (req, res) => {
+// router.get('/profilVendor/:id', async (req, res) => {
+//   try {
+//     const vendor_id = req.params.id; // Ambil vendor_id dari query parameter
+//     console.log(vendor_id)
+//     const result = await vendorController.getProfilInformasi(vendor_id);
+//     console.log(result)
+//     res.render('profil-informasi', { vendor: result, vendor_id });
+//   } catch (error) {
+//     console.error('Error fetching vendor data:', error);
+//     res.status(500).send('Error fetching vendor data');
+//   }
+// });
+
+router.get('/profilVendor/:id', async function(req, res) {
+  const vendorId = req.params.id;
   try {
-    const vendor_id = req.query.id; // Ambil vendor_id dari query parameter
-    const result = await vendorController.getProfilInformasi(vendor_id);
-    res.render('profil-informasi', { vendor: result, vendor_id });
+      const vendorData = await vendorController.getProfilInformasi(vendorId);
+      res.render('profil-informasi', { vendor: vendorData });
   } catch (error) {
-    console.error('Error fetching vendor data:', error);
-    res.status(500).send('Error fetching vendor data');
+      console.error('Error fetching vendor data:', error);
+      res.status(500).send('Error fetching vendor data');
   }
 });
+
 
 router.get('/profil-bank', async (req, res) => {
   try{
@@ -233,148 +265,176 @@ router.get('/profil-legalitas', async(req, res) => {
     const result = await vendorController.getProfilLegalitas(vendor_id);
     res.render('profil-legalitas', { vendor: result, vendor_id });
   } catch (error) {
-    console.error('Error fetching vendor data', error.stack); // Tampilkan stack error
+    console.error('Error fetching vendor data', error); // Tampilkan stack error
     res.status(500).send('Error fetching vendor data');
   }
 });
 
 
 router.get('/upload-dokumen-vendor', function(req, res) {
-  res.render('upload-dokumen-vendor');
+  const vendor_id = req.query.id; // Ambil vendor_id dari query parameter
+  res.render('upload-dokumen-vendor', { vendor_id });
 });
 
+router.post('/upload-dokumen-vendor', upload.fields([
+  { name: 'url_buku_akun_bank', maxCount: 1 },
+  { name: 'url_dokumen_npwp', maxCount: 1 },
+  { name: 'url_dokumen_ppkp', maxCount: 1 },
+  { name: 'url_ktp_direktur', maxCount: 1 },
+  { name: 'url_akta_perubahan', maxCount: 1 },
+  { name: 'url_akta_pendirian', maxCount: 1 },
+  { name: 'url_nibrba', maxCount: 1 },
+  { name: 'url_dokumen_ijin_lain', maxCount: 1 },
+  { name: 'url_profile_perusahaan', maxCount: 1 },
 
-// router.post('/upload-dokumen-vendor', upload.fields([
-//   { name: 'url_buku_akun_bank', maxCount: 1 },
-//   { name: 'url_npwp', maxCount: 1 },
-//   { name: 'url_pkp', maxCount: 1 },
-//   { name: 'url_ktp_direktur', maxCount: 1 },
-//   { name: 'url_akta_perubahan', maxCount: 1 },
-//   { name: 'url_akta_pendirian', maxCount: 1 },
-//   { name: 'url_nibrba', maxCount: 1 },
-//   { name: 'url_dokumen_ijin_lain', maxCount: 1 },
-//   { name: 'url_profile_perusahaan', maxCount: 1 }
-// ]), function(req, res) {
-//   // Process the uploaded files here
-//   // Assuming db.saveFileInformation expects an array of file data
-//   let fileData = [];
-//   for (let key in req.files) {
-//     fileData.push(...req.files[key].map(file => ({
-//       url_buku_akun_bank: file.filename,
-//       url_npwp: file.filename,
-//       url_pkp: file.filename,
-//       url_ktp_direktur: file.filename,
-//       url_akta_perubahan: file.filename,
-//       url_akta_pendirian: file.filename,
-//       url_nibrba: file.filename,
-//       url_dokumen_ijin_lain: file.filename,
-//       url_profile_perusahaan: file.filename,
-//       path: file.path,
-//       size: file.size,
-//       mimetype: file.mimetype
-//     })));
-//   }
-
-//   db.saveFileInformation(fileData)
-//     .then(() => {
-//       res.redirect('/dashboard-vendor'); 
-//       console.log('File information saved successfully');
-//       res.send('Files uploaded and saved successfully!');
-//     })
-//     .catch(error => {
-//       console.error('Error saving file information:', error);
-//       res.status(500).send('Failed to save file information');
-//     });
-// });
-
-router.post('/upload-dokumen-vendor', async function(req, res) {
-  const { url_buku_akun_bank, url_dokumen_npwp, url_dokumen_ppkp, url_ktp_direktur, url_akta_perubahan, url_akta_pendirian, url_nibrba, url_dokumen_ijin_lain, url_profile_perusahaan, vendor_id } = req.body;
-  console.log(req.body);
+  // Add other files similarly
+]), async function(req, res) {
+  const vendor_id = req.body.vendor_id;
+  const files = req.files;
   try {
-    // Await the Promise returned by saveVendorInformation
-    await vendorController.updateVendorURL(req, res);
-    // Redirect to the next page if the save is successful
-    res.redirect(`/approved-vendor-profile?id=${vendor_id}`);
+      await vendorController.updateVendorURL({
+          vendor_id: vendor_id,
+          url_buku_akun_bank: files.url_buku_akun_bank[0].path,
+          url_dokumen_npwp: files.url_dokumen_npwp[0].path,
+          url_dokumen_ppkp: files.url_dokumen_ppkp[0].path,
+          url_ktp_direktur: files.url_ktp_direktur[0].path,
+          url_akta_perubahan: files.url_akta_perubahan[0].path,
+          url_akta_pendirian: files.url_akta_pendirian[0].path,
+          url_nibrba: files.url_nibrba[0].path,
+          url_dokumen_ijin_lain: files.url_dokumen_ijin_lain[0].path,
+          url_profile_perusahaan: files.url_profile_perusahaan[0].path,
+      });
+      res.redirect(`/approved-vendor-profile?id=${vendor_id}`);
   } catch (error) {
-    // Log the error and send a 500 response if an error occurs
-    console.error('Error saving vendor information:', error);
-    res.status(500).send('An error occurred during registration: ' + error.message);
+      console.error('Error updating vendor documents:', error);
+      res.status(500).send('Failed to update documents');
   }
 });
+
+// router.post('/upload-dokumen-vendor', async function(req, res) {
+//   const { url_buku_akun_bank, url_dokumen_npwp, url_dokumen_ppkp, url_ktp_direktur, url_akta_perubahan, url_akta_pendirian, url_nibrba, url_dokumen_ijin_lain, url_profile_perusahaan, vendor_id } = req.body;
+//   console.log(req.body);
+//   try {
+//     // Await the Promise returned by saveVendorInformation
+//     await vendorController.updateVendorURL(req, res);
+//     // Redirect to the next page if the save is successful
+//            // Store ID in session
+//            req.session = req.session || {};
+//            req.session.id = vendor_id;
+//     res.redirect(`/approved-vendor-profile?id=${vendor_id}`);
+//   } catch (error) {
+//     // Log the error and send a 500 response if an error occurs
+//     console.error('Error saving vendor information:', error);
+//     res.status(500).send('An error occurred during registration: ' + error.message);
+//   }
+// });
 
 router.get('/dashboard-vendor', function(req, res) {
   res.render('dashboard-vendor');
 });
 
-router.get('/approved-vendor-profile', function(req, res) {
-  const vendorInfo = {
-    code: 'V1234',
-    category: 'Electronics',
-    name: 'PT. Setia Berkah Abadi',
-    officeStatus: 'Active',
-    ownerName: 'John Doe',
-    phone: '08123456789',
-    email: 'contact@setiaberkahabadi.com',
-    address: 'Jl. Merdeka No. 123, Jakarta',
-    country: 'Indonesia',
-    province: 'DKI Jakarta',
-    city: 'Jakarta',
-    postalCode: '10110'
-};
-  res.render('approved-vendor-profile', { vendor: vendorInfo });
-});
-
-router.get('/approved-akun-bank', function(req, res) {
-  const bankInfo = {
-    accountNumber: '88362773868',
-    accountName: 'PT Setia Berkah Abadi',
-    bankName: 'Bank BCA'
-};
-  res.render('approved-akun-bank', { bank: bankInfo });
-});
-
-router.get('/approved-perpajakan', function(req, res) {
-  const taxInfo = {
-    npwpNumber: '09.254.8274-8-23.000',
-    pkpStatus: 'Sudah PKP',
-    pkpNumber: 'PEM-02339/ERI.09/KP.0904/2012'
-};
-
-  res.render('approved-perpajakan', {tax: taxInfo});
-});
-
-router.get('/approved-legalitas', function(req, res) {
-  const legalInfo = {
-    nibNumber: '2208220056059',
-    ownerIdNumber: '187700093874002',
-    authorizedIdNumber: '33099270002938'
-};
-  res.render('approved-legalitas', { legal: legalInfo});
-});
-
-router.get('/daftar-pengadaan', async function(req, res) {
+router.get('/approved-vendor-profile', async(req, res) => {
   try {
-    const result = await pengadaanController.getPengadaan(); // Fetch pengadaan data
-    res.render('daftar-pengadaan', { pengadaan: result });
+    const vendor_id = req.query.id; // Ambil vendor_id dari query parameter
+    const result = await vendorController.getApprovedVendorProfile(vendor_id);
+    res.render('approved-vendor-profile', { vendor: result, vendor_id });
   } catch (error) {
-    console.error('Error fetching pengadaan data:', error);
-    res.status(500).send('Error fetching pengadaan data: ' + error.message);
+    console.error('Error fetching vendor data', error); // Tampilkan stack error
+    res.status(500).send('Error fetching vendor data');
   }
 });
 
-router.get('/informasi-pengadaan', function(req, res) {
-  const procurementInfo = {
-      procurementName: 'Portal Vendor',
-      procurementType: 'Jasa',
-      vendorType: 'Software House',
-      itemName: 'Website',
-      itemPrice: 'Rp. 150.000.000,00',
-      itemQuantity: 1,
-      startDate: '01-01-2024',
-      endDate: '30-04-2024',
-      actualEndDate: '-'
-  };
-  res.render('informasi-pengadaan', { procurement: procurementInfo });
+router.get('/approved-akun-bank', async function(req, res) {
+  try {
+    const vendor_id = req.query.id; // Ambil vendor_id dari query parameter
+    const result = await vendorController.getApprovedAkunBank(vendor_id);
+    res.render('approved-akun-bank', { vendor: result, vendor_id });
+  } catch (error) {
+    console.error('Error fetching vendor data', error); // Tampilkan stack error
+    res.status(500).send('Error fetching vendor data');
+  }
+});
+
+router.get('/approved-perpajakan', async function(req, res) {
+  try {
+    const vendor_id = req.query.id; // Ambil vendor_id dari query parameter
+    const result = await vendorController.getApprovedAkunPerpajakan(vendor_id);
+    res.render('approved-perpajakan', { vendor: result, vendor_id });
+  } catch (error) {
+    console.error('Error fetching vendor data', error); // Tampilkan stack error
+    res.status(500).send('Error fetching vendor data');
+  }
+});
+
+router.get('/approved-legalitas', async function(req, res) {
+  try {
+    const vendor_id = req.query.id; // Ambil vendor_id dari query parameter
+    const result = await vendorController.getApprovedLegalitas(vendor_id);
+    res.render('approved-legalitas', { vendor: result, vendor_id });
+  } catch (error) {
+    console.error('Error fetching vendor data', error); // Tampilkan stack error
+    res.status(500).send('Error fetching vendor data');
+  }
+});
+
+// router.get('/daftar-pengadaan', async function(req, res) {
+//   try {
+//       const result = await pengadaanController.getDaftarPengadaan();
+//       const vendor_id = req.query.vendor_id || 'default_vendor_id'; // Sesuaikan ini
+//       const pengadaan_id = req.query.pengadaan_id || 'default_pengadaan_id'; // Sesuaikan ini
+//       res.render('daftar-pengadaan', {
+//           pengadaan: result,
+//           vendor_id: vendor_id,
+//           pengadaan_id: pengadaan_id
+//       });
+//   } catch (error) {
+//       console.error('Error fetching pengadaan data:', error);
+//       res.status(500).send('Error fetching pengadaan data: ' + error.message);
+//   }
+// });
+
+// router.get('/daftar-pengadaan', async function(req, res) {
+//   const status_id = req.params.status_id;
+//   try {
+//       const statusOptions = await pengadaanController.option_Select_Status();
+//       const result = await pengadaanController.getDaftarPengadaanByStatus(status_id);
+//       res.render('daftar-pengadaan', {
+//           pengadaan: result,
+//           status: statusOptions
+//       });
+//   } catch (error) {
+//       console.error('Error fetching pengadaan data:', error);
+//       res.status(500).send('Error fetching pengadaan data: ' + error.message);
+//   }
+// });
+
+// Tambahkan route untuk filter status pengadaan
+router.get('/daftar-pengadaan/status/:status_id', async function(req, res) {
+  const status_id = req.params.status_id;
+  try {
+      const statusOptions = await pengadaanController.option_Select_Status();
+      const result = await pengadaanController.getDaftarPengadaanByStatus(status_id);
+      res.render('daftar-pengadaan', {
+          pengadaan: result,
+          status: statusOptions
+      });
+  } catch (error) {
+      console.error('Error fetching pengadaan data:', error);
+      res.status(500).send('Error fetching pengadaan data: ' + error.message);
+  }
+});
+
+
+
+router.get('/informasi-pengadaan', async (req, res) => {
+  try{
+    const pengadaan_id = req.query.id;
+    const result = await pengadaanController.getPengadaan(pengadaan_id);
+    res.render('informasi-pengadaan', { procurement: procurementInfo });
+  } catch(error){
+    console.error('Error fetching pengadaan data:', error);
+    res.status(500).send('Error fetching pengadaan data');
+  }
 });
 
 router.get('/item-pengadaan', function(req, res) {
@@ -404,14 +464,12 @@ router.get('/dokumen-purchase-order', function(req, res) {
 router.get('/list-bidding-vendor', async (req, res) => {
   try {
       let result = await bidding_tenderController.getBidding(); // Fetch bids data
-      console.log('Bidding data:', result); // Log data yang diterima
       if (!result || result.length === 0) {
           throw new Error('No bidding data found');
       }
-      // res.send(result);
       res.render('list-bidding-vendor', { bidding_tender: result });
   } catch (error) {
-      console.error('Error fetching bidding data:', error.message); // Log error yang lebih detail
+      console.error('Error fetching bidding data:', error);
       res.status(500).send('Error fetching bidding data');
   }
 });
@@ -504,7 +562,6 @@ router.get('/form-vendor-scoring', function(req,res) {
 })
 
 //ADMIN
-//
 
 router.get('/list-vendor-admin', async (req, res) => {
   try {
@@ -679,10 +736,15 @@ router.post('/buat-pengadaan', async (req, res) => {
 });
 
 
-router.get('/daftar-pengadaan-admin', async (req, res) => {
+router.get('/daftar-pengadaan-admin/status/:status_id', async function(req, res) {
+  const status_id = req.params.status_id;
   try {
-    const result = await pengadaanController.getPengadaan();
-    res.render('daftar-pengadaan-admin', { pengadaan: result });
+    const statusOptions = await pengadaanController.option_Select_Status();
+    const result = await pengadaanController.getDaftarPengadaanByStatus(status_id);
+    res.render('daftar-pengadaan-admin', { 
+      pengadaan: result ,
+      status: statusOptions
+    });
   } catch (error) {
       console.error('Error fetching procurement data:', error);
       res.status(500).send('Error fetching procurement data');

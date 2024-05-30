@@ -2,10 +2,11 @@ const db = require('../../database/db');
 const queries = require('../pengadaan/queries');
 const { v4: uuidv4 } = require('uuid');
 
-    async function getPengadaan() {
+async function getDaftarPengadaan() {
     const client = await db.pool.connect();
     try {
-        const result = await client.query(queries.getPengadaan); // Adjust the SQL query based on your actual table and data structure
+        const result = await client.query(queries.getDaftarPengadaan); 
+        console.log('Query result:', result.rows); // Debugging
         return result.rows;
     } catch (error) {
         console.error('Error executing query', error.stack);
@@ -13,7 +14,33 @@ const { v4: uuidv4 } = require('uuid');
     } finally {
         client.release();
     }
-  }
+}
+async function getDaftarPengadaanByStatus(status_id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getDaftarPengadaanByStatus, [status_id]);
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
+async function option_Select_Status() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.option_Select_Status);
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
 
     const getItem = async (req, res) => {
     const pengadaan_id = req.params.pengadaan_id;
@@ -249,8 +276,10 @@ const validasiPengadaan = (req, res) => {
 };
 
 module.exports = {
-    getPengadaan,
+    getDaftarPengadaan,
+    getDaftarPengadaanByStatus,
     option_PIC,
+    option_Select_Status,
     update_PIC,
     option_Vendor,
     option_Tipe_Pemilihan1,

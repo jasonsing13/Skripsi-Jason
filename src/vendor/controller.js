@@ -66,6 +66,58 @@ async function getVendor() {
     }
   }
 
+  async function getApprovedVendorProfile(vendor_id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getApprovedVendorProfile, [vendor_id]); // Adjust the SQL query based on your actual table and data structure
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
+
+  async function getApprovedAkunBank(vendor_id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getApprovedAkunBank, [vendor_id]); // Adjust the SQL query based on your actual table and data structure
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
+
+  async function getApprovedAkunPerpajakan(vendor_id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getApprovedAkunPerpajakan, [vendor_id]); // Adjust the SQL query based on your actual table and data structure
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
+
+  async function getApprovedLegalitas(vendor_id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getApprovedLegalitas, [vendor_id]); // Adjust the SQL query based on your actual table and data structure
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
+
 const getVendorById = (req,res)=>{
     const id = req.params.id;
     db.pool.query(queries.getVendorById,[id], (error, results)=>{
@@ -74,7 +126,47 @@ const getVendorById = (req,res)=>{
     })
 };
 
-const addVendor = (req,res)=>{
+// const addVendor = (req,res)=>{
+//     const {  
+//         nama_vendor,
+//         email_perusahaan,
+//         jenis_vendor_id,
+//         status_kantor,
+//         alamat_perusahaan,
+//         nama_direktur,
+//         no_telp,
+//         negara,
+//         provinsi_id,
+//         kk_id,
+//         create_by,
+//         create_date
+//     } = req.body;
+//     console.log( req.body);
+//     db.pool.query(
+//         queries.addVendor,
+//         [  
+//             req.body.nama_vendor,
+//             req.body.email_perusahaan,
+//             req.body.jenis_vendor_id,
+//             req.body.status_kantor,
+//             req.body.alamat_perusahaan,
+//             req.body.nama_direktur,
+//             req.body.no_telp,
+//             req.body.negara,
+//             req.body.provinsi_id,
+//             req.body.kk_id,
+//             req.body.create_by,
+//             req.body.create_date],
+//         (error, results) => {
+
+//             if (error) console.log(error);
+//             else return results.rows[0].vendor_id;
+//         }
+//     );
+// };
+
+
+const addVendor = (req, res) => {
     const {  
         nama_vendor,
         email_perusahaan,
@@ -86,31 +178,34 @@ const addVendor = (req,res)=>{
         negara,
         provinsi_id,
         kk_id,
-        create_by,
-        create_date
+        create_by
     } = req.body;
-    console.log( req.body);
-    db.pool.query(
+
+    return db.pool.query(
         queries.addVendor,
         [  
-            req.body.nama_vendor,
-            req.body.email_perusahaan,
-            req.body.jenis_vendor_id,
-            req.body.status_kantor,
-            req.body.alamat_perusahaan,
-            req.body.nama_direktur,
-            req.body.no_telp,
-            req.body.negara,
-            req.body.provinsi_id,
-            req.body.kk_id,
-            req.body.create_by,
-            req.body.create_date],
-        (error, results) => {
-
-            if (error) console.log(error);
-            else return results.rows[0].vendor_id;
+            nama_vendor,
+            email_perusahaan,
+            jenis_vendor_id,
+            status_kantor,
+            alamat_perusahaan,
+            nama_direktur,
+            no_telp,
+            negara,
+            provinsi_id,
+            kk_id,
+            create_by
+        ]
+    ).then(results => {
+        if (results.rows.length > 0) {
+            return results.rows[0].vendor_id;
+        } else {
+            throw new Error('Vendor ID not generated');
         }
-    );
+    }).catch(error => {
+        console.error('Error executing query', error.stack);
+        throw error;
+    });
 };
 
 // const addAccount = (req,res)=>{
@@ -259,30 +354,47 @@ const addRekening_Vendor = (req, res) => {
 
 
 const updateTax_Vendor = (req, res) => {
-    const id = req.params.id;
-    const { no_npwp, status_pkp, vendor_id} = req.body;
+    const { no_npwp, status_pkp, vendor_id } = req.body;
     const queryParams = [no_npwp, status_pkp, vendor_id];
     console.log(req.body);
     db.pool.query(queries.updateTax_Vendor, queryParams, (error, result) => {
-        if (error) throw error;
+      if (error) throw error;
     });
-};
-
-const updateLegal_Vendor = (req, res) => {
-    const id = req.params.id;
+  };
+  
+  const updateLegal_Vendor = (req, res) => {
     const { no_nibrba, no_ktp_direktur, vendor_id } = req.body;
-    const queryParams = [id, no_nibrba, no_ktp_direktur, vendor_id];
+    const queryParams = [no_nibrba, no_ktp_direktur, vendor_id];
     console.log(req.body);
     db.pool.query(queries.updateLegal_Vendor, queryParams, (error, result) => {
       if (error) throw error;
     });
   };
-  
 
 const updateVendorURL = (req, res) => {
     const id = req.params.id;
-    const { url_ktp_direktur, url_nibrba, url_akta_pendirian, url_akta_perubahan, url_dokumen_ijin_lain, url_dokumen_npwp, url_buku_akun_bank, url_profil_perusahaan, vendor_id } = req.body;
-    const queryParams = [url_ktp_direktur, url_nibrba, url_akta_pendirian, url_akta_perubahan, url_dokumen_ijin_lain, url_dokumen_npwp, url_buku_akun_bank, url_profil_perusahaan, req.query.id];
+    const { 
+        url_buku_akun_bank, 
+        url_dokumen_npwp, 
+        url_dokumen_pkpp,
+        url_ktp_direktur,
+        url_akta_perubahan,
+        url_akta_pendirian,
+        url_nibrba,
+        url_dokumen_ijin_lain, 
+        url_profil_perusahaan, 
+        vendor_id } = req.body;
+    const queryParams = [
+        url_buku_akun_bank, 
+        url_dokumen_npwp, 
+        url_dokumen_pkpp,
+        url_ktp_direktur,
+        url_akta_perubahan,
+        url_akta_pendirian,
+        url_nibrba,
+        url_dokumen_ijin_lain, 
+        url_profil_perusahaan, 
+        req.query.id];
     console.log(req.body)
     db.pool.query(queries.updateVendorURL, queryParams, (error, result) => {
         if (error) throw error;
@@ -300,13 +412,16 @@ const updateStatus_Vendor = (req, res) => {
   };
 
 
-
 module.exports = {
     getVendor,
     getProfilInformasi,
     getProfilAkunBank,
     getProfilPerpajakan,
     getProfilLegalitas,
+    getApprovedVendorProfile,
+    getApprovedAkunBank,
+    getApprovedAkunPerpajakan,
+    getApprovedLegalitas,
     option_Jenis_Vendor,
     option_Provinsi,
     option_Kabupaten_Kota,

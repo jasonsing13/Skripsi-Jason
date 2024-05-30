@@ -1,14 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <%- include('partials/head.ejs') %>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Pengadaan</title>
+    <title>Daftar Pengadaan Vendor</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <%- include('partials/style.ejs') %>
+    <%- include('partials/style.ejs') %> 
+    <style>
+        body {
+            padding: 20px;
+        }
+        .header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .alert {
+            color: #856404;
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+        }
+    </style>
 </head>
 <body>
-    <%- include('partials/sidebar.ejs') %>
     <div class="container mt-4">
         <h1>Daftar Pengadaan</h1>
         <p>Informasi daftar pengadaan</p>
@@ -16,7 +35,7 @@
             <input type="text" class="form-control" placeholder="Cari Pengadaan">
         </div>
         <div class="d-flex justify-content-between mb-3">
-            <select class="form-select w-auto">
+            <!-- <select class="form-select w-auto">
                 <option selected>Semua Vendor</option>
                 <option value="1">Vendor 1</option>
                 <option value="2">Vendor 2</option>
@@ -24,11 +43,12 @@
                 <option value="4">Vendor 4</option>
                 <option value="5">Vendor 5</option>
                 <option value="6">Vendor 6</option>
-            </select>
-            <select class="form-select w-auto">
-                <option selected>Semua Status</option>
-                <option value="open">Buka</option>
-                <option value="closed">Tutup</option>
+            </select> -->
+            <select class="form-select w-auto" id="filter-status" onchange="filterByStatus()">
+                <option selected value="">Semua Status</option>
+                <% status.forEach(status => { %>
+                    <option value="<%= status.status_id %>"><%= status.nama_status %></option>
+                <% }); %>
             </select>
             <button class="btn btn-primary" onclick="location.href='/buat-pengadaan'">Tambah Pengadaan</button>        
         </div>
@@ -70,5 +90,12 @@
             </ul>
         </nav>
     </div>
+    <script>
+        function filterByStatus() {
+            const statusId = document.getElementById('filter-status').value;
+            const url = statusId ? `/daftar-pengadaan/status/${statusId}` : '/daftar-pengadaan';
+            window.location.href = url;
+        }
+    </script>
 </body>
 </html>

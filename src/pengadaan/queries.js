@@ -1,9 +1,66 @@
-const getPengadaan = `SELECT pengadaan.*, status.nama_status, jenis_pengadaan.nama_jenis_pengadaan, jenis_vendor.nama_jenis_vendor
-FROM pengadaan
-INNER JOIN status ON pengadaan.status_id = status.status_id
-INNER JOIN jenis_pengadaan ON pengadaan.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id
-INNER JOIN jenis_vendor ON pengadaan.jenis_vendor_id = jenis_vendor.jenis_vendor_id;
+const getDaftarPengadaan = `
+SELECT
+    pengadaan.pengadaan_id,
+    pengadaan.nama_pengadaan,
+    pengadaan.tanggal_pemilihan,
+    pengadaan.tanggal_pemilihan_selesai,
+    jenis_pengadaan.nama_jenis_pengadaan,
+    status.nama_status
+FROM
+    pengadaan
+INNER JOIN
+    status ON pengadaan.status_id = status.status_id
+INNER JOIN
+    jenis_pengadaan ON pengadaan.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id;
 `;
+
+const option_Select_Status = `
+SELECT 
+    status.status_id, 
+    status.nama_status
+FROM
+    status
+WHERE
+    nama_status IN ('buka', 'tutup') 
+    AND tipe_status = 'dp';
+`;
+
+
+const getDaftarPengadaanByStatus = `
+SELECT
+    pengadaan.pengadaan_id,
+    pengadaan.nama_pengadaan,
+    pengadaan.tanggal_pemilihan,
+    pengadaan.tanggal_pemilihan_selesai,
+    jenis_pengadaan.nama_jenis_pengadaan,
+    status.nama_status
+FROM
+    pengadaan
+INNER JOIN
+    status ON pengadaan.status_id = status.status_id
+INNER JOIN
+    jenis_pengadaan ON pengadaan.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id
+WHERE
+    pengadaan.status_id = $1;
+`;
+
+
+// const getDaftarPengadaan = `
+// SELECT 
+// p.pengadaan_id, 
+// p.nama_pengadaan, 
+// p.tanggal_pemilihan, 
+// p.tanggal_pemilihan_selesai,
+// jp.nama_jenis_pengadaan,
+// s.nama_status
+// FROM 
+// public.pengadaan p
+// JOIN 
+// public.status s ON p.status_id = s.status_id
+// JOIN 
+// public.jenis_pengadaan jp ON p.jenis_pengadaan_id = jp.jenis_pengadaan_id;
+// `
+// ;
 
 const getItem = `
 SELECT i.item_id, i.nama_item, i.quantity, i.harga_item, li.harga_total
@@ -129,7 +186,9 @@ WHERE pengadaan_id = $7;
 
 
 module.exports = {
-    getPengadaan,
+    getDaftarPengadaan,
+    getDaftarPengadaanByStatus,
+    option_Select_Status,
     option_PIC,
     update_PIC,
     option_Vendor,
