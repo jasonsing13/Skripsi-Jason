@@ -57,6 +57,11 @@ JOIN
 public.rekening r ON i.rekening_id = r.rekening_id
 `;
 
+const getEmail = `
+SELECT * FROM vendor WHERE email_perusahaan = $1;
+
+`
+
 const getProfilInformasi = `
   SELECT  
     vendor.vendor_id, 
@@ -224,14 +229,13 @@ INSERT INTO public.vendor(
 ) RETURNING vendor_id;`
 
 
-
-// const addAccount = `
-// INSERT INTO public.vendor
-// (
-//   username, 
-//   password) 
-//   VALUES ($1, $2)
-// `;
+const addAccount = `
+INSERT INTO public.vendor
+(
+  username, 
+  password) 
+  VALUES ($1, $2)
+`;
 
 
 const removeVendor = ` delete from vendor where vendor_id = $1 `;
@@ -289,6 +293,7 @@ const updateStatus_Vendor = `
 
 module.exports = {
     getVendor,
+    getEmail,
     getProfilInformasi,
     getProfilAkunBank,
     getProfilPerpajakan,

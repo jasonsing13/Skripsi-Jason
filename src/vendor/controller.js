@@ -14,6 +14,21 @@ async function getVendor() {
     }
   }
 
+  async function getEmail(email_perusahaan) {
+    const client = await db.pool.connect();
+    try {
+      const result = await client.query(queries.getEmail, [email_perusahaan]);
+      return result.rows; // Asumsi Anda hanya mengambil satu baris data
+    } catch (error) {
+      console.error('Error executing query', error.stack);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+
+
   async function getProfilInformasi(vendor_id) {
     const client = await db.pool.connect();
     try {
@@ -414,6 +429,7 @@ const updateStatus_Vendor = (req, res) => {
 
 module.exports = {
     getVendor,
+    getEmail,
     getProfilInformasi,
     getProfilAkunBank,
     getProfilPerpajakan,

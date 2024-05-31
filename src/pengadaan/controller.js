@@ -28,6 +28,71 @@ async function getDaftarPengadaanByStatus(status_id) {
     }
 }
 
+async function getInformasiPengadaan(pengadaan_id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getInformasiPengadaan, [pengadaan_id]);
+        return result.rows; // Mengembalikan satu baris hasil
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
+async function getInformasiPengadaanPrevious(pengadaan_id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(getInformasiPengadaanPrevious, [pengadaan_id]);
+        return result.rows[0]; // Mengembalikan satu baris hasil
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
+async function getItemPengadaan(pengadaan_id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getItemPengadaan, [pengadaan_id]);
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
+async function getInformasiPO(pengadaan_id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getInformasiPO, [pengadaan_id]);
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
+async function getDokumenPO(pengadaan_id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getDokumenPO, [pengadaan_id]);
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
 async function option_Select_Status() {
     const client = await db.pool.connect();
     try {
@@ -278,6 +343,11 @@ const validasiPengadaan = (req, res) => {
 module.exports = {
     getDaftarPengadaan,
     getDaftarPengadaanByStatus,
+    getInformasiPengadaan,
+    getInformasiPengadaanPrevious,
+    getItemPengadaan,
+    getInformasiPO,
+    getDokumenPO,
     option_PIC,
     option_Select_Status,
     update_PIC,
@@ -293,4 +363,3 @@ module.exports = {
     removePengadaan,
     validasiPengadaan,
 };
-

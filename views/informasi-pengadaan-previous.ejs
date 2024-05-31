@@ -16,18 +16,18 @@
         </div>        
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" href="/informasi-pengadaan-previous">Informasi Pengadaan</a>
+                <a class="nav-link active" href="/informasi-pengadaan-previous?id=<%= pengadaan_id %>">Informasi Pengadaan</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " href="/item-pengadaan-previous">Item Pengadaan</a>
+                <a class="nav-link " href="/item-pengadaan-previous?id=<%= pengadaan.pengadaan_id %>">Item Pengadaan</a>
             </li>
         </ul>
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Detail Pengadaan</h5>
+                <h5 class="card-title">Informasi Pengadaan</h5>
                 <p class="card-text"><strong>Nama Pengadaan:</strong> <%= pengadaan.nama_pengadaan %></p>
-                <p class="card-text"><strong>Status:</strong> <%= pengadaan.nama_status %></p>
-                <p class="card-text"><strong>Jenis Vendor:</strong> <%= pengadaan.jenis_pengadaan %></p>
+                <p class="card-text"><strong>Jenis Pengadaan:</strong> <%= pengadaan.jenis_pengadaan %></p>
+                <p class="card-text"><strong>Jenis Vendor:</strong> <%= pengadaan.jenis_vendor %></p>
                 <p class="card-text"><strong>Tanggal Mulai:</strong> <%= pengadaan.tanggal_pemilihan %></p>
                 <p class="card-text"><strong>Tanggal Selesai:</strong> <%= pengadaan.tanggal_pemilihan_selesai %></p>
             </div>

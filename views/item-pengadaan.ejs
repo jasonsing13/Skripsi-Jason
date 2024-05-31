@@ -10,20 +10,19 @@
 <body>
     <%- include('partials/sidebar.ejs') %>
     <div class="container mt-4">
-        <h1>Yayasan Bumi Baru</h1>
-        <h2>PO-MML-2024-01</h2>
+        <h1>Item Pengadaan</h1>
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link" href="/informasi-pengadaan">Informasi Pengadaan</a>
+                <a class="nav-link" href="/informasi-pengadaan?id=<%= pengadaan_id %>">Informasi Pengadaan</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="/item-pengadaan">Item Pengadaan</a>
+                <a class="nav-link active" href="/item-pengadaan?id=<%= pengadaan_id %>">Item Pengadaan</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/informasi-purchase-order">Informasi Purchase Order</a>
+                <a class="nav-link" href="/informasi-purchase-order?id=<%= pengadaan_id %>">Informasi Purchase Order</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/dokumen-purchase-order">Dokumen Purchase Order</a>
+                <a class="nav-link" href="/dokumen-purchase-order?id=<%= pengadaan_id %>">Dokumen Purchase Order</a>
             </li>
         </ul>
         <table class="table">
@@ -38,14 +37,12 @@
                 </tr>
             </thead>
             <tbody>
-                <% items.forEach(function(item) { %>
+                <% item.forEach(function(item) { %>
                     <tr>
-                        <td><%= item.no %></td>
-                        <td><%= item.name %></td>
+                        <td><%= item.item_id %></td>
+                        <td><%= item.nama_item %></td>
                         <td><%= item.quantity %></td>
-                        <td><%= item.price %></td>
-                        <td><%= item.discount %></td>
-                        <td><%= item.netAmount %></td>
+                        <td><%= item.harga_item %></td>
                     </tr>
                 <% }); %>
             </tbody>

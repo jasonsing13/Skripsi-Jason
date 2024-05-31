@@ -5,6 +5,13 @@ var { saveAllVendorInformation } = require("../database/db");
 var multer = require('multer');
 var upload = multer({ dest: 'uploads/' });
 const bodyParser = require('body-parser'); // Jika Anda menggunakan express versi lama
+const jwt = require('jsonwebtoken');
+const { authenticateToken } = require('../middleware/authenticate'); // Impor middleware otentikasi
+const dotenv = require('dotenv');
+const bcrypt = require('bcrypt');
+
+dotenv.config(); // Load konfigurasi dari file .env
+const app = express();
 var bidding_tenderController = require('../src/bidding_tender/controller');
 var detail_bidding_tenderController = require('../src/detail_bidding_tender/controller');
 //var detail_template_vsController = require('../src/detail_template_vs/controller');
@@ -35,6 +42,47 @@ router.get('/login', function(req, res) {
     title: 'Login Page'
   });
 });
+
+
+// Fungsi untuk menghasilkan token JWT
+function generateAccessToken(data) {
+  return jwt.sign(data, process.env.TOKEN_SECRET, { expiresIn: '1800s' });
+}
+
+// Rute untuk login
+router.post('/login', async (req, res) => {
+  const { email_perusahaan, password } = req.body;
+
+  try {
+    // Query untuk mendapatkan data vendor berdasarkan email
+    const result = await vendorController.getEmail(email_perusahaan);
+    console.log(result.length)
+    console.log(result[0].password)
+
+    if (result.length > 0) {
+      const passwordDb = result[0].password;
+      console.log('d' + passwordDb);
+      console.log('p' + password);
+      if (passwordDb.trim() === password.trim()) { //Besok cari cara nge akses token di sidebar dna di file" lainnya
+        const token = generateAccessToken({ email: result[0].email });
+        return res.json({ token: token });
+      } else {
+        return res.status(401).json({ error: 'Autentikasi gagal. Email atau kata sandi tidak valid.' });
+      }
+    } else {
+      return res.status(401).json({ error: 'Autentikasi gagal. Email atau kata sandi tidak valid.' });
+    }
+  } catch (error) {
+    console.error('Error during login:', error);
+    return res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
+  }
+});
+
+// Rute yang memerlukan autentikasi
+router.get('/protected', authenticateToken, (req, res) => {
+  res.json({ message: 'Ini adalah data rahasia', user: req.user });
+});
+
 
 
 // // POST login form data
@@ -204,7 +252,7 @@ router.post('/legal-info', async function(req, res) {
   console.log(req.body);
   try {
     await vendorController.updateLegal_Vendor(req, res);
-    res.redirect(`/profilVendor/${vendor_id}`);
+    res.redirect(`/profil-informasi/${vendor_id}`);
   } catch(error) {
     console.error('Error saving final vendor information:', error);
     res.status(500).send('An error occurred during registration.' + error.message);
@@ -212,30 +260,47 @@ router.post('/legal-info', async function(req, res) {
 });
 
 
-// router.get('/profilVendor/:id', async (req, res) => {
+// `router.get('/profil-informasi/:id', async function(req, res) {
+//   const vendor_id = req.params.id;
 //   try {
-//     const vendor_id = req.params.id; // Ambil vendor_id dari query parameter
-//     console.log(vendor_id)
-//     const result = await vendorController.getProfilInformasi(vendor_id);
-//     console.log(result)
-//     res.render('profil-informasi', { vendor: result, vendor_id });
+//       const result = await vendorController.getProfilInformasi(vendor_id);
+//       console.log('Rendering profile page for vendor:', result); // Tambahkan log ini
+//       res.render('profil-informasi', { vendor: result });
 //   } catch (error) {
-//     console.error('Error fetching vendor data:', error);
-//     res.status(500).send('Error fetching vendor data');
+//       console.error('Error fetching vendor data:', error);
+//       res.status(500).send('Error fetching vendor data');
+//   }
+// });`
+
+// router.get('/profil-informasi', async function(req, res) {
+//   const vendor_id = req.params.id;
+//   try {
+//       const result = await vendorController.getProfilInformasi(vendor_id);
+//       console.log('Rendering profile page for vendor:', result);
+      
+//       if (!result) {
+//           console.warn(`Vendor with ID ${vendor_id} not found`);
+//           return res.render('profil-informasi', { vendor: null }); // Tetap render halaman meskipun data vendor kosong
+//       }
+
+//       res.render('profil-informasi', { vendor: result });
+//   } catch (error) {
+//       console.error('Error fetching vendor data:', error);
+//       res.status(500).send('Error fetching vendor data');
 //   }
 // });
 
-router.get('/profilVendor/:id', async function(req, res) {
-  const vendorId = req.params.id;
-  try {
-      const vendorData = await vendorController.getProfilInformasi(vendorId);
-      res.render('profil-informasi', { vendor: vendorData });
-  } catch (error) {
-      console.error('Error fetching vendor data:', error);
-      res.status(500).send('Error fetching vendor data');
-  }
-});
 
+router.get('/profil-informasi', async (req, res) => {
+  try{
+    const vendor_id = req.query.id; // Ambil vendor_id dari query parameter
+    const result = await vendorController.getProfilInformasi(vendor_id);
+    res.render('profil-informasi', {vendor: result, vendor_id });
+  } catch (error){
+    console.error('Error fetching vendor data:', error);
+    res.status(500).send('Error fetching vendor data');
+  }
+})
 
 router.get('/profil-bank', async (req, res) => {
   try{
@@ -425,24 +490,27 @@ router.get('/daftar-pengadaan/status/:status_id', async function(req, res) {
 });
 
 
-
 router.get('/informasi-pengadaan', async (req, res) => {
   try{
     const pengadaan_id = req.query.id;
-    const result = await pengadaanController.getPengadaan(pengadaan_id);
-    res.render('informasi-pengadaan', { procurement: procurementInfo });
+    // const pengadaan_id = req.params.pengadaan_id;
+  const result = await pengadaanController.getInformasiPengadaan(pengadaan_id);
+    res.render('informasi-pengadaan', { pengadaan: result[0], pengadaan_id });
   } catch(error){
     console.error('Error fetching pengadaan data:', error);
     res.status(500).send('Error fetching pengadaan data');
   }
 });
 
-router.get('/item-pengadaan', function(req, res) {
-  const itemsData = [
-      { no: 'IG000001', name: 'MEJA', quantity: 20, price: 'Rp. 200.000', discount: '-', netAmount: 'Rp. 4.000.000' },
-      { no: 'IG000002', name: 'KURSI', quantity: 100, price: 'Rp. 100.000', discount: '-', netAmount: 'Rp. 10.000.000' }
-  ];
-  res.render('item-pengadaan', { items: itemsData });
+router.get('/item-pengadaan', async (req, res) => {
+try{
+  const pengadaan_id = req.query.id;
+  const result = await pengadaanController.getItemPengadaan(pengadaan_id);
+  res.render('item-pengadaan', { pengadaan: result[0], pengadaan_id });
+} catch(error){
+  console.error('Error fetching pengadaan data:', error);
+  res.status(500).send('Error fetching pengadaan data');
+}
 });
 
 router.get('/informasi-purchase-order', function(req, res) {
@@ -753,8 +821,9 @@ router.get('/daftar-pengadaan-admin/status/:status_id', async function(req, res)
 
 router.get('/informasi-pengadaan-previous', async (req, res) => {
   try {
-    const result = await pengadaanController.getPengadaan();
     const pengadaan_id = req.query.id
+    const result = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
+    console.log("res"+result)
     res.render('informasi-pengadaan-previous', { pengadaan: result });
   } catch (error) {
       console.error('Error fetching procurement data:', error);
@@ -851,7 +920,7 @@ upload.fields([{ name: 'invoice' }, { name: 'surat_jalan' }]), async (req, res) 
 
     // Assuming you have a function to insert data into the database
     await goods_receivedController.addGoods_Received(url_invoice, url_surat_jalan);
-    res.redirect('/daftar-pengadaan-vendor'); // Redirect to the list page after successful insertion
+    res.redirect('/daftar-pengadaan'); // Redirect to the list page after successful insertion
   } catch (error) {
     console.error('Failed to add goods received:', error);
     res.status(500).send('Error adding goods received');

@@ -1,3 +1,5 @@
+const { get } = require("../../routes");
+
 const getDaftarPengadaan = `
 SELECT
     pengadaan.pengadaan_id,
@@ -25,6 +27,64 @@ WHERE
     AND tipe_status = 'dp';
 `;
 
+const getInformasiPengadaan = `
+SELECT 
+    pengadaan.pengadaan_id,
+    pengadaan.nama_pengadaan,
+    jenis_vendor.nama_jenis_vendor,
+    pengadaan.tanggal_pemilihan,
+    pengadaan.tanggal_pemilihan_selesai
+FROM 
+    pengadaan 
+INNER JOIN
+    jenis_vendor ON pengadaan.jenis_vendor_id = jenis_vendor.jenis_vendor_id
+WHERE 
+    pengadaan.pengadaan_id = $1;
+`;
+
+const getInformasiPengadaanPrevious = `
+SELECT 
+    pengadaan.pengadaan_id,
+    pengadaan.nama_pengadaan,
+    jenis_vendor.nama_jenis_vendor,
+    pengadaan.tanggal_pemilihan,
+    pengadaan.tanggal_pemilihan_selesai
+FROM 
+    pengadaan 
+INNER JOIN
+    jenis_vendor ON pengadaan.jenis_vendor_id = jenis_vendor.jenis_vendor_id
+WHERE 
+    pengadaan.pengadaan_id = $1;
+`;
+
+const getItemPengadaan = `
+SELECT 
+    i.*
+FROM 
+    public.item i
+INNER JOIN 
+    public.mapping_item_list_item m ON i.item_id = m.item_id
+INNER JOIN 
+    public.list_item l ON m.list_item_id = l.list_item_id
+WHERE l.pengadaan_id = $1;
+`;
+
+const getInformasiPO = `
+SELECT * FROM po WHERE pengadaan_id = $1;
+`;
+
+const getDokumenPO = `
+SELECT * FROM dokumen_po WHERE pengadaan_id = $1;
+`;
+
+// const option_Select_Vendor =`
+// SELECT 
+//     vendor.vendor_id,
+//     vendor.nama_vendor
+// FROM
+//     vendor
+// ;
+//  `
 
 const getDaftarPengadaanByStatus = `
 SELECT
@@ -43,6 +103,29 @@ INNER JOIN
 WHERE
     pengadaan.status_id = $1;
 `;
+
+// const getDaftarPengadaanByStatusVendor = `
+// SELECT
+//     pengadaan.pengadaan_id,
+//     pengadaan.nama_pengadaan,
+//     pengadaan.tanggal_pemilihan,
+//     pengadaan.tanggal_pemilihan_selesai,
+//     jenis_pengadaan.nama_jenis_pengadaan,
+//     status.nama_status
+//     vendor.nama_vendor
+// FROM
+//     pengadaan
+// INNER JOIN
+//     status ON pengadaan.status_id = status.status_id
+// INNER JOIN
+//     jenis_pengadaan ON pengadaan.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id
+// INNER JOIN
+//     vendor ON pengadaan.vendor_id = vendor.vendor_id
+// WHERE
+//     pengadaan.status_id = $1
+// AND 
+//     pengadaan.vendor_id = $2
+// `;
 
 
 // const getDaftarPengadaan = `
@@ -188,6 +271,11 @@ WHERE pengadaan_id = $7;
 module.exports = {
     getDaftarPengadaan,
     getDaftarPengadaanByStatus,
+    getInformasiPengadaan,
+    getInformasiPengadaanPrevious,
+    getItemPengadaan,
+    getInformasiPO,
+    getDokumenPO,
     option_Select_Status,
     option_PIC,
     update_PIC,

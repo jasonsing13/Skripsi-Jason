@@ -33,22 +33,22 @@
         <h1>Vendor Profile</h1>
         <ul class="nav nav-tabs">
             <li class="nav-item">
-              <a class="nav-link active" href="/profil-informasi?id=<%= vendor_id %>">Informasi Vendor</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/profil-bank?id=<%= vendor_id %>">Akun Bank</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/profil-perpajakan?id=<%= vendor_id %>">Perpajakan</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/profil-legalitas?id=<%= vendor_id %>">Legalitas</a>
-            </li>
-          </ul>
+                <a class="nav-link active" href="/profil-informasi?id=<%= vendor_id %>">Informasi Vendor</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/profil-bank?id=<%= vendor_id %>">Akun Bank</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/profil-perpajakan?id=<%= vendor_id %>">Perpajakan</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/profil-legalitas?id=<%= vendor_id %>">Legalitas</a>
+              </li>
+            </ul>
           <div class="col-md-9">
                 <!-- Main Content -->
                 <div class="alert">
-                    <a href="/upload-dokumen-vendor?id=<%= vendor_id %>" class="btn btn-primary">Lengkapi Dokumen Vendor</a>                  
+                    <a href="/upload-dokumen-vendor?id=<%= vendor.vendor_id %>" class="btn btn-primary">Lengkapi Dokumen Vendor</a>                  
                     <p>Segera lengkapi dokumen vendor untuk bisa bergabung dalam pengadaan MPM</p>
                 </div>
                 <h3><%= vendor.nama_vendor %></h3>
