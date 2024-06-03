@@ -23,7 +23,20 @@ const bidding_tenderroutes = require(`../src/bidding_tender/routes`);
 const app = express();
 const port = 3000;
 
-app.use(express.json())
+// app.use(express.json())
+// Error handler middleware
+app.use((err, req, res, next) => {
+    console.error('Error during request:', err); // Log the error for debugging
+  
+    // Set appropriate status code based on the error type
+    const statusCode = err.statusCode || 500;
+  
+    // Send a JSON response with error details
+    res.status(statusCode).json({
+      error: err.message,
+      stack: err.stack, // Optionally include stack trace for debugging
+    });
+  });
 
 app.get("/",(req,res)=>{
     res.send("hello world");

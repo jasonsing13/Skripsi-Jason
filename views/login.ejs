@@ -4,21 +4,27 @@
   <%- include('partials/head.ejs') %>
   <title>Login Page</title>
 </head>
-<body>
-  <div class="container mt-5">
-    <div class="d-flex justify-content-center">
-      <div class="login-box">
-        <h2>Selamat Datang!</h2>
-        <p>Selamat datang di layanan E-Procurement MPM.</p>
-        <form action="/login" method="post">
-          <input type="email" class="form-control" name="email_perusahaan" placeholder="Masukan E-mail" required>
-          <input type="password" class="form-control" name="password" placeholder="Masukan Kata Sandi" required>
-          <button type="submit" class="btn btn-orange w-100">Masuk</button>
-        </form>
-        <p class="text-center mt-3">Anda Vendor dan belum punya akun? <a href="/registration">Daftar Sekarang</a></p>  
+<body style="height: 100vh;">
+  <div class="container mt-5 d-flex justify-content-center align-items-center">
+    <div class="row">
+      <div class="col d-flex justify-content-center align-items-center">
+        <div class="login-box">
+          <h2>Selamat Datang!</h2>
+          <p>Selamat datang di layanan E-Procurement MPM.</p>
+          <form action="/login" method="post">
+            <input type="email" class="form-control" name="email_perusahaan" placeholder="Masukan E-mail" required>
+            <input type="password" class="form-control" name="password" placeholder="Masukan Kata Sandi" required>
+            
+            <!-- <div class="alert alert-danger" role="alert">
+              Autentikasi gagal. Email atau kata sandi tidak valid.
+            </div> -->
+            <button type="submit" class="btn btn-orange w-100">Masuk</button>
+          </form>
+          <p class="text-center mt-3">Anda Vendor dan belum punya akun? <a href="/registration">Daftar Sekarang</a></p>  
+        </div>
       </div>
     </div>
   </div>
   <%- include('partials/footer.ejs') %>
-</body>
+<%- include('partials/footer.ejs') %>
 </html>

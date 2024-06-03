@@ -18,6 +18,8 @@ jenis_pengadaan.nama_jenis_pengadaan
 FROM 
 bidding_tender
 INNER JOIN 
+detail_bidding_tender ON detail_bidding_tender.bt_id = bidding_tender.bt_id
+INNER JOIN 
 pengadaan ON bidding_tender.pengadaan_id = pengadaan.pengadaan_id
 INNER JOIN 
 item ON bidding_tender.item_id = item.item_id
@@ -58,6 +60,15 @@ FROM bidding_tender
 WHERE bt_id = $1`;
 
 const getBidding_TenderById = `select * from public.bidding_tender where bt_id = $1`;
+const getBidding_TenderDetailById = `select bidding_tender.* ,jenis_pengadaan.nama_jenis_pengadaan, 
+pengadaan.nama_pengadaan, item.nama_item, item.harga_item, item.jumlah_item, jenis_pengadaan.nama_jenis_pengadaan, list_item.*
+FROM bidding_tender
+INNER JOIN pengadaan ON bidding_tender.pengadaan_id = pengadaan.pengadaan_id
+INNER JOIN jenis_pengadaan ON jenis_pengadaan.jenis_pengadaan_id = pengadaan.jenis_pengadaan_id
+INNER JOIN list_item ON list_item.pengadaan_id = pengadaan.pengadaan_id
+INNER JOIN item ON list_item.item_id = item.item_id
+WHERE bidding_tender.bt_id = $1
+`;
 const addBidding_Tender = `INSERT INTO public.bidding_tender (bt_id, pengadaan_id, evaluasi_vendor, link_zoom)
 VALUES ($1, $2, $3, $4);`
 const removeBidding_Tender = ` delete from public.bidding_tender where bt_id = $1 `;
@@ -70,6 +81,7 @@ module.exports = {
     getTender,
     getLinkZoom,
     getBidding_TenderById,
+    getBidding_TenderDetailById,
     addBidding_Tender,
     removeBidding_Tender,   
     updateBidding_Tender,

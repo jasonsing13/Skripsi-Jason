@@ -333,7 +333,6 @@ const removeVendor = (req,res)=>{
 const addRekening_Vendor = (req, res) => {
     const { no_rekening, nama_pemilik_rekening, bank_id, vendor_id } = req.body;
     const queryParams = [no_rekening, nama_pemilik_rekening, bank_id, req.query.id];
-    console.log(queryParams);
     db.pool.query(queries.addRekening_Vendor, queryParams)
         .then(result => {
             // Lakukan sesuatu jika query berhasil dieksekusi
@@ -371,7 +370,6 @@ const addRekening_Vendor = (req, res) => {
 const updateTax_Vendor = (req, res) => {
     const { no_npwp, status_pkp, vendor_id } = req.body;
     const queryParams = [no_npwp, status_pkp, vendor_id];
-    console.log(req.body);
     db.pool.query(queries.updateTax_Vendor, queryParams, (error, result) => {
       if (error) throw error;
     });
@@ -380,7 +378,6 @@ const updateTax_Vendor = (req, res) => {
   const updateLegal_Vendor = (req, res) => {
     const { no_nibrba, no_ktp_direktur, vendor_id } = req.body;
     const queryParams = [no_nibrba, no_ktp_direktur, vendor_id];
-    console.log(req.body);
     db.pool.query(queries.updateLegal_Vendor, queryParams, (error, result) => {
       if (error) throw error;
     });
@@ -410,7 +407,6 @@ const updateVendorURL = (req, res) => {
         url_dokumen_ijin_lain, 
         url_profil_perusahaan, 
         req.query.id];
-    console.log(req.body)
     db.pool.query(queries.updateVendorURL, queryParams, (error, result) => {
         if (error) throw error;
     });
@@ -420,7 +416,6 @@ const updateStatus_Vendor = (req, res) => {
     const id = req.params.id;
     const { status_id, vendor_id } = req.body;
     const queryParams = [status_id, vendor_id];
-    console.log(req.body);
     db.pool.query(queries.updateStatus_Vendor, queryParams, (error, result) => {
       if (error) throw error;
     });

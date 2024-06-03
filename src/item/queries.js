@@ -1,4 +1,4 @@
-const getItem = `select * from public.item `;
+const getItem = `SELECT * FROM public.item WHERE LOWER(nama_item) LIKE '%' || LOWER($1) || '%'`;
 const getItemById = `select * from public.item where item_id = $1`;
 const addItem = `INSERT INTO public.item (item_id, nama_item, jumlah_item, harga_item, url_foto_item)
 VALUES ($1, $2, $3, $4, $5);`

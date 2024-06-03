@@ -15,12 +15,17 @@ async function getDetail_Bidding_Tender() {
     }
   }
 
-const getDetail_Bidding_TenderById = (req,res)=>{
-    const id = req.params.id;
-    pool.query(queries.getDetail_Bidding_TenderById,[id], (error, results)=>{
-        if(error) throw error;
-        res.status(200).json(results.rows);
-    })
+async function getDetail_Bidding_TenderById(id) {
+    const client = await pool.pool.connect();
+    try {
+        const result = await client.query(queries.getDetail_Bidding_TenderById, [id]);
+        return result.rows; // Asumsi Anda hanya mengambil satu baris data
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
 };
 
 const addDetail_Bidding_Tender = (req,res)=>{

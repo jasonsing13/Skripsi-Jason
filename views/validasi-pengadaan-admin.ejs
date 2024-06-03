@@ -15,79 +15,95 @@
             <div class="card-body">
                 <h5 class="card-title">Approve Pengadaan yang diinput oleh admin divisi</h5>
                 <form action="/validasi-pengadaan-admin" method="post">
-                    <div class="row">
+                    <div class="row flex-wrap mb-3">
                         <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="nama_pengadaan" class="form-label">Nama Pengadaan</label>
-                                <input type="text" class="form-control" id="nama_pengadaan" name="nama_pengadaan" readonly>
-                            </div>
-                            <div class="mb-3">
-                                <label for="jenis_pengadaan" class="form-label">Jenis Pengadaan</label>
-                                <input type="text" class="form-control" id="jenis_pengadaan" name="jenis_pengadaan" readonly>
-                            </div>
-                            <div class="mb-3">
-                                <label for="jenis_vendor" class="form-label">Jenis Vendor</label>
-                                <input type="text" class="form-control" id="jenis_vendor" name="jenis_vendor" readonly>
-                            </div>
-                            <div class="mb-3">
-                                <label for="nama_barang" class="form-label">Nama Barang</label>
-                                <input type="text" class="form-control" id="nama_item" name="nama_item" readonly>
-                            </div>
-                            <div class="mb-3">
-                                <label for="harga_item" class="form-label">Harga Barang</label>
-                                <input type="text" class="form-control" id="harga_item" name="harga_item" readonly>
-                            </div>
-                            <div class="mb-3">
-                                <label for="jumlah_item" class="form-label">Jumlah Barang</label>
-                                <input type="number" class="form-control" id="jumlah_item" name="jumlah_item" readonly>
-                            </div>
+                            <label for="nama_pengadaan" class="form-label">Nama Pengadaan</label>
+                            <input type="text" class="form-control" id="nama_pengadaan" name="nama_pengadaan" value="<%= pengadaan.nama_pengadaan || "-" %>" readonly>
                         </div>
                         <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="termin_pembayaran" class="form-label">Termin Pembayaran*</label>
-                                <input type="text" class="form-control" id="termin_pembayaran" name="termin_pembayaran" readonly>
-                            </div>
-                            <div class="mb-3">
-                                <label for="tipe_pemilihan" class="form-label">Alokasi Pengadaan</label>
-                                <select class="form-select" id="tipe_pemilihan" name="tipe_pemilihan" required>
-                                    <option selected>Choose...</option>
-                                    <% option_Tipe_Pemilihan2.forEach(option => { %>
-                                        <option value="<%= option.tipe_pemilihan_id %>"><%= option.nama_tipe_pemilihan %></option>
-                                    <% }); %>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="tanggal_pemilihan" class="form-label">Tanggal Mulai</label>
-                                <input type="date" class="form-control" id="tanggal_pemilihan" name="tanggal_pemilihan">
-                            </div>
-                            <div class="mb-3">
-                                <label for="tanggal_pemilihan_selesai" class="form-label">Tanggal Selesai</label>
-                                <input type="date" class="form-control" id="tanggal_pemilihan_selesai" name="tanggal_pemilihan_selesai">
-                            </div>
-                            <div class="mb-3">
-                                <label for="pic" class="form-label">PIC</label>
-                                <select class="form-select" id="pic" name="pic">
-                                    <option selected>Pilih PIC</option>
-                                    <% option_PIC.forEach(option => { %>
-                                        <option value="<%= option.pic %>"><%= option.first_name %> <%= option.last_name %></option>
-                                    <% }); %>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="nama_vendor" class="form-label">Rekomendasi Vendor</label>
-                                <select class="form-select" id="nama_vendor" name="nama_vendor">
-                                    <option selected>Tampilkan Rekomendasi Vendor</option>
+                            <label for="termin_pembayaran" class="form-label">Termin Pembayaran*</label>
+                            <input type="text" class="form-control qty" id="termin_pembayaran" name="termin_pembayaran" value="<%= pengadaan.termin_pembayaran || "-" %>" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="jenis_pengadaan" class="form-label">Jenis Pengadaan</label>
+                            <input type="text" class="form-control" id="jenis_pengadaan" name="jenis_pengadaan" value="<%= pengadaan.nama_jenis_pengadaan || "-" %>" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="jenis_vendor" class="form-label">Jenis Vendor</label>
+                            <input type="text" class="form-control" id="jenis_vendor" name="jenis_vendor" value="<%= pengadaan.nama_jenis_vendor || "-" %>" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="tipe_pemilihan" class="form-label">Alokasi Pengadaan</label>
+                            <select class="form-select" id="tipe_pemilihan" name="tipe_pemilihan" disabled>
+                                <% option_Tipe_Pemilihan2.forEach(option => { %>
+                                    <option value="<%= option.tipe_pemilihan_id %>" <%= option.tipe_pemilihan_id == pengadaan.tipe_pemilihan_id ? 'selected' : '' %>><%= option.nama_tipe_pemilihan %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row flex-wrap mb-3">
+                        <div class="col-md-6">
+                            <label for="tanggal_pemilihan" class="form-label">Tanggal Mulai</label>
+                            <input type="date" class="form-control" id="tanggal_pemilihan" name="tanggal_pemilihan">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="tanggal_pemilihan_selesai" class="form-label">Tanggal Selesai</label>
+                            <input type="date" class="form-control" id="tanggal_pemilihan_selesai" name="tanggal_pemilihan_selesai">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="pic" class="form-label">PIC</label>
+                            <select class="form-select" id="pic" name="pic">
+                                <option selected>Pilih PIC</option>
+                                <% option_PIC.forEach(option => { %>
+                                    <option value="<%= option.id %>"><%= option.first_name %> <%= option.last_name %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                        <% if(pengadaan.tipe_pemilihan_id == 'a81c1ea8-2e4f-47f1-a963-38496490cd93'){ %>
+                            <div class="col-md-6">
+                                <label for="vendor_id" class="form-label">Vendor Yang Dipilih</label>
+                                <select class="form-select" id="vendor_id" name="vendor_id">
+                                    <option selected>Pilih Vendor</option>
                                     <% option_Vendor.forEach(option => { %>
-                                        <option value="<%= option.vendor_id %>"><%= option.nama_vendor %></option>
+                                        <option value="<%= option.id %>"><%= option.nama_vendor %></option>
                                     <% }); %>
                                 </select>
+                            </div>
+                        <% } %>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>No. Item</th>
+                                            <th>Nama Pengadaan</th>
+                                            <th>Quantity</th>
+                                            <th>Harga Item</th>
+                                            <!-- <th>Diskon</th>
+                                            <th>Net Amount</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% pengadaanItem.forEach(function(item) { %>
+                                        <tr>
+                                            <td><%= item.item_id %></td>
+                                            <td><%= item.nama_item %></td>
+                                            <td class="qty"><%= item.quantity %></td>
+                                            <td class="currency"><%= item.harga_total %></td>
+                                        </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
+                    <input type="hidden" name="pengadaan_id" value="<%= pengadaan.pengadaan_id %>">
                     <button type="submit" class="btn btn-success">Approve Pengadaan</button>
                 </form>
             </div>
         </div>
     </div>
-</body>
+<%- include('partials/footer.ejs') %>
 </html> 

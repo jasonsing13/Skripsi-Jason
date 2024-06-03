@@ -1,6 +1,11 @@
 var express = require('express');
+const session = require('express-session');
 var router = express.Router();
-var db = require("../database/db")
+router.use(express.static('public'));
+router.use(session({ secret: process.env.TOKEN_SECRET, rolling: true,
+  cookie: { maxAge: 60 * 1000 * 60 }, resave: false, saveUninitialized: false}));
+
+var db = require("../database/db");
 var { saveAllVendorInformation } = require("../database/db");
 var multer = require('multer');
 var upload = multer({ dest: 'uploads/' });
@@ -11,24 +16,27 @@ const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
 
 dotenv.config(); // Load konfigurasi dari file .env
-const app = express();
+
+// CONTROLLER
 var bidding_tenderController = require('../src/bidding_tender/controller');
 var detail_bidding_tenderController = require('../src/detail_bidding_tender/controller');
 //var detail_template_vsController = require('../src/detail_template_vs/controller');
 //var detail_vsController = require('../src/detail_vs/controller');
 var goods_receivedController = require('../src/goods_received/controller');
-//var itemController = require('../src/item/controller');
+var itemController = require('../src/item/controller');
 //var purchase_orderController = require('../src/purchase_order/controller');
 //var roleController = require('../src/role/controller');
 //var statusController = require('../src/status/controller');
 //var template_vsController = require('../src/template_vs/controller');
 //var tipe_pemilihanController = require('../src/tipe_pemilihan/controller');
-//var userController = require('../src/user/controller');
+var userController = require('../src/user/controller');
 var pengadaanController = require('../src/pengadaan/controller');
 //var vendor_scoreController = require('../src/vendor_score/controller');
 var vendorController = require('../src/vendor/controller');
 //var jenis_pengadaanController = require('../src/jenis_pengadaan/controller');
 //var jenis_vendorController = require('../src/jenis_vendor/controller');
+
+// SOME QUERIES
 const { option_Tipe_Pemilihan1 } = require('../src/pengadaan/queries');
 const { option_Tipe_Pemilihan2 } = require('../src/pengadaan/queries');
 const { option_Jenis_Vendor } = require('../src/jenis_vendor/queries');
@@ -37,9 +45,54 @@ const { option_Jenis_Pengadaan } = require('../src/jenis_pengadaan/queries');
 const { option_Select_Status} = require('../src/pengadaan/queries');
 
 /* GET home page. */
+// Daftar rute yang tidak perlu dicek sesinya
+const noSessionCheckRoutes = ['/', '/login'];
+
+function checkSession(req, res, next) {
+  // Jika rute saat ini ada di daftar noSessionCheckRoutes, lanjutkan ke rute berikutnya
+  if (noSessionCheckRoutes.includes(req.path)) {
+    return next();
+  }
+
+  // Cek sesi seperti biasa
+  if (req.session && req.session.data) {
+    next();
+  } else {
+    res.redirect('/');
+  }
+}
+
+router.use(checkSession);
+
+router.get('/', function(req, res) {
+  res.redirect('login');
+});
+
 router.get('/login', function(req, res) {
-  res.render('login', {
-    title: 'Login Page'
+  // console.log(req.session.data.parent.isAdmin)
+  if(req.session.data == null){
+    res.render('login', {
+      title: 'Login Page'
+    });
+  }else{
+    if(req.session.data.parent.isAdmin){
+      res.redirect('/dashboard-admin');
+    }else{
+      res.redirect('/dashboard-vendor');
+    }
+  }
+});
+
+router.get('/logout', function(req, res) {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Error destroying session:', err);
+      // Handle error appropriately (e.g., send error response to user)
+      return res.status(500).json({ error: 'Failed to logout.' });
+    }
+
+    res.clearCookie(); // Optional: Clear session cookie
+    res.redirect('/login'); // Redirect to login page after logout
   });
 });
 
@@ -52,25 +105,37 @@ function generateAccessToken(data) {
 // Rute untuk login
 router.post('/login', async (req, res) => {
   const { email_perusahaan, password } = req.body;
-
   try {
-    // Query untuk mendapatkan data vendor berdasarkan email
     const result = await vendorController.getEmail(email_perusahaan);
-    console.log(result.length)
-    console.log(result[0].password)
+    const resultAdm = await userController.getUserByEmail(email_perusahaan);
+    
 
     if (result.length > 0) {
       const passwordDb = result[0].password;
-      console.log('d' + passwordDb);
-      console.log('p' + password);
-      if (passwordDb.trim() === password.trim()) { //Besok cari cara nge akses token di sidebar dna di file" lainnya
+      if (passwordDb.trim() === password.trim()) {
         const token = generateAccessToken({ email: result[0].email });
-        return res.json({ token: token });
+        result[0]['isAdmin'] = false;
+        req.session.data = {parent: result[0]};
+        
+        res.redirect('/dashboard-vendor');
+        // Send data to route 2 via POST request
+      } else {
+        return res.status(401).json({ error: 'Autentikasi gagal. Email atau kata sandi tidak valid.' });
+      }
+    } else if(resultAdm.length > 0) {
+      const passwordDb = resultAdm[0].password;
+      if (passwordDb.trim() === password.trim()) { //Besok cari cara nge akses token di sidebar dna di file" lainnya
+        const token = generateAccessToken({ email: resultAdm[0].email });
+        resultAdm[0]['isAdmin'] = true;
+        req.session.data = {parent: resultAdm[0]};
+
+        res.redirect('/dashboard-admin');
       } else {
         return res.status(401).json({ error: 'Autentikasi gagal. Email atau kata sandi tidak valid.' });
       }
     } else {
-      return res.status(401).json({ error: 'Autentikasi gagal. Email atau kata sandi tidak valid.' });
+        return res.redirect(`/login?status=-1`);
+      // return res.status(401).json({ error: 'Autentikasi gagal. Email atau kata sandi tidak valid.' });
     }
   } catch (error) {
     console.error('Error during login:', error);
@@ -78,29 +143,11 @@ router.post('/login', async (req, res) => {
   }
 });
 
+
 // Rute yang memerlukan autentikasi
 router.get('/protected', authenticateToken, (req, res) => {
   res.json({ message: 'Ini adalah data rahasia', user: req.user });
 });
-
-
-
-// // POST login form data
-// router.post('/login', function(req, res) {
-//   const { email, password } = req.body;
-//   console.log(req.body);
-//     try{
-//       await vendorController.addAccount(req, res);
-//   res.redirect(`/registration`);
-//     }
-//       catch (error)  {    
-//          // Log the error and send a 500 response if an error occurs
-//       console.error('Error saving vendor information:', error);
-//       res.status(500).send('An error occurred during registration: ' + error.message);
-//   }
-// });
-
-
 
 router.get('/kabupaten-kota', async function(req, res) {
   const provinsi_id = req.query.provinsi_id;
@@ -228,7 +275,6 @@ router.get('/tax-info', function(req, res) {
 /* POST tax-info page. */
 router.post('/tax-info', async function(req, res) {
   const { no_npwp, status_pkp, vendor_id } = req.body;
-  console.log(req.body);
   try {
     await vendorController.updateTax_Vendor(req, res);
     res.redirect(`/legal-info?id=${vendor_id}`);
@@ -249,7 +295,6 @@ router.get('/legal-info', function(req, res) {
 /* POST legal-info page. */
 router.post('/legal-info', async function(req, res) {  
   const { no_nibrba, no_ktp_direktur, vendor_id } = req.body;
-  console.log(req.body);
   try {
     await vendorController.updateLegal_Vendor(req, res);
     res.redirect(`/profil-informasi/${vendor_id}`);
@@ -394,15 +439,33 @@ router.post('/upload-dokumen-vendor', upload.fields([
 //   }
 // });
 
-router.get('/dashboard-vendor', function(req, res) {
-  res.render('dashboard-vendor');
+
+router.get('/dashboard-vendor', async(req, res) => {
+  try {
+    const data = req.session.data; // Access data from session
+    res.render('dashboard-vendor', { parent: data.parent, page: 'dashboard' });
+  } catch (error) {
+    console.error('Error fetching vendor data', error); // Tampilkan stack error
+    res.status(500).send('Error fetching vendor data');
+  }
+});
+
+router.get('/dashboard-admin', async(req, res) => {
+  try {
+    const data = req.session.data; // Access data from session
+    
+    res.render('dashboard-admin', { parent: data.parent, page: 'dashboard' });
+  } catch (error) {
+    console.error('Error fetching admin data', error); // Tampilkan stack error
+    res.status(500).send('Error fetching admin data');
+  }
 });
 
 router.get('/approved-vendor-profile', async(req, res) => {
   try {
-    const vendor_id = req.query.id; // Ambil vendor_id dari query parameter
-    const result = await vendorController.getApprovedVendorProfile(vendor_id);
-    res.render('approved-vendor-profile', { vendor: result, vendor_id });
+    const data = req.session.data; // Access data from session
+
+    res.render('approved-vendor-profile', { parent: data.parent, page: 'profile' });
   } catch (error) {
     console.error('Error fetching vendor data', error); // Tampilkan stack error
     res.status(500).send('Error fetching vendor data');
@@ -411,9 +474,9 @@ router.get('/approved-vendor-profile', async(req, res) => {
 
 router.get('/approved-akun-bank', async function(req, res) {
   try {
-    const vendor_id = req.query.id; // Ambil vendor_id dari query parameter
-    const result = await vendorController.getApprovedAkunBank(vendor_id);
-    res.render('approved-akun-bank', { vendor: result, vendor_id });
+    const data = req.session.data;
+    const result = await vendorController.getApprovedAkunBank(data.parent.id);
+    res.render('approved-akun-bank', { parent: data.parent, result: result, page: 'profile' });
   } catch (error) {
     console.error('Error fetching vendor data', error); // Tampilkan stack error
     res.status(500).send('Error fetching vendor data');
@@ -422,9 +485,9 @@ router.get('/approved-akun-bank', async function(req, res) {
 
 router.get('/approved-perpajakan', async function(req, res) {
   try {
-    const vendor_id = req.query.id; // Ambil vendor_id dari query parameter
-    const result = await vendorController.getApprovedAkunPerpajakan(vendor_id);
-    res.render('approved-perpajakan', { vendor: result, vendor_id });
+    const data = req.session.data;
+    const result = await vendorController.getApprovedAkunPerpajakan(data.parent.id);
+    res.render('approved-perpajakan', { parent: data.parent, result: result, page: 'profile' });
   } catch (error) {
     console.error('Error fetching vendor data', error); // Tampilkan stack error
     res.status(500).send('Error fetching vendor data');
@@ -433,9 +496,9 @@ router.get('/approved-perpajakan', async function(req, res) {
 
 router.get('/approved-legalitas', async function(req, res) {
   try {
-    const vendor_id = req.query.id; // Ambil vendor_id dari query parameter
-    const result = await vendorController.getApprovedLegalitas(vendor_id);
-    res.render('approved-legalitas', { vendor: result, vendor_id });
+    const data = req.session.data;
+    const result = await vendorController.getApprovedLegalitas(data.parent.id);
+    res.render('approved-legalitas', { parent: data.parent, result: result, page: 'profile' });
   } catch (error) {
     console.error('Error fetching vendor data', error); // Tampilkan stack error
     res.status(500).send('Error fetching vendor data');
@@ -445,12 +508,12 @@ router.get('/approved-legalitas', async function(req, res) {
 // router.get('/daftar-pengadaan', async function(req, res) {
 //   try {
 //       const result = await pengadaanController.getDaftarPengadaan();
-//       const vendor_id = req.query.vendor_id || 'default_vendor_id'; // Sesuaikan ini
-//       const pengadaan_id = req.query.pengadaan_id || 'default_pengadaan_id'; // Sesuaikan ini
+//       const vendor_id = req.query.id; // Sesuaikan ini
+//       // const pengadaan_id = req.query.pengadaan_id; // Sesuaikan ini
 //       res.render('daftar-pengadaan', {
 //           pengadaan: result,
 //           vendor_id: vendor_id,
-//           pengadaan_id: pengadaan_id
+//           pengadaan_id: result.pengadaan_id
 //       });
 //   } catch (error) {
 //       console.error('Error fetching pengadaan data:', error);
@@ -458,30 +521,38 @@ router.get('/approved-legalitas', async function(req, res) {
 //   }
 // });
 
-// router.get('/daftar-pengadaan', async function(req, res) {
-//   const status_id = req.params.status_id;
-//   try {
-//       const statusOptions = await pengadaanController.option_Select_Status();
-//       const result = await pengadaanController.getDaftarPengadaanByStatus(status_id);
-//       res.render('daftar-pengadaan', {
-//           pengadaan: result,
-//           status: statusOptions
-//       });
-//   } catch (error) {
-//       console.error('Error fetching pengadaan data:', error);
-//       res.status(500).send('Error fetching pengadaan data: ' + error.message);
-//   }
-// });
+router.get('/daftar-pengadaan', async function(req, res) {
+  const data = req.session.data;
+  try {
+      const statusOptions = await pengadaanController.option_Select_Status();
+      const result = await pengadaanController.getDaftarPengadaan();
+      const vendor = await vendorController.getProfilInformasi(req.query.id);
+      res.render('daftar-pengadaan', {
+          parent: data.parent,
+          pengadaan: result,
+          status_id: '',
+          status: statusOptions, 
+          page: 'pengadaan'
+      });
+  } catch (error) {
+      console.error('Error fetching pengadaan data:', error);
+      res.status(500).send('Error fetching pengadaan data: ' + error.message);
+  }
+});
 
 // Tambahkan route untuk filter status pengadaan
 router.get('/daftar-pengadaan/status/:status_id', async function(req, res) {
   const status_id = req.params.status_id;
+  const data = req.session.data;
   try {
       const statusOptions = await pengadaanController.option_Select_Status();
       const result = await pengadaanController.getDaftarPengadaanByStatus(status_id);
       res.render('daftar-pengadaan', {
           pengadaan: result,
-          status: statusOptions
+          status: statusOptions,
+          status_id: status_id,
+          parent: data.parent,
+          page: 'pengadaan'
       });
   } catch (error) {
       console.error('Error fetching pengadaan data:', error);
@@ -531,11 +602,9 @@ router.get('/dokumen-purchase-order', function(req, res) {
 
 router.get('/list-bidding-vendor', async (req, res) => {
   try {
-      let result = await bidding_tenderController.getBidding(); // Fetch bids data
-      if (!result || result.length === 0) {
-          throw new Error('No bidding data found');
-      }
-      res.render('list-bidding-vendor', { bidding_tender: result });
+    const data = req.session.data;
+    let result = await bidding_tenderController.getBidding(); // Fetch bids data'
+    res.render('list-bidding-vendor', { bidding_tender: result, parent: data.parent, page: 'bidding', pagelink: 'undangan' });
   } catch (error) {
       console.error('Error fetching bidding data:', error);
       res.status(500).send('Error fetching bidding data');
@@ -545,19 +614,28 @@ router.get('/list-bidding-vendor', async (req, res) => {
 
 
 
-router.get('/form-bidding', function(req, res) {
+router.get('/form-bidding', async (req, res) => {
+  const data = req.session.data;
   const currentDate = new Date();
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   const formattedDate = currentDate.toLocaleDateString('id-ID', options);
-
-  res.render('form-bidding', {
-    title: "Form Bidding",
-    currdate: formattedDate
-  });
+  try {
+    const dataBidding = await bidding_tenderController.getBidding_TenderDetailById(req.query.id);
+    res.render('form-bidding', {
+      title: "Form Bidding",
+      currdate: formattedDate,
+      dataBidding: dataBidding,
+      parent: data.parent,
+      page: 'bidding'
+    });
+} catch (error) {
+    console.error('Failed to add new detail bidding tender:', error);
+    res.status(500).send('Error adding new detail bidding tender');
+  }
 });
 
 
-router.post('/form-bidding', async function(req, res) {
+router.post('/form-bidding', async (req, res) => {
   const { durasi_pekerjaan, pengajuan_harga } = req.body;
   try {
       // Assuming you have a function to insert data into the database
@@ -569,25 +647,29 @@ router.post('/form-bidding', async function(req, res) {
   }
 });
 
-router.get('/form-tender', function(req, res) {
+router.get('/form-tender/:id', async function(req, res) {
   const currentDate = new Date();
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   const formattedDate = currentDate.toLocaleDateString('id-ID', options);
+  const data = req.session.data;
 
   res.render('form-tender', {
     title: "Form Tender",
-    currdate: formattedDate
+    currdate: formattedDate,
+    page: 'tender',
+    parent: data.parent
   });
 });
 
 router.post('/form-tender', async function(req, res) {
-  const { duration, bidAmount, vendor_id, bt_id } = req.body;  // Ensure vendor_id and bt_id are provided in the form or derived from session/context
+  const data = req.session.data;
+  const { duration, bidAmount, bt_id } = req.body;  // Ensure vendor_id and bt_id are provided in the form or derived from session/context
 
   try {
       await db.addDetail_Bidding_Tender({
           pengajuan_harga: bidAmount,
           durasi_pekerjaan: duration,
-          vendor_id: vendor_id,  // Assuming vendor_id is obtained correctly
+          parent: data.parent,  // Assuming vendor_id is obtained correctly
           bt_id: bt_id           // Assuming bt_id is obtained correctly
       });
 
@@ -600,13 +682,13 @@ router.post('/form-tender', async function(req, res) {
 
 router.get('/list-tender-vendor', async (req, res) => {
   try {
-      let result = await bidding_tenderController.getTender(); // Fetch tenders data
-      console.log('Tender data:', result); // Log data yang diterima
-      if (!result || result.length === 0) {
-          throw new Error('No tender data found');
-      }
-      // res.send(result);
-      res.render('list-tender-vendor', { bidding_tender: result });
+    const data = req.session.data;
+    let result = await bidding_tenderController.getTender(); // Fetch tenders data
+    if (!result || result.length === 0) {
+        throw new Error('No tender data found');
+    }
+    // res.send(result);
+    res.render('list-tender-vendor', { bidding_tender: result, parent: data.parent, page: 'tender' });
   } catch (error) {
       console.error('Error fetching tender data:', error.message); // Log error yang lebih detail
       res.status(500).send('Error fetching tender data');
@@ -633,8 +715,9 @@ router.get('/form-vendor-scoring', function(req,res) {
 
 router.get('/list-vendor-admin', async (req, res) => {
   try {
-      const result = await vendorController.getVendor(); // Fetch vendors data using a function from db.js
-      res.render('list-vendor-admin', { vendor: result });
+    const data = req.session.data;
+    const result = await vendorController.getVendor(); // Fetch vendors data using a function from db.js
+    res.render('list-vendor-admin', { vendor: result, parent: data.parent });
   } catch (error) {
       console.error('Error fetching vendors:', error);
       res.status(500).send('Error fetching vendor data');
@@ -643,14 +726,16 @@ router.get('/list-vendor-admin', async (req, res) => {
 
 
 router.get('/approval-vendor-admin', function(req, res) {
-  res.render('approval-vendor-admin');
+  const data = req.session.data;
+  res.render('approval-vendor-admin', { parent: data.parent });
 });
 
 router.post('/approval-vendor-admin', async (req, res) => {
   const { vendor_id, status_id } = req.body;
+  const data = req.session.data;
   try {
       await vendorController.updateVendor_Status(vendor_id, status_id); // Assuming db.updateVendorStatus updates the status
-      res.redirect('/list-vendor-admin');
+      res.redirect('/list-vendor-admin', { parent: data.parent });
   } catch (error) {
       console.error('Failed to update vendor status:', error);
       res.status(500).send('Error updating vendor status');
@@ -658,10 +743,17 @@ router.post('/approval-vendor-admin', async (req, res) => {
 });
 
 router.get('/buat-pengadaan', async function(req, res) {
-  const option_Tipe_Pemilihan1 = await pengadaanController.option_Tipe_Pemilihan1();
+  const data = req.session.data;
+  const option_Tipe_Pemilihan1 = await pengadaanController.option_Tipe_Pemilihan2();
   const option_Jenis_Pengadaan = await pengadaanController.option_Jenis_Pengadaan();
   const option_Jenis_Vendor = await pengadaanController.option_Jenis_Vendor();
-  res.render('buat-pengadaan', { option_Tipe_Pemilihan1, option_Jenis_Pengadaan, option_Jenis_Vendor });
+  res.render('buat-pengadaan', { 
+    option_Tipe_Pemilihan1, 
+    option_Jenis_Pengadaan, 
+    option_Jenis_Vendor, 
+    parent: data.parent,
+    page: 'pengadaan'
+  });
 });
 
 // router.post('/buat-pengadaan', async function(req, res) {
@@ -773,45 +865,78 @@ router.get('/buat-pengadaan', async function(req, res) {
 
 router.post('/buat-pengadaan', async (req, res) => {
   const {
-      nama_pengadaan,
-      tipe_pemilihan_id,
-      jenis_pengadaan_id,
-      jenis_vendor_id,
-      termin_pembayaran,
-      create_date,
-      create_by,
-      items // Items as JSON string
+      'item_id[]': item_id,
+      'jumlah[]': jumlah,
+      'harga[]': harga
   } = req.body;
-
   try {
       // Buat pengadaan baru dan dapatkan pengadaan_id
-      const pengadaan_id = await pengadaanController.addPengadaan(req.body);
+      const pengadaan_id = await pengadaanController.addPengadaan(req.body, req.session.data.parent.id);
 
-      // Parse items JSON string
-      const itemsArray = JSON.parse(items);
+      // Pastikan bahwa item_id, jumlah, dan harga memiliki panjang yang sama
+      if ((item_id.length !== jumlah.length || item_id.length !== harga.length) && item_id.isArray) {
+        console.error('Array lengths do not match');
+        return res.redirect(`/buat-pengadaan`);
+      }
 
+      var itemsArray = {}
+      // Buat array items
+      if(item_id.isArray){
+        itemsArray = item_id.map((id, index) => ({
+          id: id,
+          jumlah: jumlah[index],
+          harga: harga[index]
+        }));
+      }else{
+        itemsArray = [{
+          id: item_id,
+          jumlah: jumlah,
+          harga: harga
+        }]
+      }
       // Tambahkan item ke pengadaan yang baru dibuat
       for (const item of itemsArray) {
-          await pengadaanController.addItem(pengadaan_id, item);
+        await pengadaanController.addItem(pengadaan_id, item);
       }
 
       // Redirect ke halaman daftar-pengadaan-admin dengan pengadaan_id sebagai query parameter
-      res.redirect(`/daftar-pengadaan-admin?pengadaan_id=${pengadaan_id}`);
+      res.redirect(`/daftar-pengadaan-admin`);
   } catch (error) {
       console.error('Database connection error', error);
       res.status(500).send('Something went wrong');
   }
 });
 
+router.get('/daftar-pengadaan-admin', async function(req, res) {
+  const data = req.session.data;
+  try {
+      const statusOptions = await pengadaanController.option_Select_Status();
+      const result = await pengadaanController.getDaftarPengadaan();
+      res.render('daftar-pengadaan-admin', {
+          parent: data.parent,
+          pengadaan: result,
+          status_id: '',
+          status: statusOptions, 
+          page: 'pengadaan'
+      });
+  } catch (error) {
+      console.error('Error fetching pengadaan data:', error);
+      res.status(500).send('Error fetching pengadaan data: ' + error.message);
+  }
+});
 
 router.get('/daftar-pengadaan-admin/status/:status_id', async function(req, res) {
+  const data = req.session.data;
   const status_id = req.params.status_id;
   try {
     const statusOptions = await pengadaanController.option_Select_Status();
     const result = await pengadaanController.getDaftarPengadaanByStatus(status_id);
     res.render('daftar-pengadaan-admin', { 
-      pengadaan: result ,
-      status: statusOptions
+      parent: data.parent,
+      pengadaan: result,
+      status_id: status_id,
+      status: statusOptions, 
+      page: 'pengadaan'
     });
   } catch (error) {
       console.error('Error fetching procurement data:', error);
@@ -819,12 +944,12 @@ router.get('/daftar-pengadaan-admin/status/:status_id', async function(req, res)
   }
 });
 
-router.get('/informasi-pengadaan-previous', async (req, res) => {
+router.get('/informasi-pengadaan-previous/:id', async (req, res) => {
   try {
-    const pengadaan_id = req.query.id
+    const data = req.session.data;
+    const pengadaan_id = req.params.id
     const result = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
-    console.log("res"+result)
-    res.render('informasi-pengadaan-previous', { pengadaan: result });
+    res.render('informasi-pengadaan-previous', { pengadaan: result, parent: data.parent, page: 'pengadaan' });
   } catch (error) {
       console.error('Error fetching procurement data:', error);
       res.status(500).send('Error fetching procurement data');
@@ -832,33 +957,35 @@ router.get('/informasi-pengadaan-previous', async (req, res) => {
 });
 
 
-router.get('/item-pengadaan-previous', async (req, res) => {
+router.get('/item-pengadaan-previous/:id', async (req, res) => {
   // Fetch the necessary items data
   try {
-    const result = await pengadaanController.getPengadaan();
-    const pengadaan_id = req.query.id
-    res.render('item-pengadaan-previous', { pengadaan: result });
+    const pengadaan_id = req.params.id
+    const result = await pengadaanController.getItemPengadaan(pengadaan_id);
+    const data = req.session.data;
+    res.render('item-pengadaan-previous', { pengadaan: result, parent: data.parent, pengadaan_id: pengadaan_id, page: 'pengadaan' });
   } catch (error) {
       console.error('Error fetching procurement data:', error);
       res.status(500).send('Error fetching procurement data');
   }
 });
 
-router.get('/validasi-pengadaan-admin', function(req, res) {
-  const option_Tipe_Pemilihan2 =  pengadaanController.option_Tipe_Pemilihan2();
-  const option_Vendor =  pengadaanController.option_Vendor();
-  const option_PIC =  pengadaanController.option_PIC();
-  res.render('validasi-pengadaan-admin', {option_Tipe_Pemilihan2, option_Vendor, option_PIC});
+router.get('/validasi-pengadaan-admin/:id', async function(req, res) {
+  const option_Tipe_Pemilihan2 = await pengadaanController.option_Tipe_Pemilihan2();
+  const option_Vendor = await pengadaanController.option_Vendor();
+  const option_PIC = await pengadaanController.option_PIC();
+  const pengadaan_id = req.params.id
+  const result = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
+  const item = await pengadaanController.getItemPengadaan(pengadaan_id);
+  const data = req.session.data;
+  res.render('validasi-pengadaan-admin', {pengadaan: result, pengadaanItem: item, option_Tipe_Pemilihan2, option_Vendor, option_PIC, parent: data.parent, page: "pengadaan"});
 });
 
 router.post('/validasi-pengadaan-admin', async function(req, res) {
-  const { time_pemilihan_id, tanggal_pemilihan, tanggal_pemilihan_selesai, pic, vendor_id } = req.body;
-  console.log(req.body);
+  const vendor_id = req.body.vendor_id || null;
   try {
       // Asumsi Anda memiliki fungsi untuk menyetujui pengadaan
-      await pengadaanController.validasiPengadaan({ req, res });
-      req.session = req.session || {};
-      req.session.id = pengadaan_id;
+      await pengadaanController.validasiPengadaan(req.body, vendor_id);
       res.redirect('/informasi-pengadaan-approved'); // Mengarahkan ke halaman sukses atau kembali ke daftar
   } catch (error) {
       console.error('Gagal menyetujui pengadaan:', error);
@@ -942,6 +1069,21 @@ upload.fields([{ name: 'invoice' }, { name: 'surat_jalan' }]), async (req, res) 
     // Assuming you have a function to insert data into the database
     await goods_receivedController.addGoods_Received(url_invoice, url_surat_jalan);
     res.redirect('/daftar-pengadaan-vendor'); // Redirect to the list page after successful insertion
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+// API
+router.post('/api/getProduct', async (req, res) => {
+  try {
+    const {
+      prod
+    } = req.body;
+    // Assuming you have a function to insert data into the database
+    const item = await itemController.getItem(prod);
+    res.send(item); // Redirect to the list page after successful insertion
   } catch (error) {
     console.error('Failed to add goods received:', error);
     res.status(500).send('Error adding goods received');

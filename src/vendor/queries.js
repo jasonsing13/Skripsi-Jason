@@ -1,5 +1,5 @@
 const getVendor = `SELECT 
-i.vendor_id,
+i.id,
 r.rekening_id,
 r.nama_pemilik_rekening,
 r.no_rekening,
@@ -30,7 +30,7 @@ v.modif_by,
 v.negara,
 v.no_npwp,
 v.url_profil_perusahaan,
-v.jenis_vendor_id,
+v.jenis_id,
 v.no_nibrba,
 v.kk_id,
 v.rekening_id,
@@ -40,7 +40,7 @@ v.status_pkp,
 v.no_ktp_direktur,
 v.status_id,
 v.no_telp,
-v.kategori_vendor_id
+v.kategori_id
 FROM 
 public.vendor i
 JOIN 
@@ -48,23 +48,23 @@ public.status s ON i.status_id = s.status_id
 JOIN 
 public.jenis_pengadaan jp ON i.jenis_pengadaan_id = jp.jenis_pengadaan_id
 JOIN 
-public.jenis_vendor jv ON i.jenis_vendor_id = jv.jenis_vendor_id
+public.jenis_vendor jv ON i.jenis_id = jv.jenis_id
 JOIN 
-public.kategori_vendor kv ON i.kategori_vendor_id = kv.kategori_vendor_id
+public.kategori_vendor kv ON i.kategori_id = kv.kategori_id
 JOIN 
-public.vendor v ON i.vendor_id = v.vendor_id
+public.vendor v ON i.id = v.id
 JOIN
 public.rekening r ON i.rekening_id = r.rekening_id
 `;
 
 const getEmail = `
-SELECT * FROM vendor WHERE email_perusahaan = $1;
+SELECT * FROM vendor WHERE email_perusahaan = $1 LIMIT 1;
 
 `
 
 const getProfilInformasi = `
   SELECT  
-    vendor.vendor_id, 
+    vendor.id, 
     vendor.nama_vendor, 
     vendor.status_kantor,
     vendor.nama_direktur,
@@ -81,12 +81,12 @@ const getProfilInformasi = `
   JOIN
     public.provinsi p ON kk.provinsi_id = p.provinsi_id
   WHERE 
-    vendor.vendor_id = $1
+    vendor.id = $1
 `;
 
 const getProfilAkunBank = `SELECT
 v.nama_vendor,
-v.vendor_id,
+v.id,
 r.no_rekening,
 r.nama_pemilik_rekening,
 b.nama_bank
@@ -97,7 +97,7 @@ public.rekening r ON v.rekening_id = r.rekening_id
 JOIN
 public.bank b ON r.bank_id = b.bank_id
 WHERE 
-v.vendor_id = $1;
+v.id = $1;
 `
 
 const getProfilPerpajakan = `SELECT
@@ -106,7 +106,7 @@ no_npwp,
 status_pkp,
 nppkp
 FROM public.vendor
-WHERE vendor_id = $1;
+WHERE id = $1;
 `
 
 const getProfilLegalitas = `SELECT
@@ -114,13 +114,13 @@ nama_vendor,
 no_nibrba,
 no_ktp_direktur
 FROM public.vendor
-WHERE vendor_id = $1;
+WHERE id = $1;
 `
 
 const getApprovedVendorProfile =`
 SELECT  
 vendor.nama_vendor, 
-vendor.vendor_id,
+vendor.id,
 vendor.status_kantor,
 vendor.nama_direktur,
 vendor.no_telp,
@@ -136,13 +136,13 @@ public.kabupaten_kota kk ON vendor.kk_id = kk.kk_id
 JOIN
 public.provinsi p ON kk.provinsi_id = p.provinsi_id
 WHERE 
-vendor.vendor_id = $1
+vendor.id = $1
 `
 
 const getApprovedAkunBank =`
 SELECT
 v.nama_vendor,
-v.vendor_id,
+v.id,
 r.rekening_id,
 r.nama_pemilik_rekening,
 r.no_rekening,
@@ -154,7 +154,7 @@ public.rekening r ON v.rekening_id = r.rekening_id
 JOIN
 public.bank b ON r.bank_id = b.bank_id
 WHERE 
-v.vendor_id = $1;
+v.id = $1;
 `
 const getApprovedAkunPerpajakan = `
 SELECT
@@ -163,7 +163,7 @@ no_npwp,
 status_pkp,
 nppkp
 FROM public.vendor
-WHERE vendor_id = $1;
+WHERE id = $1;
 `
 
 const getApprovedLegalitas = `
@@ -172,16 +172,16 @@ nama_vendor,
 no_nibrba,
 no_ktp_direktur
 FROM public.vendor
-WHERE vendor_id = $1;
+WHERE id = $1;
 `
 
-const getVendorById = `select * from vendor where vendor_id = $1`;
+const getVendorById = `select * from vendor where id = $1`;
 
-const option_Jenis_Vendor = `SELECT jenis_vendor_id, nama_jenis_vendor
+const option_Jenis_Vendor = `SELECT jenis_id, nama_jenis_vendor
 FROM public.jenis_vendor;
 `;
 
-const option_kategori_vendor = `SELECT kategori_vendor_id, nama_kategori_vendor
+const option_kategori_vendor = `SELECT kategori_id, nama_kategori_vendor
 FROM public.kategori_vendor;
 `;
 
@@ -199,10 +199,10 @@ FROM public.bank;
 
 const addVendor = `
 INSERT INTO public.vendor( 
-  vendor_id,
+  id,
   nama_vendor,
   email_perusahaan,
-  jenis_vendor_id,
+  jenis_id,
   status_kantor,
   alamat_perusahaan,
   nama_direktur,
@@ -213,10 +213,10 @@ INSERT INTO public.vendor(
   create_by,
   create_date
 ) VALUES (
-  gen_random_uuid(), --vendor_id
+  gen_random_uuid(), --id
   $1,  -- nama_vendor
   $2,  -- email_perusahaan
-  $3,  -- jenis_vendor_id
+  $3,  -- jenis_id
   $4,  -- status_kantor
   $5,  -- alamat_perusahaan
   $6,  -- nama_direktur
@@ -226,7 +226,7 @@ INSERT INTO public.vendor(
   $10, -- kk_id
   $11, -- create_by
   now() -- create_date
-) RETURNING vendor_id;`
+) RETURNING id;`
 
 
 const addAccount = `
@@ -238,7 +238,7 @@ INSERT INTO public.vendor
 `;
 
 
-const removeVendor = ` delete from vendor where vendor_id = $1 `;
+const removeVendor = ` delete from vendor where id = $1 `;
 
 const addRekening_Vendor = 
 ` INSERT INTO public.rekening
@@ -250,7 +250,7 @@ const updateRekening_Vendor = `
   UPDATE public.vendor
   SET 
     rekening_id =$1
-  WHERE vendor_id = $2;
+  WHERE id = $2;
 `;
 
 const updateTax_Vendor = `
@@ -258,7 +258,7 @@ const updateTax_Vendor = `
   SET 
     no_npwp = $1,
     status_pkp = $2
-  WHERE vendor_id = $3;
+  WHERE id = $3;
 `;
 
 const updateLegal_Vendor = `
@@ -266,7 +266,7 @@ const updateLegal_Vendor = `
   SET
     no_nibrba = $1,
     no_ktp_direktur = $2
-  WHERE vendor_id = $3;
+  WHERE id = $3;
 `;
 
 const updateVendorURL = ` 
@@ -281,14 +281,14 @@ const updateVendorURL = `
     url_nibrba = $7,
     url_dokumen_ijin_lain = $8,
     url_profil_perusahaan = $9 
-  WHERE vendor_id = $10;
+  WHERE id = $10;
 `;
 
 const updateStatus_Vendor = `
   UPDATE public.vendor
   SET
     status_id = $1
-  WHERE vendor_id = $2;
+  WHERE id = $2;
 `;
 
 module.exports = {

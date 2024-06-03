@@ -4,16 +4,25 @@ const getDaftarPengadaan = `
 SELECT
     pengadaan.pengadaan_id,
     pengadaan.nama_pengadaan,
-    pengadaan.tanggal_pemilihan,
-    pengadaan.tanggal_pemilihan_selesai,
+    pengadaan.tanggal_permintaan::DATE AS tanggal_permintaan,
+    pengadaan.tanggal_pemilihan::DATE AS tanggal_pemilihan,
+    pengadaan.tanggal_pemilihan_selesai::DATE AS tanggal_pemilihan_selesai,
     jenis_pengadaan.nama_jenis_pengadaan,
-    status.nama_status
+    nama_tipe_pemilihan,
+    status.nama_status,
+    nama_jenis_vendor
 FROM
     pengadaan
 INNER JOIN
-    status ON pengadaan.status_id = status.status_id
+    list_item ON pengadaan.pengadaan_id = list_item.pengadaan_id
 INNER JOIN
-    jenis_pengadaan ON pengadaan.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id;
+    status ON pengadaan.status_id = status.status_id
+LEFT JOIN
+    jenis_pengadaan ON pengadaan.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id
+LEFT JOIN
+    jenis_vendor ON pengadaan.jenis_vendor_id = jenis_vendor.jenis_vendor_id
+INNER JOIN
+    tipe_pemilihan ON tipe_pemilihan.tipe_pemilihan_id = pengadaan.tipe_pemilihan_id;
 `;
 
 const option_Select_Status = `
@@ -44,28 +53,26 @@ WHERE
 
 const getInformasiPengadaanPrevious = `
 SELECT 
-    pengadaan.pengadaan_id,
-    pengadaan.nama_pengadaan,
-    jenis_vendor.nama_jenis_vendor,
-    pengadaan.tanggal_pemilihan,
-    pengadaan.tanggal_pemilihan_selesai
+    pengadaan.*,
+    jenis_vendor.nama_jenis_vendor, 
+    nama_jenis_pengadaan
 FROM 
     pengadaan 
-INNER JOIN
+LEFT JOIN
     jenis_vendor ON pengadaan.jenis_vendor_id = jenis_vendor.jenis_vendor_id
+LEFT JOIN
+    jenis_pengadaan ON pengadaan.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id
 WHERE 
     pengadaan.pengadaan_id = $1;
 `;
 
 const getItemPengadaan = `
 SELECT 
-    i.*
+    i.nama_item, l.*
 FROM 
     public.item i
 INNER JOIN 
-    public.mapping_item_list_item m ON i.item_id = m.item_id
-INNER JOIN 
-    public.list_item l ON m.list_item_id = l.list_item_id
+    public.list_item l ON l.item_id = i.item_id
 WHERE l.pengadaan_id = $1;
 `;
 
@@ -156,7 +163,7 @@ WHERE li.pengadaan_id = $1
 
 const addListItem = `
     INSERT INTO public.list_item (
-        list_item_id,
+        item_id,
         pengadaan_id,
         quantity,
         harga_total
@@ -184,7 +191,7 @@ const getItemsByPengadaanId = `
 
 const option_PIC = `
 SELECT 
-user_id, 
+id, 
 first_name, 
 last_name, 
 role_id from public.user;`;
@@ -194,13 +201,12 @@ const update_PIC = `
   UPDATE public.pengadaan
   SET 
     pic =$1
-  WHERE user_id = $2;
+  WHERE id = $2;
 `;
 
 const option_Vendor =`
-SELECT vendor_id, nama_vendor
+SELECT id, nama_vendor
 FROM public.vendor
-WHERE vendor_id =$1
 ;
 `;
 
@@ -233,10 +239,10 @@ const addPengadaan = `
         jenis_vendor_id, 
         termin_pembayaran,
         tanggal_permintaan,  
-        create_date, 
-        create_by
+        create_by,
+        status_id
     ) 
-    VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $6)
+    VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP, $7, '0b3e77e5-140b-4662-9563-dde365358ddc')
     RETURNING pengadaan_id;
 `;
 
@@ -259,11 +265,11 @@ const validasiPengadaan = `
 UPDATE public.pengadaan
 SET 
 tanggal_pemilihan = $1, 
-tanggal_pemilihan_selesai = $3, 
-pic = $4, 
-jenis_pengadaan_id = $5, 
-vendor_id = $6
-WHERE pengadaan_id = $7;
+tanggal_pemilihan_selesai = $2, 
+pic = $3,
+vendor_pemenang = $4,
+status_id = '5b117843-38aa-47cd-b4f2-24c3f88ab472'
+WHERE pengadaan_id = $5;
 ;`
 ;
 

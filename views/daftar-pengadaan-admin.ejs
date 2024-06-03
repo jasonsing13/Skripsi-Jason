@@ -51,15 +51,20 @@
                     <option value="<%= status.status_id %>"><%= status.nama_status %></option>
                 <% }); %>
             </select>
-            <button class="btn btn-primary" onclick="location.href='/buat-pengadaan'">Tambah Pengadaan</button>        
+            <form action="buat-pengadaan" method="get">
+                <button type="submit" class="btn btn-primary">Tambah Pengadaan</button>        
+            </form>
         </div>
         <table class="table">
             <thead>
                 <tr>
                     <th>Nomor Procurement</th>
                     <th>Nama Pengadaan</th>
+                    <th>Tanggal Permintaan</th>
                     <th>Tanggal Mulai</th>
                     <th>Tanggal Selesai</th>
+                    <th>Jenis Pengadaan</th>
+                    <th>Jenis Pemilihan</th>
                     <th>Jenis Vendor</th>
                     <th>Status</th>
                     <th>Aksi</th>
@@ -70,12 +75,15 @@
                 <tr>
                     <td><%= pengadaan.pengadaan_id %></td>
                     <td><%= pengadaan.nama_pengadaan %></td>
-                    <td><%= pengadaan.tanggal_pemilihan %></td>
-                    <td><%= pengadaan.tanggal_pemilihan_selesai %></td>
-                    <td><%= pengadaan.jenis_pengadaan %></td>
+                    <td><%= pengadaan.tanggal_permintaan || "-"  %></td>
+                    <td><%= pengadaan.tanggal_pemilihan || "-"  %></td>
+                    <td><%= pengadaan.tanggal_pemilihan_selesai || "-"  %></td>
+                    <td><%= pengadaan.nama_jenis_pengadaan || "-" %></td>
+                    <td><%= pengadaan.nama_tipe_pemilihan || "-" %></td>
+                    <td><%= pengadaan.nama_jenis_vendor || "-" %></td>
                     <td><%= pengadaan.nama_status %></td>
                     <td>
-                        <button class="btn btn-orange" onclick="location.href='informasi-pengadaan-previous'">Detail</button>                    
+                        <button class="btn btn-orange" onclick="location.href='informasi-pengadaan-previous/<%= pengadaan.pengadaan_id %>'">Detail</button>                    
                     </td>
                 </tr>
                 <% }); %>
@@ -98,5 +106,5 @@
             window.location.href = url;
         }
     </script>
-</body>
+<%- include('partials/footer.ejs') %>
 </html>

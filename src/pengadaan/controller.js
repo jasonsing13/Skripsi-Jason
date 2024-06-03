@@ -1,3 +1,4 @@
+const session = require('express-session');
 const db = require('../../database/db');
 const queries = require('../pengadaan/queries');
 const { v4: uuidv4 } = require('uuid');
@@ -6,7 +7,6 @@ async function getDaftarPengadaan() {
     const client = await db.pool.connect();
     try {
         const result = await client.query(queries.getDaftarPengadaan); 
-        console.log('Query result:', result.rows); // Debugging
         return result.rows;
     } catch (error) {
         console.error('Error executing query', error.stack);
@@ -44,7 +44,7 @@ async function getInformasiPengadaan(pengadaan_id) {
 async function getInformasiPengadaanPrevious(pengadaan_id) {
     const client = await db.pool.connect();
     try {
-        const result = await client.query(getInformasiPengadaanPrevious, [pengadaan_id]);
+        const result = await client.query(queries.getInformasiPengadaanPrevious, [pengadaan_id]);
         return result.rows[0]; // Mengembalikan satu baris hasil
     } catch (error) {
         console.error('Error executing query', error.stack);
@@ -139,17 +139,15 @@ const update_PIC = (req, res) => {
     const id = req.params.id;
     const { pic, user_id} = req.body;
     const queryParams = [pic, user_id];
-    console.log(req.body);
     db.pool.query(queries.update_PIC, queryParams, (error, result) => {
         if (error) throw error;
     });
 };
 
-async function option_Vendor(vendor_id) {
+async function option_Vendor() {
     const client = await db.pool.connect();
-    console.log(client);
     try {
-        const result = await client.query(queries.option_Vendor, [vendor_id]); // Adjust the SQL query based on your actual table and data structure
+        const result = await client.query(queries.option_Vendor); // Adjust the SQL query based on your actual table and data structure
         return result.rows;
     } catch (error) {
         console.error('Error executing query', error.stack);
@@ -249,30 +247,26 @@ const getPengadaanById = (req,res)=>{
 //     );
 // };
 
-const addPengadaan = async (req, res) => {
+const addPengadaan = async (pengadaan, user_id) => {
     const {
         nama_pengadaan,
-        tipe_pemilihan_id,
-        jenis_pengadaan_id,
-        jenis_vendor_id,
+        tipe_pemilihan,
+        jenis_pengadaan,
+        jenis_vendor,
         termin_pembayaran,
-        create_date,
-        create_by
-    } = req.body;
+    } = pengadaan;
 
     const pengadaan_id = uuidv4(); // Generate a new UUID
-
     try {
         const client = await db.pool.connect();
         await client.query(queries.addPengadaan, [
             pengadaan_id,
             nama_pengadaan,
-            tipe_pemilihan_id,
-            jenis_pengadaan_id,
-            jenis_vendor_id,
+            tipe_pemilihan,
+            jenis_pengadaan,
+            jenis_vendor,
             termin_pembayaran,
-            create_date,
-            create_by,
+            user_id
         ]);
         client.release();
         return pengadaan_id;
@@ -284,21 +278,19 @@ const addPengadaan = async (req, res) => {
 
 const addItem = async (pengadaan_id, item) => {
     const {
-        nama_item,
-        harga_item,
-        jumlah_item,
+        id,
+        harga,
+        jumlah
     } = item;
-
-    const item_id = uuidv4(); // Generate a new UUID for the item
 
     try {
         const client = await db.pool.connect();
-        await client.query(queries.addItem, [
-            item_id,
-            nama_item,
-            harga_item,
-            jumlah_item,
-            pengadaan_id        ]);
+        await client.query(queries.addListItem, [
+            id,
+            pengadaan_id,
+            jumlah,
+            harga        
+        ]);
         client.release();
     } catch (error) {
         console.error('Error executing query', error.stack);
@@ -330,14 +322,18 @@ const removePengadaan = (req,res)=>{
     });
 };
 
-const validasiPengadaan = (req, res) => {
-    const id = req.params.id;
-    const { tipe_pemilihan_id, tanggal_pemilihan, tanggal_pemilihan_selesai, pic, vendor_id } = req.body;
-    const queryParams = [tipe_pemilihan_id, tanggal_pemilihan, tanggal_pemilihan_selesai, pic, vendor_id, id];
-    console.log(queryParams);
-    db.pool.query(queries.validasiPengadaan, queryParams, (error, result) => {
-        if (error) throw error;
-    });
+const validasiPengadaan = async (reqa, vendor_id = null) => {
+    const { tanggal_pemilihan, tanggal_pemilihan_selesai, pic, pengadaan_id } = reqa;
+    const queryParams = [tanggal_pemilihan, tanggal_pemilihan_selesai, pic, vendor_id, pengadaan_id];
+    try {
+        await db.pool.query( queries.validasiPengadaan, queryParams, (error, result) => {
+            if (error) throw error;
+        });
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    }
+    
 };
 
 module.exports = {

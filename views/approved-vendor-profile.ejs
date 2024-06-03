@@ -33,39 +33,39 @@
         <h1>Vendor Profile</h1>
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" href="/approved-vendor-profile?id=<%= vendor_id %>">Informasi Vendor</a>
+                <a class="nav-link active" href="/approved-vendor-profile">Informasi Vendor</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/approved-akun-bank?id=<%= vendor_id %>">Akun Bank</a>
+                <a class="nav-link" href="/approved-akun-bank">Akun Bank</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/approved-perpajakan?id=<%= vendor_id %>">Perpajakan</a>
+                <a class="nav-link" href="/approved-perpajakan">Perpajakan</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/approved-legalitas?id=<%= vendor_id %>">Legalitas</a>
+                <a class="nav-link" href="/approved-legalitas">Legalitas</a>
             </li>
         </ul>
-        <h3><%= vendor.nama_vendor %></h3>
+        <h3><%= parent.nama_vendor %></h3>
         <p>Status Verifikasi: <span class="badge bg-success">Data Sudah Lengkap</span></p>
         <div class="row">
             <div class="col-md-6">
                 <h4>Informasi Vendor</h4>
-                <p>Kode Vendor: <%= vendor.vendor_id %></p>
-                <p>Status Kantor: <%= vendor.status_kantor %></p>
-                <p>Nama Direktur/Pemilik: <%= vendor.nama_direktur %></p>
-                <p>Nomor Telepon Perusahaan: <%= vendor.no_telp %></p>
+                <p>Kode Vendor: <%= parent.id %></p>
+                <p>Status Kantor: <%= parent.status_kantor %></p>
+                <p>Nama Direktur/Pemilik: <%= parent.nama_direktur %></p>
+                <p>Nomor Telepon Perusahaan: <%= parent.no_telp %></p>
             </div>
             <div class="col-md-6">
                 <h4>Email Perusahaan</h4>
-                <p>Email Perusahaan: <%= vendor.email_perusahaan %></p>
+                <p>Email Perusahaan: <%= parent.email_perusahaan %></p>
                 <h4>Alamat Perusahaan</h4>
-                <p>Alamat Perusahaan: <%= vendor.alamat_perusahaan %></p>
-                <p>Negara: <%= vendor.negara %></p>
-                <p>Provinsi: <%= vendor.nama_provinsi %></p>
-                <p>Kabupaten/Kota: <%= vendor.nama_kk %></p>
+                <p>Alamat Perusahaan: <%= parent.alamat_perusahaan %></p>
+                <p>Negara: <%= parent.negara %></p>
+                <p>Provinsi: <%= parent.nama_provinsi %></p>
+                <p>Kabupaten/Kota: <%= parent.nama_kk %></p>
             </div>
         </div>
         <button class="btn btn-primary">Update</button>
     </div>
-</body>
+<%- include('partials/footer.ejs') %>
 </html>

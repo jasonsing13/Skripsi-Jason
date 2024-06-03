@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buat Pengadaan</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <%- include('partials/style.ejs') %>
+    <%- include('partials/head.ejs') %>
 </head>
 <body>
     <%- include('partials/sidebar.ejs') %>
@@ -47,62 +46,157 @@
                     </div>
                     <div class="mb-3">
                         <label for="termin_pembayaran" class="form-label">Termin Pembayaran* (hari)</label>
-                        <input type="text" class="form-control" id="termin_pembayaran" name="termin_pembayaran">
+                        <input type="text" class="form-control qty" id="termin_pembayaran" name="termin_pembayaran">
                     </div>
-
-                <input type="hidden" name="create_by" value="user_id"> <!-- Set user_id here -->
-                <input type="hidden" name="create_date" value="2024-05-22"> <!-- Set current date here -->
-                
-            </div>
+                </div>
                 <div class="col-md-6">
-             <h4>Detail Item</h4>
-    <div id="itemDetails">
-        <div class="mb-3">
-            <label for="nama_item" class="form-label">Nama Barang*</label>
-            <input type="text" class="form-control" id="nama_item" name="nama_item" required>
-        </div>
-        <div class="mb-3">
-            <label for="harga_item" class="form-label">Harga Barang*</label>
-            <input type="number" class="form-control" id="harga_item" name="harga_item" required>
-        </div>
-        <div class="mb-3">
-            <label for="jumlah_item" class="form-label">Jumlah Barang*</label>
-            <input type="number" class="form-control" id="jumlah_item" name="jumlah_item" required>
-        </div>
-        <button type="button" class="btn btn-secondary" onclick="addItem()">Tambah Item</button>
+                    <h4>Detail Item</h4>
+                    <div class="form-group mb-3">
+                        <label class="col-sm-3" for="selProd">Tambah Item:</label>
+                        <div class='input-group col-sm'>
+                            <input class="form-control input-sm selProd m-0" type="text" name="selProd" id="selProd">
+                            <label class="input-group-text load" id="loadItem"></label>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <caption>List Barang</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nama Barang</th>
+                                    <th scope="col">Jumlah</th>
+                                    <th scope="col">Harga</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableItems">
+                                <tr>
+                                    <td scope="row" colspan="4">No Data</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td>Total:</td>
+                                    <td id="totalHarga" class="currency">0</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Buat Pengadaan</button>
+                </div>
+            </div>
+        </form>
     </div>
-    <div id="additionalItems"></div>
-    <input type="hidden" name="items" id="itemsInput">
-    <button type="submit" class="btn btn-primary mt-3">Buat Pengadaan</button>
-</form>
-
+<%- include('partials/footer.ejs') %>
 <script>
-function addItem() {
-    const itemDetails = document.getElementById('itemDetails');
-    const additionalItems = document.getElementById('additionalItems');
+var selectedItemBefore=[];
 
-    // Clone the itemDetails div and remove the add button from the clone
-    const newItem = itemDetails.cloneNode(true);
-    newItem.querySelector('button').remove();
-
-    // Clear input values in the cloned div
-    newItem.querySelectorAll('input').forEach(input => {
-        input.value = '';
-    });
-
-    additionalItems.appendChild(newItem);
+function delRow(id){
+    $("#"+id).remove();
+    removeItemAll(selectedItemBefore, id);
+    if(selectedItemBefore == 0){
+        $("#tableItems").html(`
+        <tr>
+            <td scope="row" colspan="4">No Data</td>
+        </tr>
+        `)
+    }
+    hitungTotal()
 }
 
-document.getElementById('pengadaanForm').onsubmit = function() {
-    const items = [];
-    document.querySelectorAll('#itemDetails, #additionalItems .itemDetails').forEach(itemDiv => {
-        const nama_item = itemDiv.querySelector('[name="nama_item"]').value;
-        const jumlah_item = itemDiv.querySelector('[name="jumlah_item"]').value;
-        const harga_item = itemDiv.querySelector('[name="harga_item"]').value;
-        items.push({ nama_item, jumlah_item, harga_item });
+function hitungTotal(){
+    // Dapatkan semua elemen input dengan name "jumlah[]" dan "harga[]"
+    var jumlahs = $('input[name="jumlah[]"]');
+    var hargas = $('input[name="harga[]"]');
+
+    // Buat variabel untuk menyimpan total
+    var total = 0;
+
+    // Gunakan .each untuk melakukan iterasi pada setiap elemen input
+    jumlahs.each(function(index) {
+        // Dapatkan nilai dari elemen input ini dan elemen input harga dengan indeks yang sama
+        var jumlah = parseFloat(initAutoNumeric(this, "qty").getNumericString()) || 0
+        var harga = parseFloat(initAutoNumeric(hargas[index], "currency").getNumericString()) || 0
+
+        // Tambahkan hasil perkalian jumlah dan harga ke total
+        total += jumlah * harga;
     });
-    document.getElementById('itemsInput').value = JSON.stringify(items);
-};
+
+    totalHarga = initAutoNumeric('#totalHarga', "currency");
+    totalHarga.set(total)
+}
+
+$("#selProd").autocomplete({
+    minLength: 3,
+    delay: 500,
+    /* &filter_prod_bom_is_material=1 */
+    source: function(request,response) {
+        $.ajax({
+            type: "POST",
+            data: {prod: $("#selProd").val()},
+            url: "/api/getProduct",
+            beforeSend: function(){
+                $("#loadItem").html('<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><path fill-rule="evenodd" d="M12 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14m0 3c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10" clip-rule="evenodd" opacity="0.2"/><path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7z"/></g></svg>');
+            },
+            complete: function() {                
+                $("#loadItem").html('');
+            },
+            success: function(result){
+                if(result.length == 0){ $("#loadItem").html('No data'); return false; }
+                $selectedProd = result[0];
+                var display=[];    
+                $.each(result, function(i, arr){
+                    var name = arr['nama_item'];
+                    var harga = arr['harga_item'];
+                    var intID = arr['item_id'];
+                    // var strKodeAlias1= arr['prod_code_alias1'];
+                    if($.inArray(intID,selectedItemBefore) > -1){
+
+                    }else{
+                        display.push({label: name, value: name, id:intID, harga: harga});    
+                    }
+                    
+                });                
+                response(display);
+            }
+        });
+    },
+    select: function(event, ui) { 
+        $("#selProd").val("")
+        var itemSelected = ui.item;
+        if(selectedItemBefore.length == 0){
+            $("#tableItems").html('')
+        }
+        selectedItemBefore.push(itemSelected.id);
+        $("#tableItems").append(`
+        <tr id="`+ itemSelected.id +`">
+            <td>
+                `+ itemSelected.value +`
+            </td>
+            <td>
+                <input type="text" name="jumlah[]" class="form-control input-sm qty" value="" onchange="hitungTotal()">
+            </td>
+            <td>
+                <input type="text" name="harga[]" class="form-control input-sm currency" value="`+ itemSelected.harga +`" onchange="hitungTotal()">
+            </td>
+            <td>
+                <input type="hidden" name="item_id[]" value="`+ itemSelected.id +`">
+                <button type="button" class="btn" id="`+ itemSelected.id +`" onclick="delRow(id)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zM9 17h2V8H9zm4 0h2V8h-2zM7 6v13z"/></svg></button>
+            </td>
+        </tr>
+        `);
+
+        initAutoNumericAll()
+        return false;
+    }
+});
+
+$('form').submit(function () {
+    if(selectedItemBefore.length == 0){
+        alert("Item tidak boleh kosong!"); return false;
+    }
+})
 </script>
-</body>
 </html>

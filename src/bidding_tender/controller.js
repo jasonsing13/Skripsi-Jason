@@ -32,9 +32,7 @@ async function getBidding_Tender() {
 async function getBidding() {
     const client = await db.pool.connect();
     try {
-        console.log('Executing query:', queries.getBidding); // Log query yang akan dijalankan
         const result = await client.query(queries.getBidding);
-        console.log('Query result:', result.rows); // Log hasil query
         return result.rows;
     } catch (error) {
         console.error('Error executing query', error); // Log error yang lebih detail
@@ -48,9 +46,7 @@ async function getBidding() {
 async function getTender() {
     const client = await db.pool.connect();
     try {
-        console.log('Executing query:', queries.getTender); // Log query yang akan dijalankan
         const result = await client.query(queries.getTender);
-        console.log('Query result:', result.rows); // Log hasil query
 
         // Trim spasi berlebih dari hasil query
         // const trimmedResult = result.rows.map(row => {
@@ -92,6 +88,20 @@ const getBidding_TenderById = (req,res)=>{
         res.status(200).json(results.rows);
     })
 };
+
+async function getBidding_TenderDetailById(id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getBidding_TenderDetailById, [id]);
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error); // Log error yang lebih detail
+        return null;
+    } finally {
+        client.release();
+    }
+}
+
 
 const addBidding_Tender = (req,res)=>{
     const { bt_id, pengadaan_id, evaluasi_vendor, link_zoom } = req.body;
@@ -146,6 +156,7 @@ module.exports = {
     getTender,
     getLinkZoom,
     getBidding_TenderById,
+    getBidding_TenderDetailById,
     addBidding_Tender,
     removeBidding_Tender,
     updateBidding_Tender,
