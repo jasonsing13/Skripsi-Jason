@@ -986,8 +986,17 @@ router.post('/validasi-pengadaan-admin', async function(req, res) {
   try {
       // Asumsi Anda memiliki fungsi untuk menyetujui pengadaan
       await pengadaanController.validasiPengadaan(req.body, vendor_id);
-      res.redirect('/informasi-pengadaan-approved'); // Mengarahkan ke halaman sukses atau kembali ke daftar
-  } catch (error) {
+      const data = req.session.data;
+      const statusOptions = await pengadaanController.option_Select_Status();
+      const result = await pengadaanController.getDaftarPengadaan();
+      res.render('daftar-pengadaan-admin', {
+          parent: data.parent,
+          pengadaan: result,
+          status_id: '',
+          status: statusOptions, 
+          page: 'pengadaan'
+      });
+    } catch (error) {
       console.error('Gagal menyetujui pengadaan:', error);
       res.status(500).send('Error menyetujui pengadaan');
   }
