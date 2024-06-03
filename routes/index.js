@@ -881,7 +881,7 @@ router.post('/buat-pengadaan', async (req, res) => {
 
       var itemsArray = {}
       // Buat array items
-      if(item_id.isArray){
+      if(typeof item_id == 'object'){
         itemsArray = item_id.map((id, index) => ({
           id: id,
           jumlah: jumlah[index],
