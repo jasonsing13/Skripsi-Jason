@@ -102,18 +102,31 @@ async function getBidding_TenderDetailById(id) {
     }
 }
 
+async function getBidding_TenderVendorStatus(pengadaan_id, vendor_id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getBidding_TenderVendorStatus, [pengadaan_id, vendor_id]);
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error); // Log error yang lebih detail
+        return null;
+    } finally {
+        client.release();
+    }
+}
 
-const addBidding_Tender = (req,res)=>{
-    const { bt_id, pengadaan_id, evaluasi_vendor, link_zoom } = req.body;
-    pool.query(
-        queries.addBidding_Tender,
-        [bt_id, pengadaan_id, evaluasi_vendor, link_zoom],
-        (error, results) => {
-            if (error) throw error;
-            res.status(201).send("Bidding Tender created success")
-        }
-    );
-};
+async function addBidding_Tender(pengadaan_id, vendor_id) {
+    const client = await db.pool.connect();
+    try {
+        await client.query(queries.addBidding_Tender, [vendor_id, pengadaan_id]);
+        return res.status(201).send("Bidding Tender created success");
+    } catch (error) {
+        console.error('Error executing query', error); // Log error yang lebih detail
+        return null;
+    } finally {
+        client.release();
+    }
+}
 
 const removeBidding_Tender = (req,res)=>{
     const id = req.params.id;
@@ -157,6 +170,7 @@ module.exports = {
     getLinkZoom,
     getBidding_TenderById,
     getBidding_TenderDetailById,
+    getBidding_TenderVendorStatus,
     addBidding_Tender,
     removeBidding_Tender,
     updateBidding_Tender,

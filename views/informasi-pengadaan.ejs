@@ -11,6 +11,15 @@
     <%- include('partials/sidebar.ejs') %>
     <div class="container mt-4">
         <h1>Informasi Pengadaan</h1>
+        <% if(pengadaanUser.status_id == 'ae00536a-78c1-42e7-af53-ebe6cd68903d'){ %>
+            <div class="d-flex justify-content-end align-items-start mb-3">
+                <% if (pengadaan.tipe_pemilihan_id == '4ff07c90-7efb-4a4a-8715-d53748a387d6') { %>
+                    <button class="btn btn-success" onclick="location.href='/form-bidding/<%= pengadaan_id %>'">Form Bidding</button>        
+                <% }else{ %>
+                        <button class="btn btn-success" onclick="location.href='/form-bidding/<%= pengadaan_id %>'">Form Bidding</button>        
+                <% } %>
+            </div>        
+        <% } %>  
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link active" href="/informasi-pengadaan?id=<%= pengadaan_id %>">Informasi Pengadaan</a>
@@ -18,12 +27,14 @@
             <li class="nav-item">
                 <a class="nav-link" href="/item-pengadaan?id=<%= pengadaan_id %>">Item Pengadaan</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/informasi-purchase-order?id=<%= pengadaan_id %>">Informasi Purchase Order</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/dokumen-purchase-order?id=<%= pengadaan_id %>">Dokumen Purchase Order</a>
-            </li>
+            <% if (pengadaan.status_id != '5b117843-38aa-47cd-b4f2-24c3f88ab472') { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/informasi-purchase-order?id=<%= pengadaan_id %>">Informasi Purchase Order</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/dokumen-purchase-order?id=<%= pengadaan_id %>">Dokumen Purchase Order</a>
+                </li>
+            <% } %>
         </ul>
         <div class="card">
             <div class="card-body">

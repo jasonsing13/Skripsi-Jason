@@ -3,10 +3,10 @@ const db = require('../../database/db');
 const queries = require('../pengadaan/queries');
 const { v4: uuidv4 } = require('uuid');
 
-async function getDaftarPengadaan() {
+async function getDaftarPengadaan(vendor_id) {
     const client = await db.pool.connect();
     try {
-        const result = await client.query(queries.getDaftarPengadaan); 
+        const result = await client.query(queries.getDaftarPengadaan, [vendor_id]); 
         return result.rows;
     } catch (error) {
         console.error('Error executing query', error.stack);
@@ -15,10 +15,36 @@ async function getDaftarPengadaan() {
         client.release();
     }
 }
-async function getDaftarPengadaanByStatus(status_id) {
+
+async function getDaftarPengadaanAdmin() {
     const client = await db.pool.connect();
     try {
-        const result = await client.query(queries.getDaftarPengadaanByStatus, [status_id]);
+        const result = await client.query(queries.getDaftarPengadaanAdmin); 
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+async function getDaftarPengadaanByStatus(status_id, vendor_id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getDaftarPengadaanByStatus, [status_id, vendor_id]);
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
+async function getDaftarPengadaanAdminByStatus(status_id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getDaftarPengadaanAdminByStatus, [status_id]);
         return result.rows;
     } catch (error) {
         console.error('Error executing query', error.stack);
@@ -338,7 +364,9 @@ const validasiPengadaan = async (reqa, vendor_id = null) => {
 
 module.exports = {
     getDaftarPengadaan,
+    getDaftarPengadaanAdmin,
     getDaftarPengadaanByStatus,
+    getDaftarPengadaanAdminByStatus,
     getInformasiPengadaan,
     getInformasiPengadaanPrevious,
     getItemPengadaan,

@@ -52,29 +52,38 @@
                 <tr>
                     <th>Nomor Procurement</th>
                     <th>Nama Pengadaan</th>
-                    <th>Tanggal Mulai</th>
-                    <th>Tanggal Selesai</th>
+                    <th>Tanggal Permintaan</th>
                     <th>Jenis Pengadaan</th>
+                    <th>Jenis Pemilihan</th>
+                    <th>Jenis Vendor</th>
                     <th>Status</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                <% pengadaan.forEach(function(pengadaan) { %>
+                <% if(pengadaan.length > 0){
+                    pengadaan.forEach(function(pengadaan) { %>
                     <tr>
                         <td><%= pengadaan.pengadaan_id %></td>
                         <td><%= pengadaan.nama_pengadaan %></td>
-                        <td><%= pengadaan.tanggal_pemilihan %></td>
-                        <td><%= pengadaan.tanggal_pemilihan_selesai %></td>
-                        <td><%= pengadaan.nama_jenis_pengadaan %></td>
-                        <td><%= pengadaan.nama_status%></td>
+                        <td><%= pengadaan.tanggal_permintaan || "-"  %></td>
+                        <td><%= pengadaan.nama_jenis_pengadaan || "-" %></td>
+                        <td><%= pengadaan.nama_tipe_pemilihan || "-" %></td>
+                        <td><%= pengadaan.nama_jenis_vendor || "-" %></td>
+                        <td><%= pengadaan.nama_status %></td>
                         <td>
-                            <form action="/informasi-pengadaan-previous/<%= pengadaan.pengadaan_id %>" method="get">
+                            <form action="<%= pengadaan.status_id == '0b3e77e5-140b-4662-9563-dde365358ddc' || pengadaan.status_id == '3b9a7057-fc96-4894-88b6-24f2f4211110' ? '/informasi-pengadaan-approved' : '/informasi-pengadaan' %>" method="get">
+                                <input type="hidden" name="id" value="<%= pengadaan.pengadaan_id %>">
                                 <button class="btn btn-orange" type="submit">Detail</button>
                             </form>
                         </td>
                     </tr>
-                <% }); %>
+                <% });
+                }else{ %>
+                    <tr>
+                        <td colspan="10">No Data</td>
+                    </tr>
+                <% } %>
             </tbody>
         </table>
         <nav aria-label="Page navigation example">

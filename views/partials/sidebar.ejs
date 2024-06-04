@@ -32,29 +32,10 @@
                     Profil Vendor
                 </a>
             </li>
-            <li class="nav-item">
-                <button class="btn btn-toggle nav-link w-100 text-start collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+            <li>
+                <a href="/daftar-pengadaan" class="nav-link <%= page == 'pengadaan' ? 'active' : 'link-dark' %>">
                     Pengadaan
-                </button>
-                <div class="collapse <%= page == 'pengadaan' || page == 'bidding' || page == 'tender' ? 'show' : '' %>" id="home-collapse">
-                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                        <li>
-                            <a href="/daftar-pengadaan" class="nav-link <%= page == 'pengadaan' ? 'active' : 'link-dark' %>">
-                                Pengadaan
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/list-bidding-vendor" class="nav-link <%= page == 'bidding' ? 'active' : 'link-dark' %>">
-                                Bidding
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/list-tender-vendor" class="nav-link <%= page == 'tender' ? 'active' : 'link-dark' %>">
-                                Tender
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                </a>
             </li>
             
         <% } %>

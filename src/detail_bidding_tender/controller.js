@@ -28,17 +28,30 @@ async function getDetail_Bidding_TenderById(id) {
     }
 };
 
-const addDetail_Bidding_Tender = (req,res)=>{
-    const { pengajuan_harga, durasi_pekerjaan } = req.body;
-    pool.query(
-        queries.addDetail_Bidding_Tender,
-        [pengajuan_harga, durasi_pekerjaan],
-        (error, results) => {
-            if (error) throw error;
-            res.status(201).send("Detail Bidding Tender created success")
-        }
-    );
-};
+// const addDetail_Bidding_Tender = (req,res)=>{
+//     const { pengajuan_harga, durasi_pekerjaan } = req.body;
+//     pool.query(
+//         queries.addDetail_Bidding_Tender,
+//         [pengajuan_harga, durasi_pekerjaan],
+//         (error, results) => {
+//             if (error) throw error;
+//             res.status(201).send("Detail Bidding Tender created success")
+//         }
+//     );
+// };
+
+async function addDetail_Bidding_Tender(bt_id, vendor_id) {
+    const client = await db.pool.connect();
+    try {
+        await client.query(queries.addDetail_Bidding_Tender, [bt_id, vendor_id]);
+        return res.status(201).send("Bidding Tender created success");
+    } catch (error) {
+        console.error('Error executing query', error); // Log error yang lebih detail
+        return null;
+    } finally {
+        client.release();
+    }
+}
 
 
 const removeDetail_Bidding_Tender = (req,res)=>{

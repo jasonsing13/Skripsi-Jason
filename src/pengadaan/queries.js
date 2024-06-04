@@ -10,6 +10,39 @@ SELECT
     jenis_pengadaan.nama_jenis_pengadaan,
     nama_tipe_pemilihan,
     status.nama_status,
+    pengadaan.status_id,
+    nama_jenis_vendor
+FROM
+    pengadaan
+LEFT JOIN
+    bidding_tender bt ON pengadaan.pengadaan_id = bt.pengadaan_id
+LEFT JOIN
+    detail_bidding_tender dbt ON dbt.bt_id = bt.bt_id
+INNER JOIN
+    list_item ON pengadaan.pengadaan_id = list_item.pengadaan_id
+LEFT JOIN
+    status ON dbt.status_id = status.status_id
+LEFT JOIN
+    jenis_pengadaan ON pengadaan.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id
+LEFT JOIN
+    jenis_vendor ON pengadaan.jenis_vendor_id = jenis_vendor.jenis_vendor_id
+INNER JOIN
+    tipe_pemilihan ON tipe_pemilihan.tipe_pemilihan_id = pengadaan.tipe_pemilihan_id
+WHERE 
+    dbt.vendor_id = $1;
+`;
+
+const getDaftarPengadaanAdmin = `
+SELECT
+    pengadaan.pengadaan_id,
+    pengadaan.nama_pengadaan,
+    pengadaan.tanggal_permintaan::DATE AS tanggal_permintaan,
+    pengadaan.tanggal_pemilihan::DATE AS tanggal_pemilihan,
+    pengadaan.tanggal_pemilihan_selesai::DATE AS tanggal_pemilihan_selesai,
+    jenis_pengadaan.nama_jenis_pengadaan,
+    nama_tipe_pemilihan,
+    status.nama_status,
+    pengadaan.status_id,
     nama_jenis_vendor
 FROM
     pengadaan
@@ -22,7 +55,9 @@ LEFT JOIN
 LEFT JOIN
     jenis_vendor ON pengadaan.jenis_vendor_id = jenis_vendor.jenis_vendor_id
 INNER JOIN
-    tipe_pemilihan ON tipe_pemilihan.tipe_pemilihan_id = pengadaan.tipe_pemilihan_id;
+    tipe_pemilihan ON tipe_pemilihan.tipe_pemilihan_id = pengadaan.tipe_pemilihan_id
+WHERE 
+    nama_status NOT IN ('diterima', 'terverifikasi');
 `;
 
 const option_Select_Status = `
@@ -31,9 +66,8 @@ SELECT
     status.nama_status
 FROM
     status
-WHERE
-    nama_status IN ('buka', 'tutup') 
-    AND tipe_status = 'dp';
+WHERE 
+    nama_status NOT IN ('diterima', 'terverifikasi');
 `;
 
 const getInformasiPengadaan = `
@@ -42,13 +76,15 @@ SELECT
     pengadaan.nama_pengadaan,
     jenis_vendor.nama_jenis_vendor,
     pengadaan.tanggal_pemilihan,
-    pengadaan.tanggal_pemilihan_selesai
+    pengadaan.tanggal_pemilihan_selesai,
+    pengadaan.status_id
 FROM 
     pengadaan 
 INNER JOIN
     jenis_vendor ON pengadaan.jenis_vendor_id = jenis_vendor.jenis_vendor_id
 WHERE 
-    pengadaan.pengadaan_id = $1;
+    pengadaan.pengadaan_id = $1
+    ORDER BY pengadaan.tanggal_permintaan DESC;
 `;
 
 const getInformasiPengadaanPrevious = `
@@ -103,12 +139,36 @@ SELECT
     status.nama_status
 FROM
     pengadaan
-INNER JOIN
+LEFT JOIN
+    bidding_tender bt ON pengadaan.pengadaan_id = bt.pengadaan_id
+LEFT JOIN
+    detail_bidding_tender dbt ON dbt.bt_id = bt.bt_id
+LEFT JOIN
     status ON pengadaan.status_id = status.status_id
 INNER JOIN
     jenis_pengadaan ON pengadaan.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id
 WHERE
-    pengadaan.status_id = $1;
+    pengadaan.status_id = $1 AND dbt.vendor_id = $2
+    ORDER BY pengadaan.tanggal_permintaan DESC
+`;
+
+const getDaftarPengadaanAdminByStatus = `
+SELECT
+    pengadaan.pengadaan_id,
+    pengadaan.nama_pengadaan,
+    pengadaan.tanggal_pemilihan,
+    pengadaan.tanggal_pemilihan_selesai,
+    jenis_pengadaan.nama_jenis_pengadaan,
+    status.nama_status
+FROM
+    pengadaan
+LEFT JOIN
+    status ON pengadaan.status_id = status.status_id
+INNER JOIN
+    jenis_pengadaan ON pengadaan.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id
+WHERE
+    pengadaan.status_id = $1
+    ORDER BY pengadaan.tanggal_permintaan DESC
 `;
 
 // const getDaftarPengadaanByStatusVendor = `
@@ -242,7 +302,7 @@ const addPengadaan = `
         create_by,
         status_id
     ) 
-    VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP, $7, '0b3e77e5-140b-4662-9563-dde365358ddc')
+    VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP, $7, '5b117843-38aa-47cd-b4f2-24c3f88ab472')
     RETURNING pengadaan_id;
 `;
 
@@ -268,7 +328,7 @@ tanggal_pemilihan = $1,
 tanggal_pemilihan_selesai = $2, 
 pic = $3,
 vendor_pemenang = $4,
-status_id = '5b117843-38aa-47cd-b4f2-24c3f88ab472'
+status_id = '0b3e77e5-140b-4662-9563-dde365358ddc'
 WHERE pengadaan_id = $5;
 ;`
 ;
@@ -276,7 +336,9 @@ WHERE pengadaan_id = $5;
 
 module.exports = {
     getDaftarPengadaan,
+    getDaftarPengadaanAdmin,
     getDaftarPengadaanByStatus,
+    getDaftarPengadaanAdminByStatus,
     getInformasiPengadaan,
     getInformasiPengadaanPrevious,
     getItemPengadaan,

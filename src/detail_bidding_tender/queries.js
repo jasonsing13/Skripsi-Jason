@@ -9,7 +9,7 @@ WHERE bidding_tender.id = $1
 `;
 
 const getDetail_Bidding_TenderById = `select * from public.detail_bidding_tender where vendor_id = $1`;
-const addDetail_Bidding_Tender = `INSERT INTO public.detail_bidding_tender (pengajuan_harga, durasi_pekerjaan)
+const addDetail_Bidding_Tender = `INSERT INTO public.detail_bidding_tender (id_bt, vendor_id)
 VALUES ( 
     $1 -- pengajuan_harga, 
     $2 -- durasi_pekerjaan

@@ -69,6 +69,13 @@ INNER JOIN list_item ON list_item.pengadaan_id = pengadaan.pengadaan_id
 INNER JOIN item ON list_item.item_id = item.item_id
 WHERE bidding_tender.bt_id = $1
 `;
+
+const getBidding_TenderVendorStatus = `select bd.status_id
+FROM bidding_tender bt
+LEFT JOIN detail_bidding_tender bd ON bd.bt_id = bt.bt_id
+WHERE bt.pengadaan_id = $1 AND bd.vendor_id = $2
+GROUP BY bd.dbt_id
+`;
 const addBidding_Tender = `INSERT INTO public.bidding_tender (bt_id, pengadaan_id, evaluasi_vendor, link_zoom)
 VALUES ($1, $2, $3, $4);`
 const removeBidding_Tender = ` delete from public.bidding_tender where bt_id = $1 `;
@@ -82,6 +89,7 @@ module.exports = {
     getLinkZoom,
     getBidding_TenderById,
     getBidding_TenderDetailById,
+    getBidding_TenderVendorStatus,
     addBidding_Tender,
     removeBidding_Tender,   
     updateBidding_Tender,
