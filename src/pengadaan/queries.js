@@ -327,9 +327,20 @@ SET
 tanggal_pemilihan = $1, 
 tanggal_pemilihan_selesai = $2, 
 pic = $3,
+status_id = '0b3e77e5-140b-4662-9563-dde365358ddc'
+WHERE pengadaan_id = $4
+;`
+;
+
+const validasiPengadaanLangsung = ` 
+UPDATE public.pengadaan
+SET 
+tanggal_pemilihan = $1, 
+tanggal_pemilihan_selesai = $2, 
+pic = $3,
 vendor_pemenang = $4,
 status_id = '0b3e77e5-140b-4662-9563-dde365358ddc'
-WHERE pengadaan_id = $5;
+WHERE pengadaan_id = $5
 ;`
 ;
 
@@ -361,5 +372,6 @@ module.exports = {
     getItem,
     removePengadaan,
     validasiPengadaan,
+    validasiPengadaanLangsung
 };
 

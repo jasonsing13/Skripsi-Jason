@@ -10,13 +10,7 @@
 <body>
     <%- include('partials/sidebar.ejs') %>
     <div class="container mt-4">
-        <h1>Informasi Pengadaan</h1>
-
-        <% if(pengadaan.status_id == '0b3e77e5-140b-4662-9563-dde365358ddc' && pengadaan.status_id != '3b9a7057-fc96-4894-88b6-24f2f4211110'){ %>
-        <div class="d-flex justify-content-end align-items-start mb-3">
-            <button class="btn btn-success">Invite Vendor</button>        
-        </div>        
-        <% } %>        
+        <h1>Informasi Pengadaan</h1>      
         <% if(pengadaan.status_id == '5b117843-38aa-47cd-b4f2-24c3f88ab472'){ %>
             <div class="d-flex justify-content-end align-items-start mb-3">
                 <button class="btn btn-success" onclick="location.href='/validasi-pengadaan-admin/<%= pengadaan_id %>'">Validasi Pengadaan</button>        
@@ -24,11 +18,16 @@
         <% } %>        
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" href="/informasi-pengadaan-previous/<%= pengadaan.pengadaan_id %>">Informasi Pengadaan</a>
+                <a class="nav-link active" href="/informasi-pengadaan-previous/<%= pengadaan_id %>">Informasi Pengadaan</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " href="/item-pengadaan-previous/<%= pengadaan.pengadaan_id %>">Item Pengadaan</a>
+                <a class="nav-link" href="/item-pengadaan-previous/<%= pengadaan_id %>">Item Pengadaan</a>
             </li>
+            <% if(pengadaan.status_id == '0b3e77e5-140b-4662-9563-dde365358ddc' && pengadaan.status_id != '3b9a7057-fc96-4894-88b6-24f2f4211110'){ %>
+            <li class="nav-item">
+                <a class="nav-link " href="/vendor-pengadaan-previous/<%= pengadaan_id %>">List Vendor</a>
+            </li>
+            <% } %>  
         </ul>
         <div class="card">
             <div class="card-body">

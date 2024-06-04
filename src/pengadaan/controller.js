@@ -350,11 +350,20 @@ const removePengadaan = (req,res)=>{
 
 const validasiPengadaan = async (reqa, vendor_id = null) => {
     const { tanggal_pemilihan, tanggal_pemilihan_selesai, pic, pengadaan_id } = reqa;
-    const queryParams = [tanggal_pemilihan, tanggal_pemilihan_selesai, pic, vendor_id, pengadaan_id];
+    var queryParams = [];
+    console.log(queryParams);
     try {
-        await db.pool.query( queries.validasiPengadaan, queryParams, (error, result) => {
-            if (error) throw error;
-        });
+        if(vendor_id != null){
+            queryParams = [tanggal_pemilihan, tanggal_pemilihan_selesai, pic, vendor_id, pengadaan_id];
+            await db.pool.query( queries.validasiPengadaanLangsung, queryParams, (error, result) => {
+                if (error) throw error;
+            });
+        }else{
+            queryParams = [tanggal_pemilihan, tanggal_pemilihan_selesai, pic, pengadaan_id];
+            await db.pool.query( queries.validasiPengadaan, queryParams, (error, result) => {
+                if (error) throw error;
+            });
+        }
     } catch (error) {
         console.error('Error executing query', error.stack);
         throw error;

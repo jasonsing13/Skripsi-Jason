@@ -973,9 +973,23 @@ router.get('/item-pengadaan-previous/:id', async (req, res) => {
   // Fetch the necessary items data
   try {
     const pengadaan_id = req.params.id
-    const result = await pengadaanController.getItemPengadaan(pengadaan_id);
+    const result = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
+    const items = await pengadaanController.getItemPengadaan(pengadaan_id);
     const data = req.session.data;
-    res.render('item-pengadaan-previous', { pengadaan_id, pengadaan: result, parent: data.parent, pengadaan_id: pengadaan_id, page: 'pengadaan' });
+    res.render('item-pengadaan-previous', { pengadaan_id, items, pengadaan: result, parent: data.parent, page: 'pengadaan' });
+  } catch (error) {
+    console.error('Error fetching procurement data:', error);
+    res.status(500).send('Error fetching procurement data');
+  }
+});
+
+router.get('/vendor-pengadaan-previous/:id', async (req, res) => {
+  // Fetch the necessary items data
+  try {
+    const pengadaan_id = req.params.id
+    const result = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
+    const data = req.session.data;
+    res.render('vendor-pengadaan-previous', { pengadaan_id, pengadaan: result, parent: data.parent, page: 'pengadaan' });
   } catch (error) {
       console.error('Error fetching procurement data:', error);
       res.status(500).send('Error fetching procurement data');
@@ -998,16 +1012,10 @@ router.post('/validasi-pengadaan-admin', async function(req, res) {
   try {
       // Asumsi Anda memiliki fungsi untuk menyetujui pengadaan
       await pengadaanController.validasiPengadaan(req.body, vendor_id);
-      const data = req.session.data;
-      const statusOptions = await pengadaanController.option_Select_Status();
-      const result = await pengadaanController.getDaftarPengadaan();
-      res.render('daftar-pengadaan-admin', {
-          parent: data.parent,
-          pengadaan: result,
-          status_id: '',
-          status: statusOptions, 
-          page: 'pengadaan'
-      });
+      // const data = req.session.data;
+      // const statusOptions = await pengadaanController.option_Select_Status();
+      // const result = await pengadaanController.getDaftarPengadaan();
+      res.redirect(`/daftar-pengadaan-admin`);
     } catch (error) {
       console.error('Gagal menyetujui pengadaan:', error);
       res.status(500).send('Error menyetujui pengadaan');
