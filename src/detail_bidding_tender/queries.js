@@ -8,15 +8,24 @@ INNER JOIN item ON list_item.item_id = item.item_id
 WHERE bidding_tender.id = $1
 `;
 
-const getDetail_Bidding_TenderById = `select * from public.detail_bidding_tender where vendor_id = $1`;
-const addDetail_Bidding_Tender = `INSERT INTO public.detail_bidding_tender (id_bt, vendor_id)
+const getDetail_Bidding_TenderById = `select pengajuan_harga, durasi_pekerjaan, dbt.status_id, v.nama_vendor, jv.nama_jenis_vendor, s.nama_status
+from public.detail_bidding_tender dbt 
+LEFT JOIN vendor v ON v.id = dbt.vendor_id
+LEFT JOIN jenis_vendor jv ON jv.jenis_vendor_id = v.jenis_vendor_id
+LEFT JOIN status s ON s.status_id = dbt.status_id
+where bt_id = $1
+GROUP BY dbt.dbt_id, v.nama_vendor, jv.nama_jenis_vendor, s.nama_status`;
+
+const addDetail_Bidding_Tender = `INSERT INTO public.detail_bidding_tender (bt_id, vendor_id, pengadaan_id)
 VALUES ( 
     $1 -- pengajuan_harga, 
-    $2 -- durasi_pekerjaan
+    $2 -- durasi_pekerjaan,
+    $3 -- durasi_pekerjaan
     );`
 
 const removeDetail_Bidding_Tender = ` delete from public.detail_bidding_tender where dbt_id = $1 `;
-const updateDetail_Bidding_Tender = `update public.detail_bidding_tender set username =$1 where dbt_id = $2 `;
+const updateDetail_Bidding_Tender = `update public.detail_bidding_tender set pengajuan_harga = $1, durasi_pekerjaan = $2 where dbt_id = $3 `;
+const updateStatusDetail_Bidding_Tender = `update public.detail_bidding_tender set status_id = $1 where dbt_id = $2 `;
 
 
 module.exports = {
@@ -25,5 +34,6 @@ module.exports = {
     addDetail_Bidding_Tender,
     removeDetail_Bidding_Tender,
     updateDetail_Bidding_Tender,
+    updateStatusDetail_Bidding_Tender
 };
 

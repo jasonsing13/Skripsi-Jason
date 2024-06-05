@@ -1,60 +1,24 @@
 const getVendor = `SELECT 
-i.id,
+i.*,
 r.rekening_id,
 r.nama_pemilik_rekening,
 r.no_rekening,
 r.bank_id,
 s.nama_status, 
+s.status_id, 
 jp.nama_jenis_pengadaan, 
-jv.nama_jenis_vendor, 
-kv.nama_kategori_vendor,
-v.nama_vendor,
-v.nama_direktur,
-v.status_kantor,
-v.username,
-v.password,
-v.email_perusahaan,
-v.alamat_perusahaan,
-v.url_ktp_direktur,
-v.url_ktp_penerima_kuasa,
-v.url_nibrba,
-v.url_akta_pendirian,
-v.url_akta_perubahan,
-v.url_dokumen_ijin_lain,
-v.url_dokumen_npwp,
-v.url_buku_akun_bank,
-v.create_date,
-v.create_by,
-v.modif_date,
-v.modif_by,
-v.negara,
-v.no_npwp,
-v.url_profil_perusahaan,
-v.jenis_id,
-v.no_nibrba,
-v.kk_id,
-v.rekening_id,
-v.provinsi_id,
-v.url_dokumen_ppkp,
-v.status_pkp,
-v.no_ktp_direktur,
-v.status_id,
-v.no_telp,
-v.kategori_id
+jv.nama_jenis_vendor
 FROM 
 public.vendor i
-JOIN 
+LEFT JOIN 
 public.status s ON i.status_id = s.status_id
-JOIN 
+LEFT JOIN 
 public.jenis_pengadaan jp ON i.jenis_pengadaan_id = jp.jenis_pengadaan_id
-JOIN 
-public.jenis_vendor jv ON i.jenis_id = jv.jenis_id
-JOIN 
-public.kategori_vendor kv ON i.kategori_id = kv.kategori_id
-JOIN 
-public.vendor v ON i.id = v.id
-JOIN
+LEFT JOIN 
+public.jenis_vendor jv ON i.jenis_vendor_id = jv.jenis_vendor_id
+LEFT JOIN
 public.rekening r ON i.rekening_id = r.rekening_id
+WHERE LOWER(nama_vendor) LIKE '%' || LOWER($1) || '%'
 `;
 
 const getEmail = `

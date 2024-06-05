@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengadaan - List Vendor</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <%- include('partials/style.ejs') %>
+    <%- include('partials/head.ejs') %>
 </head>
 <body>
     <%- include('partials/sidebar.ejs') %>
@@ -32,6 +31,8 @@
         <div class="card">
             <div class="card-header">
                 <div class="form-group mb-3">
+                    <input type="hidden" id="pengadaan_id" name="pengadaan_id" value="<%= pengadaan_id %>">
+                    <input type="hidden" id="bt_id" name="bt_id" value="<%= pengadaan.bt_id %>">
                     <label class="col-sm-3" for="selVendor">Invite Vendor:</label>
                     <div class='input-group col-sm'>
                         <input class="form-control input-sm selVendor m-0" type="text" name="selVendor" id="selVendor">
@@ -54,21 +55,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <% result.forEach(function(bt) { %>
+                            <% result.forEach(function(bt, i) { %>
                             <tr>
-                                <td class="qty">1</td>
+                                <td class="qty"><%= i+1 %></td>
                                 <td><%= bt.nama_vendor %></td>
                                 <td><%= bt.nama_jenis_vendor %></td>
-                                <td><%= bt.nama_status %></td>
                                 <td class="currency"><%= bt.pengajuan_harga || '-' %></td>
                                 <td class="qty"><%= bt.durasi_pekerjaan || '-' %></td>
+                                <td><%= bt.nama_status %></td>
                                 <td>
-                                    <form action="/set-pemenang" method="post">
-                                        <input type="hidden" name="pengadaan_id" value="<%= pengadaan_id %>">
-                                        <input type="hidden" name="vendor_id" value="<%= bt.vendor_id %>">
-                                        <input type="hidden" name="bt_id" value="<%= bt.bt_id %>">
-                                        <button class="btn btn-success" type="submit">Set Pemenang</button>
-                                    </form>
+                                    <% if (bt.status_id != 'ae00536a-78c1-42e7-af53-ebe6cd68903d') { %>
+                                        <form action="/set-pemenang" method="post">
+                                            <input type="hidden" name="pengadaan_id" value="<%= pengadaan_id %>">
+                                            <input type="hidden" name="vendor_id" value="<%= bt.vendor_id %>">
+                                            <input type="hidden" name="bt_id" value="<%= bt.bt_id %>">
+                                            <button class="btn btn-success" type="submit">Set Pemenang</button>
+                                        </form>
+                                    <% } %>
                                 </td>
                             </tr>
                             <% }); %>
@@ -79,4 +82,69 @@
         </div>
     </div>
 <%- include('partials/footer.ejs') %>
+<script>
+var selectedItemBefore = [];
+$("#selVendor").autocomplete({
+    minLength: 3,
+    delay: 500,
+    /* &filter_prod_bom_is_material=1 */
+    source: function(request,response) {
+        $.ajax({
+            type: "POST",
+            data: {nama_vendor: $("#selVendor").val()},
+            url: "/api/getVendor",
+            beforeSend: function(){
+                $("#loadItem").html('<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><path fill-rule="evenodd" d="M12 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14m0 3c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10" clip-rule="evenodd" opacity="0.2"/><path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7z"/></g></svg>');
+            },
+            complete: function() {                
+                $("#loadItem").html('');
+            },
+            success: function(result){
+                if(result.length == 0){ $("#loadItem").html('No data'); return false; }
+                $selectedProd = result[0];
+                var display=[];    
+                $.each(result, function(i, arr){
+                    var name = arr['nama_vendor'];
+                    // var jenis = arr['nama_jenis_vendor'];
+                    var intID = arr['id'];
+                    // var bt_id = arr['bt_id'];
+                    // var strKodeAlias1= arr['prod_code_alias1'];
+                    if($.inArray(intID,selectedItemBefore) > -1){
+
+                    }else{
+                        display.push({label: name, value: name, id: intID });    
+                    }
+                    
+                });                
+                response(display);
+            }
+        });
+    },
+    select: function(event, ui) { 
+        $("#selProd").val("")
+        var itemSelected = ui.item;
+        const pengadaan_id = $('#pengadaan_id').val()
+        const bt_id = $('#bt_id').val()
+        // console.log("itemSelected:")
+        // console.log(itemSelected.id)
+        // console.log("pengadaan_id:")
+        // console.log(pengadaan_id)
+        // console.log("bt_id:")
+        // console.log(bt_id)
+        // INPUT KE DB
+        $.ajax({
+            type: "POST",
+            data: { bt_id: bt_id, vendor_id: itemSelected.id, pengadaan_id },
+            url: "/add-bidding-tender",
+            beforeSend: function(){
+                return confirm('Apakah Anda Yakin?') && true;
+            },
+            success: function(result){
+                return alert('Vendor Berhasil Diundang');
+            }
+        });
+        return false;
+    }
+});
+</script>
 </html>

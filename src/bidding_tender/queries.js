@@ -76,8 +76,9 @@ LEFT JOIN detail_bidding_tender bd ON bd.bt_id = bt.bt_id
 WHERE bt.pengadaan_id = $1 AND bd.vendor_id = $2
 GROUP BY bd.dbt_id
 `;
-const addBidding_Tender = `INSERT INTO public.bidding_tender (bt_id, pengadaan_id, evaluasi_vendor, link_zoom)
-VALUES ($1, $2, $3, $4);`
+
+const addBidding_Tender = `INSERT INTO public.bidding_tender (pengadaan_id)
+VALUES ($1);`
 const removeBidding_Tender = ` delete from public.bidding_tender where bt_id = $1 `;
 const updateBidding_Tender = `update public.bidding_tender set username =$1 where bt_id = $2 `;
 

@@ -40,10 +40,10 @@ async function getDetail_Bidding_TenderById(id) {
 //     );
 // };
 
-async function addDetail_Bidding_Tender(bt_id, vendor_id) {
-    const client = await db.pool.connect();
+async function addDetail_Bidding_Tender(bt_id, vendor_id, pengadaan_id) {
+    const client = await pool.pool.connect();
     try {
-        await client.query(queries.addDetail_Bidding_Tender, [bt_id, vendor_id]);
+        await client.query(queries.addDetail_Bidding_Tender, [bt_id, vendor_id, pengadaan_id]);
         return res.status(201).send("Bidding Tender created success");
     } catch (error) {
         console.error('Error executing query', error); // Log error yang lebih detail

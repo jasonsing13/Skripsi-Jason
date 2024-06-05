@@ -29,7 +29,12 @@ LEFT JOIN
 INNER JOIN
     tipe_pemilihan ON tipe_pemilihan.tipe_pemilihan_id = pengadaan.tipe_pemilihan_id
 WHERE 
-    dbt.vendor_id = $1;
+    dbt.vendor_id = $1
+GROUP BY pengadaan.pengadaan_id, jenis_pengadaan.nama_jenis_pengadaan,
+nama_tipe_pemilihan,
+status.nama_status,
+pengadaan.status_id,
+nama_jenis_vendor
 `;
 
 const getDaftarPengadaanAdmin = `
@@ -57,7 +62,12 @@ LEFT JOIN
 INNER JOIN
     tipe_pemilihan ON tipe_pemilihan.tipe_pemilihan_id = pengadaan.tipe_pemilihan_id
 WHERE 
-    nama_status NOT IN ('diterima', 'terverifikasi');
+    nama_status NOT IN ('diterima', 'terverifikasi')
+GROUP BY pengadaan.pengadaan_id, jenis_pengadaan.nama_jenis_pengadaan,
+nama_tipe_pemilihan,
+status.nama_status,
+pengadaan.status_id,
+nama_jenis_vendor
 `;
 
 const option_Select_Status = `
@@ -91,9 +101,12 @@ const getInformasiPengadaanPrevious = `
 SELECT 
     pengadaan.*,
     jenis_vendor.nama_jenis_vendor, 
-    nama_jenis_pengadaan
+    nama_jenis_pengadaan,
+    bidding_tender.bt_id
 FROM 
     pengadaan 
+LEFT JOIN
+    bidding_tender ON pengadaan.pengadaan_id = bidding_tender.pengadaan_id
 LEFT JOIN
     jenis_vendor ON pengadaan.jenis_vendor_id = jenis_vendor.jenis_vendor_id
 LEFT JOIN

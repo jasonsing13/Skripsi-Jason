@@ -643,12 +643,23 @@ router.get('/form-bidding/:id', async (req, res) => {
   }
 });
 
+router.post('/add-bidding-tender', async (req, res) => {
+  const { id_bt, vendor_id, pengadaan_id } = req.body;
+  try {
+      // Assuming you have a function to insert data into the database
+      await detail_bidding_tenderController.addDetail_Bidding_Tender(id_bt, vendor_id, pengadaan_id);
+      res.redirect('/daftar-pengadaan'); // Redirect to the list page after successful insertion
+  } catch (error) {
+      console.error('Failed to add new detail bidding tender:', error);
+      res.status(500).send('Error adding new detail bidding tender');
+  }
+});
 
 router.post('/form-bidding', async (req, res) => {
   const { durasi_pekerjaan, pengajuan_harga } = req.body;
   try {
       // Assuming you have a function to insert data into the database
-      await detail_bidding_tenderController.addDetail_Bidding_Tender(durasi_pekerjaan, pengajuan_harga);
+      await detail_bidding_tenderController.updateDetail_Bidding_Tender(durasi_pekerjaan, pengajuan_harga);
       res.redirect('/daftar-pengadaan'); // Redirect to the list page after successful insertion
   } catch (error) {
       console.error('Failed to add new detail bidding tender:', error);
@@ -879,14 +890,14 @@ router.post('/buat-pengadaan', async (req, res) => {
       'harga[]': harga
   } = req.body;
   try {
+    // Pastikan bahwa item_id, jumlah, dan harga memiliki panjang yang sama
+    if ((item_id.length !== jumlah.length || item_id.length !== harga.length) && item_id.isArray) {
+      console.error('Array lengths do not match');
+      return res.redirect(`/buat-pengadaan`);
+    }
+
       // Buat pengadaan baru dan dapatkan pengadaan_id
       const pengadaan_id = await pengadaanController.addPengadaan(req.body, req.session.data.parent.id);
-
-      // Pastikan bahwa item_id, jumlah, dan harga memiliki panjang yang sama
-      if ((item_id.length !== jumlah.length || item_id.length !== harga.length) && item_id.isArray) {
-        console.error('Array lengths do not match');
-        return res.redirect(`/buat-pengadaan`);
-      }
 
       var itemsArray = {}
       // Buat array items
@@ -908,7 +919,7 @@ router.post('/buat-pengadaan', async (req, res) => {
         await pengadaanController.addItem(pengadaan_id, item);
       }
 
-      await bidding_tenderController.addBidding_Tender(pengadaan_id, req.session.data.parent.id);
+      await bidding_tenderController.addBidding_Tender(pengadaan_id);
 
       // Redirect ke halaman daftar-pengadaan-admin dengan pengadaan_id sebagai query parameter
       res.redirect(`/daftar-pengadaan-admin`);
@@ -986,10 +997,12 @@ router.get('/item-pengadaan-previous/:id', async (req, res) => {
 router.get('/vendor-pengadaan-previous/:id', async (req, res) => {
   // Fetch the necessary items data
   try {
-    const pengadaan_id = req.params.id
-    const result = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
     const data = req.session.data;
-    res.render('vendor-pengadaan-previous', { pengadaan_id, pengadaan: result, parent: data.parent, page: 'pengadaan' });
+    const pengadaan_id = req.params.id
+    const pengadaan = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
+    console.log(pengadaan);
+    const result = await detail_bidding_tenderController.getDetail_Bidding_TenderById(pengadaan.bt_id);
+    res.render('vendor-pengadaan-previous', { pengadaan_id, pengadaan, result, parent: data.parent, page: 'pengadaan' });
   } catch (error) {
       console.error('Error fetching procurement data:', error);
       res.status(500).send('Error fetching procurement data');
@@ -1120,6 +1133,21 @@ router.post('/api/getProduct', async (req, res) => {
     } = req.body;
     // Assuming you have a function to insert data into the database
     const item = await itemController.getItem(prod);
+    res.send(item); // Redirect to the list page after successful insertion
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/api/getVendor', async (req, res) => {
+  try {
+    const {
+      nama_vendor 
+    } = req.body;
+    console.log(req.body)
+    // Assuming you have a function to insert data into the database
+    const item = await vendorController.getVendor(nama_vendor)
     res.send(item); // Redirect to the list page after successful insertion
   } catch (error) {
     console.error('Failed to add goods received:', error);
