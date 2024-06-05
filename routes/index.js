@@ -899,7 +899,7 @@ router.post('/buat-pengadaan', async (req, res) => {
       // Buat pengadaan baru dan dapatkan pengadaan_id
       const pengadaan_id = await pengadaanController.addPengadaan(req.body, req.session.data.parent.id);
 
-      var itemsArray = {}
+      var itemsArray = {};
       // Buat array items
       if(typeof item_id == 'object'){
         itemsArray = item_id.map((id, index) => ({
