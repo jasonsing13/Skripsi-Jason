@@ -24,7 +24,7 @@ var detail_bidding_tenderController = require('../src/detail_bidding_tender/cont
 //var detail_vsController = require('../src/detail_vs/controller');
 var goods_receivedController = require('../src/goods_received/controller');
 var itemController = require('../src/item/controller');
-//var purchase_orderController = require('../src/purchase_order/controller');
+var purchase_orderController = require('../src/purchase_order/controller');
 //var roleController = require('../src/role/controller');
 //var statusController = require('../src/status/controller');
 //var template_vsController = require('../src/template_vs/controller');
@@ -607,6 +607,37 @@ router.get('/dokumen-purchase-order', function(req, res) {
       { no: 'IG000002', name: 'KURSI', quantity: 100, price: 'Rp. 100.000', deliveryDate: '12-04-2024', status: 'TUTUP' }
   ];
   res.render('dokumen-purchase-order', { items: itemsData, pengadaan_id: pengadaan_id, parent: data.parent, page: 'pengadaan' });
+});
+
+
+// Assuming you have a route setup for getting a purchase order by ID
+// Import the necessary controller
+var purchase_orderController = require('../src/purchase_order/controller');
+
+// Add a route for the Purchase Order page
+router.get('/purchase-order/:id', async (req, res) => {
+    try {
+        const po_id = req.params.id;
+        const purchaseOrderData = await purchase_orderController.getPurchase_OrderById(po_id);
+        res.render('template-purchase-order', { 
+            po_id: purchaseOrderData.po_id,
+            tanggal_po: purchaseOrderData.tanggal_po,
+            pengadaan_id: purchaseOrderData.pengadaan_id,
+            tanggal_pengiriman: purchaseOrderData.tanggal_pengiriman,
+            alamat_pengiriman: purchaseOrderData.alamat_pengiriman,
+            nama_vendor: purchaseOrderData.nama_vendor,
+            subTotal: purchaseOrderData.subTotal,
+            discount: purchaseOrderData.discount,
+            ppn: purchaseOrderData.ppn,
+            biaya: purchaseOrderData.biaya,
+            total: purchaseOrderData.total,
+            divHead: purchaseOrderData.divHead,
+            vendorApproval: purchaseOrderData.vendorApproval
+        });
+    } catch (error) {
+        console.error('Error fetching purchase order:', error);
+        res.status(500).send('Error fetching purchase order');
+    }
 });
 
 router.get('/list-bidding-vendor', async (req, res) => {
