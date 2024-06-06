@@ -4,8 +4,8 @@ const pool = new Pool({
   user: 'postgres',
   password: 'admin',
   host: 'localhost', 
-  port: 5433, // default Postgres port
-  database: 'DB_Portal_Vendor'
+  port: 5432, // default Postgres port
+  database: 'DB_Portal_Vendor2'
 });
 
 // pool.on('connect', () => {
