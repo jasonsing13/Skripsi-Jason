@@ -15,53 +15,70 @@
             <h2>Form Tender</h2>
             <p>Form untuk pengajuan Tender</p>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12 mb-3">
                     <div class="card h-100">
                         <div class="card-header">
                             <h5>Detail Tender</h5>
                         </div>
                         <div class="card-body">
-                            <div class="form-group">
-                                <label>Nama Pengadaan</label>
-                                <input class="form-control" type="text" placeholder="Portal Vendor" readonly>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="nama_pengadaan" class="form-label">Nama Pengadaan</label>
+                                        <input class="form-control" type="text" id="nama_pengadaan" name="nama_pengadaan" value="<%= dataTender[0]['nama_pengadaan'] %>" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="jenis_pengadaan" class="form-label">Jenis Pengadaan</label>
+                                        <input type="text" class="form-control" id="jenis_pengadaan" name="jenis_pengadaan" value="<%= dataTender[0]['nama_jenis_pengadaan'] %>" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="jenis_vendor" class="form-label">Jenis Vendor</label>
+                                        <input type="text" class="form-control" id="jenis_vendor" name="jenis_vendor" value="<%  %>" disabled>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>Jenis Pengadaan</label>
-                                <input class="form-control" type="text" placeholder="Jasa" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label>Jenis Vendor</label>
-                                <input class="form-control" type="text" placeholder="Software House" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label>Nama Barang</label>
-                                <input class="form-control" type="text" placeholder="Website" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label>Harga Rekomendasi</label>
-                                <input class="form-control" type="text" placeholder="Rp. 100.000" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label>Jumlah Barang</label>
-                                <input class="form-control" type="text" placeholder="10" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label>Nama Barang</label>
-                                <input class="form-control" type="text" placeholder="Website" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label>Harga Rekomendasi</label>
-                                <input class="form-control" type="text" placeholder="Rp. 100.000" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label>Jumlah Barang</label>
-                                <input class="form-control" type="text" placeholder="10" readonly>
+                            
+                            <div class="divider py-1 my-3 bg-secondary"></div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <caption>List Barang</caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Nama Barang</th>
+                                            <th scope="col">Harga</th>
+                                            <th scope="col">Jumlah Barang</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% dataTender.forEach((bid, key) => { %>
+                                            <tr>
+                                                <th scope="row"><%= key+1 %></th>
+                                                <td><%= bid['nama_item'] %></td>
+                                                <td class="currency"><%= bid['harga_item'] %></td>
+                                                <td class="qty"><%= bid['jumlah_item'] %></td>
+                                            </tr>
+                                        <% }) %>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td></td>
+                                            <td>Total:</td>
+                                            <td class="currency"><%= dataTender[0]['harga_pengadaan'] %></td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="card aanwijzing mb-3">
+                    <div class="card aanwijzing">
                         <div class="card-header">
                             <h5>Persyaratan Aanwijzing</h5>
                         </div>
@@ -85,15 +102,20 @@
                                 oleh perwakilan dari pihak perwakilan vendor.</p>
                         </div>
                     </div>
-                    <div class="card form-tender">
+                </div>
+                <div class="col-md-6">
+                    <div class="card form-bidding">
                         <div class="card-header">
                             <h5>Form Pengajuan</h5>
                         </div>
                         <div class="card-body">
-                            <div class="detail-tender">
-                                <form action="/form-tender" method="post">
+                            <div class="detail-bidding">
+                                <form id="biddingForm" action="/form-bidding" method="post">
+                                    <input type="hidden" name="vendor_id" value="<%= parent.id %>">
+                                    <input type="hidden" name="bt_id" value="<%= dataTender[0]['bt_id'] %>">
+                                    
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                        <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
                                         <small class="form-check-label text-muted" for="exampleCheck1">Dengan ini pihak yang bersangkutan telah menyetujui aanwijzing, beserta syarat dan ketentuan yang berlaku.*</label>
                                     </div>
                                     <button type="submit" class="btn btn-primary pt-1">Ajukan Tender</button>
@@ -102,23 +124,9 @@
                         </div>
                     </div>
                 </div>
-                <div id="successMessage" class="card hidden">
-                    <div class="card-body text-center">
-                        <h4>Bidding Berhasil Diajukan</h4>
-                        <button onclick="closeSuccessMessage()" class="btn btn-success">Tutup</button>
-                    </div>
             </div>
         </div>
-
-        <script>
-            document.getElementById('biddingForm').addEventListener('submit', function(event) {
-                event.preventDefault();
-                document.getElementById('successMessage').classList.remove('hidden');
-            });
-    
-            function closeSuccessMessage() {
-                document.getElementById('successMessage').classList.add('hidden');
-            }
-        </script>
     </body>
+    <%- include('partials/footer.ejs') %>
     </html>
+    

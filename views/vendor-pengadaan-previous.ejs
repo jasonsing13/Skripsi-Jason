@@ -55,7 +55,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <% result.forEach(function(bt, i) { %>
+                            <% result.forEach(function(bt, i) {  %>
                             <tr>
                                 <td class="qty"><%= i+1 %></td>
                                 <td><%= bt.nama_vendor %></td>
@@ -64,13 +64,13 @@
                                 <td class="qty"><%= bt.durasi_pekerjaan || '-' %></td>
                                 <td><%= bt.nama_status %></td>
                                 <td>
-                                    <% if (bt.status_id == '9e18ab27-4557-41eb-b3c1-430c67377830') { %>
+                                    <% if (bt.status_id == '9e18ab27-4557-41eb-b3c1-430c67377830' || (bt.status_id == 'ae00536a-78c1-42e7-af53-ebe6cd68903d' && pengadaan.tipe_pemilihan_id == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f')) { %>
                                         <form id="setPemenang" action="/set-pemenang" method="post">
                                             <input type="hidden" name="pengadaan_id" value="<%= pengadaan_id %>">
                                             <input type="hidden" name="vendor_id" value="<%= bt.vendor_id %>">
                                             <input type="hidden" name="dbt_id" value="<%= bt.dbt_id %>">
                                             <input type="hidden" name="bt_id" value="<%= bt.bt_id %>">
-                                            <button class="btn btn-success" type="submit">Set Pemenang</button>
+                                            <button class="btn btn-success" <%= pengadaan.tipe_pemilihan_id == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f' ? "type=button data-bs-toggle=modal data-bs-target=#setPemenang-modal-"+i : "type='submit'" %> >Set Pemenang</button>
                                         </form>
                                     <% } %>
                                 </td>
@@ -83,6 +83,38 @@
         </div>
     </div>
 <%- include('partials/footer.ejs') %>
+<% result.forEach((bt, i) => { %>
+    <div id="setPemenang-modal-<%= i %>" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form action="/set-pemenang" method="post">
+                <input type="hidden" name="pengadaan_id" value="<%= pengadaan_id %>">
+                <input type="hidden" name="vendor_id" value="<%= bt.vendor_id %>">
+                <input type="hidden" name="dbt_id" value="<%= bt.dbt_id %>">
+                <input type="hidden" name="bt_id" value="<%= bt.bt_id %>">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Input Data</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="harga">Harga</label>
+                            <input id="harga" class="form-control currency" type="text" name="harga">
+                        </div>    
+                        <div class="form-group">
+                            <label for="harga">Durasi Pekerjaan (Day)</label>
+                            <input id="harga" class="form-control qty" type="text" name="durasi">
+                        </div>    
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+<% }) %>
 <script>
 var selectedItemBefore = [];
 <% result.forEach(function(bt, i) { %>

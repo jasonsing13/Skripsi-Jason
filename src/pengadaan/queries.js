@@ -10,7 +10,7 @@ SELECT
     jenis_pengadaan.nama_jenis_pengadaan,
     nama_tipe_pemilihan,
     status.nama_status,
-    pengadaan.status_id,
+    dbt.status_id,
     nama_jenis_vendor
 FROM
     pengadaan
@@ -33,7 +33,7 @@ WHERE
 GROUP BY pengadaan.pengadaan_id, jenis_pengadaan.nama_jenis_pengadaan,
 nama_tipe_pemilihan,
 status.nama_status,
-pengadaan.status_id,
+dbt.status_id,
 nama_jenis_vendor
 `;
 
@@ -77,7 +77,17 @@ SELECT
 FROM
     status
 WHERE 
-    nama_status NOT IN ('diterima', 'terverifikasi');
+    tipe_status = 'vendor';
+`;
+
+const option_Select_Status_Admin = `
+SELECT 
+    status.status_id, 
+    status.nama_status
+FROM
+    status
+WHERE 
+    tipe_status = 'head';
 `;
 
 const getInformasiPengadaan = `
@@ -87,7 +97,8 @@ SELECT
     jenis_vendor.nama_jenis_vendor,
     pengadaan.tanggal_pemilihan,
     pengadaan.tanggal_pemilihan_selesai,
-    pengadaan.status_id
+    pengadaan.status_id,
+    pengadaan.tipe_pemilihan_id
 FROM 
     pengadaan 
 INNER JOIN
@@ -146,23 +157,38 @@ const getDaftarPengadaanByStatus = `
 SELECT
     pengadaan.pengadaan_id,
     pengadaan.nama_pengadaan,
-    pengadaan.tanggal_pemilihan,
-    pengadaan.tanggal_pemilihan_selesai,
+    pengadaan.tanggal_permintaan::DATE AS tanggal_permintaan,
+    pengadaan.tanggal_pemilihan::DATE AS tanggal_pemilihan,
+    pengadaan.tanggal_pemilihan_selesai::DATE AS tanggal_pemilihan_selesai,
     jenis_pengadaan.nama_jenis_pengadaan,
-    status.nama_status
+    nama_tipe_pemilihan,
+    status.nama_status,
+    dbt.status_id,
+    nama_jenis_vendor
 FROM
     pengadaan
 LEFT JOIN
     bidding_tender bt ON pengadaan.pengadaan_id = bt.pengadaan_id
 LEFT JOIN
     detail_bidding_tender dbt ON dbt.bt_id = bt.bt_id
-LEFT JOIN
-    status ON pengadaan.status_id = status.status_id
 INNER JOIN
+    list_item ON pengadaan.pengadaan_id = list_item.pengadaan_id
+LEFT JOIN
+    status ON dbt.status_id = status.status_id
+LEFT JOIN
     jenis_pengadaan ON pengadaan.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id
+LEFT JOIN
+    jenis_vendor ON pengadaan.jenis_vendor_id = jenis_vendor.jenis_vendor_id
+INNER JOIN
+    tipe_pemilihan ON tipe_pemilihan.tipe_pemilihan_id = pengadaan.tipe_pemilihan_id
 WHERE
-    pengadaan.status_id = $1 AND dbt.vendor_id = $2
-    ORDER BY pengadaan.tanggal_permintaan DESC
+    dbt.status_id = $1 AND dbt.vendor_id = $2
+GROUP BY pengadaan.pengadaan_id, jenis_pengadaan.nama_jenis_pengadaan,
+    nama_tipe_pemilihan,
+    status.nama_status,
+    dbt.status_id,
+    nama_jenis_vendor
+ORDER BY pengadaan.tanggal_permintaan DESC
 `;
 
 const getDaftarPengadaanAdminByStatus = `
@@ -313,9 +339,10 @@ const addPengadaan = `
         termin_pembayaran,
         tanggal_permintaan,  
         create_by,
-        status_id
+        status_id,
+        harga
     ) 
-    VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP, $7, '5b117843-38aa-47cd-b4f2-24c3f88ab472')
+    VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP, $7, '5b117843-38aa-47cd-b4f2-24c3f88ab472', $8)
     RETURNING pengadaan_id;
 `;
 
@@ -364,6 +391,13 @@ vendor_pemenang = $1
 WHERE pengadaan_id = $2;`
 ;
 
+const setPemenangTender = ` 
+UPDATE public.pengadaan
+SET 
+vendor_pemenang = $1, harga = $3, durasi_pengerjaan = $4
+WHERE pengadaan_id = $2;`
+;
+
 const setPemenang2 = ` 
 UPDATE public.detail_bidding_tender
 SET 
@@ -390,6 +424,7 @@ module.exports = {
     getInformasiPO,
     getDokumenPO,
     option_Select_Status,
+    option_Select_Status_Admin,
     option_PIC,
     update_PIC,
     option_Vendor,
@@ -409,6 +444,7 @@ module.exports = {
     validasiPengadaanLangsung,
     setPemenang,
     setDitolak,
-    setPemenang2
+    setPemenang2,
+    setPemenangTender
 };
 

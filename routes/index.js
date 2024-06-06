@@ -526,7 +526,6 @@ router.get('/daftar-pengadaan', async function(req, res) {
   try {
       const statusOptions = await pengadaanController.option_Select_Status();
       const result = await pengadaanController.getDaftarPengadaan(data.parent.id);
-      const vendor = await vendorController.getProfilInformasi(req.query.id);
       res.render('daftar-pengadaan', {
           parent: data.parent,
           pengadaan: result,
@@ -566,7 +565,7 @@ router.get('/informasi-pengadaan', async (req, res) => {
     const pengadaan_id = req.query.id;
     const data = req.session.data;
     // const pengadaan_id = req.params.pengadaan_id;
-  const result = await pengadaanController.getInformasiPengadaan(pengadaan_id);
+    const result = await pengadaanController.getInformasiPengadaan(pengadaan_id);
     const pengadaanUser = await bidding_tenderController.getBidding_TenderVendorStatus(pengadaan_id, data.parent.id)
     res.render('informasi-pengadaan', {pengadaanUser: pengadaanUser[0], pengadaan: result[0], pengadaan_id, parent: data.parent, page: 'pengadaan' });
   } catch(error){
@@ -635,7 +634,7 @@ router.get('/form-bidding/:id', async (req, res) => {
       currdate: formattedDate,
       dataBidding: dataBidding,
       parent: data.parent,
-      page: 'bidding'
+      page: 'pengadaan'
     });
 } catch (error) {
     console.error('Failed to add new detail bidding tender:', error);
@@ -673,11 +672,13 @@ router.get('/form-tender/:id', async function(req, res) {
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   const formattedDate = currentDate.toLocaleDateString('id-ID', options);
   const data = req.session.data;
+  const dataTender = await bidding_tenderController.getBidding_TenderDetailById(req.params.id);
 
   res.render('form-tender', {
     title: "Form Tender",
     currdate: formattedDate,
-    page: 'tender',
+    page: 'pengadaan',
+    dataTender: dataTender,
     parent: data.parent
   });
 });
@@ -933,7 +934,7 @@ router.post('/buat-pengadaan', async (req, res) => {
 router.get('/daftar-pengadaan-admin', async function(req, res) {
   const data = req.session.data;
   try {
-      const statusOptions = await pengadaanController.option_Select_Status();
+      const statusOptions = await pengadaanController.option_Select_Status_Admin();
       const result = await pengadaanController.getDaftarPengadaanAdmin();
       res.render('daftar-pengadaan-admin', {
           parent: data.parent,
@@ -952,7 +953,7 @@ router.get('/daftar-pengadaan-admin/status/:status_id', async function(req, res)
   const data = req.session.data;
   const status_id = req.params.status_id;
   try {
-    const statusOptions = await pengadaanController.option_Select_Status();
+    const statusOptions = await pengadaanController.option_Select_Status_Admin();
     const result = await pengadaanController.getDaftarPengadaanAdminByStatus(status_id);
     res.render('daftar-pengadaan-admin', { 
       parent: data.parent,
@@ -1035,10 +1036,10 @@ router.post('/validasi-pengadaan-admin', async function(req, res) {
 });
 
 router.post('/set-pemenang', async function(req, res) {
-  const {pengadaan_id, vendor_id, dbt_id, bt_id} = req.body;
+  const {pengadaan_id, vendor_id, dbt_id, bt_id, harga, durasi} = req.body;
   try {
       // Asumsi Anda memiliki fungsi untuk menyetujui pengadaan
-      await pengadaanController.setPemenang(pengadaan_id, vendor_id, dbt_id, bt_id);
+      await pengadaanController.setPemenang(pengadaan_id, vendor_id, dbt_id, bt_id, harga, durasi);
       // const data = req.session.data;
       // const statusOptions = await pengadaanController.option_Select_Status();
       // const result = await pengadaanController.getDaftarPengadaan();
@@ -1049,7 +1050,7 @@ router.post('/set-pemenang', async function(req, res) {
   }
 });
 
-router.get('/informasi-pengadaan-approved', function(req, res) {
+router.get('/informasi-pengadaan-approved', async function(req, res) {
   const data = req.session.data;
   const pengadaan_id = req.query.id;
   const procurementInfo = {
@@ -1063,37 +1064,45 @@ router.get('/informasi-pengadaan-approved', function(req, res) {
       endDate: '30-04-2024',
       actualEndDate: '-'
   };
-  res.render('informasi-pengadaan-approved', { procurement: procurementInfo, pengadaan_id, parent: data.parent, page: 'pengadaan' });
+  const result = await pengadaanController.getInformasiPengadaan(pengadaan_id);
+  const pengadaanUser = await bidding_tenderController.getBidding_TenderVendorStatus(pengadaan_id, data.parent.id)
+  res.render('informasi-pengadaan-approved', { pengadaanUser: pengadaanUser[0], pengadaan_id, pengadaan: result[0], procurement: procurementInfo, parent: data.parent, page: 'pengadaan' });
 });
 
-router.get('/item-pengadaan-approved', function(req, res) {
+router.get('/item-pengadaan-approved', async function(req, res) {
   const data = req.session.data;
   const pengadaan_id = req.query.id;
   const itemsData = [
       { no: 'IG000001', name: 'MEJA', quantity: 20, price: 'Rp. 200.000', discount: '-', netAmount: 'Rp. 4.000.000' },
       { no: 'IG000002', name: 'KURSI', quantity: 100, price: 'Rp. 100.000', discount: '-', netAmount: 'Rp. 10.000.000' }
   ];
-  res.render('item-pengadaan-approved', { items: itemsData, pengadaan_id, parent: data.parent, page: 'pengadaan' });
+  const result = await pengadaanController.getInformasiPengadaan(pengadaan_id);
+  const pengadaanUser = await bidding_tenderController.getBidding_TenderVendorStatus(pengadaan_id, data.parent.id)
+  res.render('item-pengadaan-approved', { items: itemsData, pengadaanUser: pengadaanUser[0], pengadaan: result[0], pengadaan_id, parent: data.parent, page: 'pengadaan' });
 });
 
-router.get('/informasi-purchase-order-approved', function(req, res) {
+router.get('/informasi-purchase-order-approved', async function(req, res) {
   const data = req.session.data;
   const pengadaan_id = req.query.id;
+  const result = await pengadaanController.getInformasiPengadaan(pengadaan_id);
+  const pengadaanUser = await bidding_tenderController.getBidding_TenderVendorStatus(pengadaan_id, data.parent.id)
   const itemsData = [
       { no: 'IG000001', name: 'MEJA', quantity: 20, price: 'Rp. 200.000', discount: '-', netAmount: 'Rp. 4.000.000' },
       { no: 'IG000002', name: 'KURSI', quantity: 100, price: 'Rp. 100.000', discount: '-', netAmount: 'Rp. 10.000.000' }
   ];
-  res.render('informasi-purchase-order-approved', { items: itemsData, pengadaan_id, parent: data.parent, page: 'pengadaan' });
+  res.render('informasi-purchase-order-approved', { pengadaanUser: pengadaanUser[0], pengadaan: result[0], items: itemsData, pengadaan_id, parent: data.parent, page: 'pengadaan' });
 });
 
-router.get('/dokumen-purchase-order-approved', function(req, res) {
+router.get('/dokumen-purchase-order-approved', async function(req, res) {
   const data = req.session.data;
   const pengadaan_id = req.query.id;
+  const result = await pengadaanController.getInformasiPengadaan(pengadaan_id);
+  const pengadaanUser = await bidding_tenderController.getBidding_TenderVendorStatus(pengadaan_id, data.parent.id)
   const itemsData = [
       { no: 'IG000001', name: 'MEJA', quantity: 20, price: 'Rp. 200.000', deliveryDate: '14-04-2024', status: 'TUTUP' },
       { no: 'IG000002', name: 'KURSI', quantity: 100, price: 'Rp. 100.000', deliveryDate: '12-04-2024', status: 'TUTUP' }
   ];
-  res.render('dokumen-purchase-order-approved', { items: itemsData, pengadaan_id, parent: data.parent, page: 'pengadaan' });
+  res.render('dokumen-purchase-order-approved', { pengadaanUser: pengadaanUser[0], pengadaan: result[0], items: itemsData, pengadaan_id, parent: data.parent, page: 'pengadaan' });
 });
 
 // GET route for the goods received page

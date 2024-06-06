@@ -132,8 +132,21 @@ async function option_Select_Status() {
     }
 }
 
+async function option_Select_Status_Admin() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.option_Select_Status_Admin);
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
 
-    const getItem = async (req, res) => {
+
+const getItem = async (req, res) => {
     const pengadaan_id = req.params.pengadaan_id;
 
     try {
@@ -280,6 +293,7 @@ const addPengadaan = async (pengadaan, user_id) => {
         jenis_pengadaan,
         jenis_vendor,
         termin_pembayaran,
+        totalHarga
     } = pengadaan;
 
     const pengadaan_id = uuidv4(); // Generate a new UUID
@@ -292,7 +306,8 @@ const addPengadaan = async (pengadaan, user_id) => {
             jenis_pengadaan,
             jenis_vendor,
             termin_pembayaran,
-            user_id
+            user_id,
+            totalHarga
         ]);
         client.release();
         return pengadaan_id;
@@ -371,10 +386,14 @@ const validasiPengadaan = async (reqa, vendor_id = null) => {
     
 };
 
-async function setPemenang (pengadaan_id, vendor_id, dbt_id, bt_id) {
+async function setPemenang (pengadaan_id, vendor_id, dbt_id, bt_id, harga, durasi) {
     const client = await db.pool.connect();
     try {
-        await client.query(queries.setPemenang, [vendor_id, pengadaan_id]); 
+        if(harga){
+            await client.query(queries.setPemenangTender, [vendor_id, pengadaan_id, harga, durasi]); 
+        }else{
+            await client.query(queries.setPemenang, [vendor_id, pengadaan_id]); 
+        }
         await client.query(queries.setPemenang2, [dbt_id]); 
         await client.query(queries.setDitolak, [bt_id, dbt_id]); 
     } catch (error) {
@@ -397,6 +416,7 @@ module.exports = {
     getDokumenPO,
     option_PIC,
     option_Select_Status,
+    option_Select_Status_Admin,
     update_PIC,
     option_Vendor,
     option_Tipe_Pemilihan1,

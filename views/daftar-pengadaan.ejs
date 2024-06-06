@@ -1,22 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('partials/head.ejs') %>
     <title>Daftar Pengadaan Vendor</title>
+    <%- include('partials/head.ejs') %>
     <%- include('partials/style.ejs') %> 
     <style>
-        body {
-            padding: 20px;
-        }
-        .header {
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        .container {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-        }
         .alert {
             color: #856404;
             background-color: #fff3cd;
@@ -72,7 +60,7 @@
                         <td><%= pengadaan.nama_jenis_vendor || "-" %></td>
                         <td><%= pengadaan.nama_status %></td>
                         <td>
-                            <form action="<%= pengadaan.status_id == '760ad69f-7739-41e1-baf9-7a68665b21e8' ? '/informasi-pengadaan-approved' : '/informasi-pengadaan' %>" method="get">
+                            <form action="<%= pengadaan.status_id != 'ae00536a-78c1-42e7-af53-ebe6cd68903d' ? '/informasi-pengadaan-approved' : '/informasi-pengadaan' %>" method="get">
                                 <input type="hidden" name="id" value="<%= pengadaan.pengadaan_id %>">
                                 <button class="btn btn-orange" type="submit">Detail</button>
                             </form>

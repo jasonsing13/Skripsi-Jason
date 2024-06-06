@@ -60,7 +60,7 @@ FROM bidding_tender
 WHERE bt_id = $1`;
 
 const getBidding_TenderById = `select * from public.bidding_tender where bt_id = $1`;
-const getBidding_TenderDetailById = `select bidding_tender.* ,jenis_pengadaan.nama_jenis_pengadaan, 
+const getBidding_TenderDetailById = `select bidding_tender.* ,jenis_pengadaan.nama_jenis_pengadaan, pengadaan.harga AS harga_pengadaan, 
 pengadaan.nama_pengadaan, item.nama_item, item.harga_item, item.jumlah_item, jenis_pengadaan.nama_jenis_pengadaan, list_item.*
 FROM bidding_tender
 LEFT JOIN pengadaan ON bidding_tender.pengadaan_id = pengadaan.pengadaan_id
