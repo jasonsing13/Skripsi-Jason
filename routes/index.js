@@ -1034,6 +1034,20 @@ router.post('/validasi-pengadaan-admin', async function(req, res) {
   }
 });
 
+router.post('/set-pemenang', async function(req, res) {
+  const {pengadaan_id, vendor_id, dbt_id, bt_id} = req.body;
+  try {
+      // Asumsi Anda memiliki fungsi untuk menyetujui pengadaan
+      await pengadaanController.setPemenang(pengadaan_id, vendor_id, dbt_id, bt_id);
+      // const data = req.session.data;
+      // const statusOptions = await pengadaanController.option_Select_Status();
+      // const result = await pengadaanController.getDaftarPengadaan();
+      res.redirect(`/vendor-pengadaan-previous/`+pengadaan_id);
+    } catch (error) {
+      console.error('Gagal menyetujui pengadaan:', error);
+      res.status(500).send('Error menyetujui pengadaan');
+  }
+});
 
 router.get('/informasi-pengadaan-approved', function(req, res) {
   const data = req.session.data;

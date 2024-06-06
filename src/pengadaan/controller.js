@@ -371,6 +371,20 @@ const validasiPengadaan = async (reqa, vendor_id = null) => {
     
 };
 
+async function setPemenang (pengadaan_id, vendor_id, dbt_id, bt_id) {
+    const client = await db.pool.connect();
+    try {
+        await client.query(queries.setPemenang, [vendor_id, pengadaan_id]); 
+        await client.query(queries.setPemenang2, [dbt_id]); 
+        await client.query(queries.setDitolak, [bt_id, dbt_id]); 
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+};
+
 module.exports = {
     getDaftarPengadaan,
     getDaftarPengadaanAdmin,
@@ -395,4 +409,5 @@ module.exports = {
     addItem,
     removePengadaan,
     validasiPengadaan,
+    setPemenang
 };

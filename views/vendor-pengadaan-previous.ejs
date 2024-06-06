@@ -64,10 +64,11 @@
                                 <td class="qty"><%= bt.durasi_pekerjaan || '-' %></td>
                                 <td><%= bt.nama_status %></td>
                                 <td>
-                                    <% if (bt.status_id != 'ae00536a-78c1-42e7-af53-ebe6cd68903d') { %>
-                                        <form action="/set-pemenang" method="post">
+                                    <% if (bt.status_id == '9e18ab27-4557-41eb-b3c1-430c67377830') { %>
+                                        <form id="setPemenang" action="/set-pemenang" method="post">
                                             <input type="hidden" name="pengadaan_id" value="<%= pengadaan_id %>">
                                             <input type="hidden" name="vendor_id" value="<%= bt.vendor_id %>">
+                                            <input type="hidden" name="dbt_id" value="<%= bt.dbt_id %>">
                                             <input type="hidden" name="bt_id" value="<%= bt.bt_id %>">
                                             <button class="btn btn-success" type="submit">Set Pemenang</button>
                                         </form>
@@ -144,5 +145,9 @@ $("#selVendor").autocomplete({
         // return false;
     }
 });
+
+$("#setPemenang").submit(function(){
+    return confirm('Apakah Anda Yakin?');
+})
 </script>
 </html>

@@ -8,13 +8,13 @@ INNER JOIN item ON list_item.item_id = item.item_id
 WHERE bidding_tender.id = $1
 `;
 
-const getDetail_Bidding_TenderById = `select pengajuan_harga, durasi_pekerjaan, dbt.status_id, v.nama_vendor, jv.nama_jenis_vendor, s.nama_status, v.id AS vendor_id, dbt.bt_id
+const getDetail_Bidding_TenderById = `select pengajuan_harga, durasi_pekerjaan, dbt.status_id, v.nama_vendor, jv.nama_jenis_vendor, s.nama_status, v.id AS vendor_id, dbt.bt_id, dbt.dbt_id
 from public.detail_bidding_tender dbt 
 LEFT JOIN vendor v ON v.id = dbt.vendor_id
 LEFT JOIN jenis_vendor jv ON jv.jenis_vendor_id = v.jenis_vendor_id
 LEFT JOIN status s ON s.status_id = dbt.status_id
 where bt_id = $1
-GROUP BY dbt.dbt_id, v.nama_vendor, jv.nama_jenis_vendor, s.nama_status, v.id, dbt.bt_id`;
+GROUP BY dbt.dbt_id, v.nama_vendor, jv.nama_jenis_vendor, s.nama_status, v.id, dbt.bt_id, dbt.dbt_id`;
 
 const addDetail_Bidding_Tender = `INSERT INTO public.detail_bidding_tender (bt_id, vendor_id)
 VALUES ( 

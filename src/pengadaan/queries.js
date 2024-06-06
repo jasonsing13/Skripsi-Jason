@@ -357,6 +357,27 @@ WHERE pengadaan_id = $5
 ;`
 ;
 
+const setPemenang = ` 
+UPDATE public.pengadaan
+SET 
+vendor_pemenang = $1
+WHERE pengadaan_id = $2;`
+;
+
+const setPemenang2 = ` 
+UPDATE public.detail_bidding_tender
+SET 
+status_id = '760ad69f-7739-41e1-baf9-7a68665b21e8'
+WHERE dbt_id = $1;`
+;
+
+const setDitolak = ` 
+UPDATE public.detail_bidding_tender
+SET 
+status_id = '49cd669e-a2e1-4589-8473-d63b110ebbfc'
+WHERE bt_id = $1 AND dbt_id != $2;`
+;
+
 
 module.exports = {
     getDaftarPengadaan,
@@ -385,6 +406,9 @@ module.exports = {
     getItem,
     removePengadaan,
     validasiPengadaan,
-    validasiPengadaanLangsung
+    validasiPengadaanLangsung,
+    setPemenang,
+    setDitolak,
+    setPemenang2
 };
 
