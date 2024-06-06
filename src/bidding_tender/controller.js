@@ -115,10 +115,10 @@ async function getBidding_TenderVendorStatus(pengadaan_id, vendor_id) {
     }
 }
 
-async function addBidding_Tender(pengadaan_id, vendor_id) {
+async function addBidding_Tender(pengadaan_id) {
     const client = await db.pool.connect();
     try {
-        await client.query(queries.addBidding_Tender, [vendor_id, pengadaan_id]);
+        await client.query(queries.addBidding_Tender, [pengadaan_id]);
         return res.status(201).send("Bidding Tender created success");
     } catch (error) {
         console.error('Error executing query', error); // Log error yang lebih detail

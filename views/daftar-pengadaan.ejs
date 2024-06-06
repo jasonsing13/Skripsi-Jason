@@ -72,7 +72,7 @@
                         <td><%= pengadaan.nama_jenis_vendor || "-" %></td>
                         <td><%= pengadaan.nama_status %></td>
                         <td>
-                            <form action="<%= pengadaan.status_id == '0b3e77e5-140b-4662-9563-dde365358ddc' || pengadaan.status_id == '3b9a7057-fc96-4894-88b6-24f2f4211110' ? '/informasi-pengadaan-approved' : '/informasi-pengadaan' %>" method="get">
+                            <form action="<%= pengadaan.status_id == '760ad69f-7739-41e1-baf9-7a68665b21e8' ? '/informasi-pengadaan-approved' : '/informasi-pengadaan' %>" method="get">
                                 <input type="hidden" name="id" value="<%= pengadaan.pengadaan_id %>">
                                 <button class="btn btn-orange" type="submit">Detail</button>
                             </form>

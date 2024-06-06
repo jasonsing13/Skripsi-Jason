@@ -31,8 +31,8 @@
         <div class="card">
             <div class="card-header">
                 <div class="form-group mb-3">
-                    <input type="hidden" id="pengadaan_id" name="pengadaan_id" value="<%= pengadaan_id %>">
                     <input type="hidden" id="bt_id" name="bt_id" value="<%= pengadaan.bt_id %>">
+                    <input type="hidden" id="pengadaan_id" name="pengadaan_id" value="<%= pengadaan_id %>">
                     <label class="col-sm-3" for="selVendor">Invite Vendor:</label>
                     <div class='input-group col-sm'>
                         <input class="form-control input-sm selVendor m-0" type="text" name="selVendor" id="selVendor">
@@ -59,7 +59,7 @@
                             <tr>
                                 <td class="qty"><%= i+1 %></td>
                                 <td><%= bt.nama_vendor %></td>
-                                <td><%= bt.nama_jenis_vendor %></td>
+                                <td><%= bt.nama_jenis_vendor || '-'  %></td>
                                 <td class="currency"><%= bt.pengajuan_harga || '-' %></td>
                                 <td class="qty"><%= bt.durasi_pekerjaan || '-' %></td>
                                 <td><%= bt.nama_status %></td>
@@ -84,6 +84,10 @@
 <%- include('partials/footer.ejs') %>
 <script>
 var selectedItemBefore = [];
+<% result.forEach(function(bt, i) { %>
+    selectedItemBefore.push("<%= bt.vendor_id %>");
+<% }) %>;  // Ensure semicolon here
+
 $("#selVendor").autocomplete({
     minLength: 3,
     delay: 500,
@@ -101,7 +105,7 @@ $("#selVendor").autocomplete({
             },
             success: function(result){
                 if(result.length == 0){ $("#loadItem").html('No data'); return false; }
-                $selectedProd = result[0];
+                selectedProd = result[0];
                 var display=[];    
                 $.each(result, function(i, arr){
                     var name = arr['nama_vendor'];
@@ -125,25 +129,19 @@ $("#selVendor").autocomplete({
         var itemSelected = ui.item;
         const pengadaan_id = $('#pengadaan_id').val()
         const bt_id = $('#bt_id').val()
-        // console.log("itemSelected:")
-        // console.log(itemSelected.id)
-        // console.log("pengadaan_id:")
-        // console.log(pengadaan_id)
-        // console.log("bt_id:")
-        // console.log(bt_id)
         // INPUT KE DB
         $.ajax({
             type: "POST",
             data: { bt_id: bt_id, vendor_id: itemSelected.id, pengadaan_id },
             url: "/add-bidding-tender",
             beforeSend: function(){
-                return confirm('Apakah Anda Yakin?') && true;
+                return confirm('Apakah Anda Yakin?');
             },
             success: function(result){
-                return alert('Vendor Berhasil Diundang');
+                window.location.reload();
             }
         });
-        return false;
+        // return false;
     }
 });
 </script>

@@ -629,7 +629,7 @@ router.get('/form-bidding/:id', async (req, res) => {
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   const formattedDate = currentDate.toLocaleDateString('id-ID', options);
   try {
-    const dataBidding = await bidding_tenderController.getBidding_TenderDetailById(req.query.id);
+    const dataBidding = await bidding_tenderController.getBidding_TenderDetailById(req.params.id);
     res.render('form-bidding', {
       title: "Form Bidding",
       currdate: formattedDate,
@@ -644,11 +644,11 @@ router.get('/form-bidding/:id', async (req, res) => {
 });
 
 router.post('/add-bidding-tender', async (req, res) => {
-  const { id_bt, vendor_id, pengadaan_id } = req.body;
+  const { bt_id, vendor_id, pengadaan_id } = req.body;
   try {
       // Assuming you have a function to insert data into the database
-      await detail_bidding_tenderController.addDetail_Bidding_Tender(id_bt, vendor_id, pengadaan_id);
-      res.redirect('/daftar-pengadaan'); // Redirect to the list page after successful insertion
+      await detail_bidding_tenderController.addDetail_Bidding_Tender(bt_id, vendor_id);
+      res.redirect('back')
   } catch (error) {
       console.error('Failed to add new detail bidding tender:', error);
       res.status(500).send('Error adding new detail bidding tender');
@@ -656,10 +656,11 @@ router.post('/add-bidding-tender', async (req, res) => {
 });
 
 router.post('/form-bidding', async (req, res) => {
-  const { durasi_pekerjaan, pengajuan_harga } = req.body;
+  console.log(req.body);
+  const { durasi_pekerjaan, pengajuan_harga, bt_id, vendor_id } = req.body;
   try {
       // Assuming you have a function to insert data into the database
-      await detail_bidding_tenderController.updateDetail_Bidding_Tender(durasi_pekerjaan, pengajuan_harga);
+      await detail_bidding_tenderController.updateDetail_Bidding_Tender(durasi_pekerjaan, pengajuan_harga, bt_id, vendor_id);
       res.redirect('/daftar-pengadaan'); // Redirect to the list page after successful insertion
   } catch (error) {
       console.error('Failed to add new detail bidding tender:', error);
@@ -971,7 +972,6 @@ router.get('/informasi-pengadaan-previous/:id', async (req, res) => {
     const data = req.session.data;
     const pengadaan_id = req.params.id
     const result = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
-    console.log(result);
     res.render('informasi-pengadaan-previous', { pengadaan_id, pengadaan: result, parent: data.parent, page: 'pengadaan' });
   } catch (error) {
       console.error('Error fetching procurement data:', error);
@@ -1000,7 +1000,6 @@ router.get('/vendor-pengadaan-previous/:id', async (req, res) => {
     const data = req.session.data;
     const pengadaan_id = req.params.id
     const pengadaan = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
-    console.log(pengadaan);
     const result = await detail_bidding_tenderController.getDetail_Bidding_TenderById(pengadaan.bt_id);
     res.render('vendor-pengadaan-previous', { pengadaan_id, pengadaan, result, parent: data.parent, page: 'pengadaan' });
   } catch (error) {
@@ -1145,7 +1144,6 @@ router.post('/api/getVendor', async (req, res) => {
     const {
       nama_vendor 
     } = req.body;
-    console.log(req.body)
     // Assuming you have a function to insert data into the database
     const item = await vendorController.getVendor(nama_vendor)
     res.send(item); // Redirect to the list page after successful insertion

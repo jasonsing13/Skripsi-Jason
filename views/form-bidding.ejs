@@ -110,7 +110,9 @@
                         </div>
                         <div class="card-body">
                             <div class="detail-bidding">
-                                <form id="biddingForm" action="/form-bidding-vendor" method="post">
+                                <form id="biddingForm" action="/form-bidding" method="post">
+                                    <input type="hidden" name="vendor_id" value="<%= parent.id %>">
+                                    <input type="hidden" name="bt_id" value="<%= dataBidding[0]['bt_id'] %>">
                                     <div class="form-group">
                                         <label for="durasi_pekerjaan">Durasi Pekerjaan*</label>
                                         <input class="form-control qty" type="text" id="durasi_pekerjaan" name="durasi_pekerjaan" required>
@@ -130,25 +132,8 @@
                         </div>
                     </div>
                 </div>
-                <div id="successMessage" class="card hidden">
-                    <div class="card-body text-center">
-                        <h4>Bidding Berhasil Diajukan</h4>
-                        <button onclick="closeSuccessMessage()" class="btn btn-success">Tutup</button>
-                    </div>
-                </div>
             </div>
         </div>
-
-        <script>
-            document.getElementById('biddingForm').addEventListener('submit', function(event) {
-                event.preventDefault();
-                document.getElementById('successMessage').classList.remove('hidden');
-            });
-    
-            function closeSuccessMessage() {
-                document.getElementById('successMessage').classList.add('hidden');
-            }
-        </script>
     </body>
     <%- include('partials/footer.ejs') %>
     </html>

@@ -63,11 +63,11 @@ const getBidding_TenderById = `select * from public.bidding_tender where bt_id =
 const getBidding_TenderDetailById = `select bidding_tender.* ,jenis_pengadaan.nama_jenis_pengadaan, 
 pengadaan.nama_pengadaan, item.nama_item, item.harga_item, item.jumlah_item, jenis_pengadaan.nama_jenis_pengadaan, list_item.*
 FROM bidding_tender
-INNER JOIN pengadaan ON bidding_tender.pengadaan_id = pengadaan.pengadaan_id
-INNER JOIN jenis_pengadaan ON jenis_pengadaan.jenis_pengadaan_id = pengadaan.jenis_pengadaan_id
-INNER JOIN list_item ON list_item.pengadaan_id = pengadaan.pengadaan_id
-INNER JOIN item ON list_item.item_id = item.item_id
-WHERE bidding_tender.bt_id = $1
+LEFT JOIN pengadaan ON bidding_tender.pengadaan_id = pengadaan.pengadaan_id
+LEFT JOIN jenis_pengadaan ON jenis_pengadaan.jenis_pengadaan_id = pengadaan.jenis_pengadaan_id
+LEFT JOIN list_item ON list_item.pengadaan_id = pengadaan.pengadaan_id
+LEFT JOIN item ON list_item.item_id = item.item_id
+WHERE pengadaan.pengadaan_id = $1
 `;
 
 const getBidding_TenderVendorStatus = `select bd.status_id

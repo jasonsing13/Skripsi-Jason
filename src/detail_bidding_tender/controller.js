@@ -40,11 +40,10 @@ async function getDetail_Bidding_TenderById(id) {
 //     );
 // };
 
-async function addDetail_Bidding_Tender(bt_id, vendor_id, pengadaan_id) {
+async function addDetail_Bidding_Tender(bt_id, vendor_id) {
     const client = await pool.pool.connect();
     try {
-        await client.query(queries.addDetail_Bidding_Tender, [bt_id, vendor_id, pengadaan_id]);
-        return res.status(201).send("Bidding Tender created success");
+        await client.query(queries.addDetail_Bidding_Tender, [bt_id, vendor_id]);
     } catch (error) {
         console.error('Error executing query', error); // Log error yang lebih detail
         return null;
@@ -79,14 +78,16 @@ const removeDetail_Bidding_Tender = (req,res)=>{
 };
 
 
-const updateDetail_Bidding_Tender = (req, res) => {
-    const id = req.params.id;
-    const { username } = req.body;
-
-    pool.query(queries.updateDetail_Bidding_Tender, [username, id], (error, result) => {
-        if (error) throw error;
-        res.status(200).send("Pembaruan Detail Bidding Tender berhasil");
-    });
+async function updateDetail_Bidding_Tender(durasi_pekerjaan, pengajuan_harga, bt_id, vendor_id){
+    const client = await pool.pool.connect();
+    try {
+        await client.query(queries.updateDetail_Bidding_Tender, [pengajuan_harga, durasi_pekerjaan, bt_id, vendor_id]);
+    } catch (error) {
+        console.error('Error executing query', error); // Log error yang lebih detail
+        return null;
+    } finally {
+        client.release();
+    }
 };
 
 
