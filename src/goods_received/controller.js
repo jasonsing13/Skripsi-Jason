@@ -29,16 +29,20 @@ const getGoods_ReceivedById = (req,res)=>{
     })
 };
 
-const addGoods_Received = (req,res)=>{
-    const { received_id, penerima, item_gr_id, pengadaan_id, url_invoice, url_surat_jalan, status_id, create_date, create_by, modif_date, modif_by } = req.body;
-    pool.query(
-        queries.addGoods_Received,
-        [received_id, penerima, item_gr_id, pengadaan_id, url_invoice, url_surat_jalan, status_id, create_date, create_by, modif_date, modif_by],
-        (error, results) => {
-            if (error) throw error;
-            res.status(201).send("Goods received created success")
-        }
-    );
+const getGoods_ReceivedByPengadaanId = async (pengadaan_id, vendor_id)=>{
+    try {
+        const result = await pool.pool.query(await queries.getGoods_ReceivedByPenagdaanId,[pengadaan_id, vendor_id])
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } 
+};
+
+const addGoods_Received = async (url_invoice, url_surat_jalan, pengadaan_id, create_by)=>{
+    pool.pool.query(
+        await queries.addGoods_Received,
+        [pengadaan_id, url_invoice, url_surat_jalan, create_by]);
 };
 
 const removeGoods_Received = (req,res)=>{
@@ -94,5 +98,6 @@ module.exports = {
     addGoods_Received,
     removeGoods_Received,
     updateGoods_Received,
+    getGoods_ReceivedByPengadaanId
 };
 

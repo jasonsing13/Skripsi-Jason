@@ -38,19 +38,17 @@
                             <th scope="col">NAMA PENGADAAN</th>
                             <th scope="col">QUANTITY</th>
                             <th scope="col">HARGA ITEM</th>
-                            <th scope="col">DISKON</th>
                             <th scope="col">NET AMOUNT</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% items.forEach(function(item) { %>
+                        <% items.forEach(function(item, i) { %>
                             <tr>
-                                <td><%= item.no %></td>
-                                <td><%= item.name %></td>
-                                <td><%= item.quantity %></td>
-                                <td><%= item.price %></td>
-                                <td><%= item.discount %></td>
-                                <td><%= item.netAmount %></td>
+                                <td><%= i+1 %></td>
+                                <td><%= item.nama_item %></td>
+                                <td class="qty"><%= item.quantity %></td>
+                                <td class="currency"><%= item.harga_item %></td>
+                                <td class="currency"><%= item.harga_total %></td>
                             </tr>
                         <% }); %>
                     </tbody>

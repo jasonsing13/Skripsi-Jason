@@ -4,49 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Goods Received</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <%- include('partials/head.ejs') %>
     <%- include('partials/style.ejs') %>
 </head>
 <body>
-        <%- include('partials/sidebar.ejs') %>
-        <div class="container mt-4">
-                <h1>Goods Received</h1>
-                <p>Review hasil yang diterima</p>
+    <%- include('partials/sidebar.ejs') %>
+    <div class="container mt-4">
+        <h1>Goods Received</h1>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" href="/informasi-pengadaan-previous/<%= pengadaan_id %>">Informasi Pengadaan</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="/item-pengadaan-previous/<%= pengadaan_id %>">Item Pengadaan</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="/vendor-pengadaan-previous/<%= pengadaan_id %>">List Vendor</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/informasi-purchase-order-previous?id=<%= pengadaan_id %>">Informasi Purchase Order</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="/dokumen-purchase-order-previous?id=<%= pengadaan_id %>">Dokumen Purchase Order</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/goods-received-admin?id=<%= pengadaan_id %>">Goods Received</a>
+                </li>
+            </ul>
                 
-                <div class="buttons">
-                    <button onclick="window.location.href='/lihat-invoice'">Lihat Invoice</button>
-                    <button onclick="window.location.href='/lihat-surat-jalan'">Lihat Surat Jalan</button>
+            <div class="card">
+                <div class="card-header">
+                    <p class="m-0">Review hasil yang diterima</p>
                 </div>
-                
-                <form action="/goods-received-admin" method="POST" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="tanggal-terima">TANGGAL TERIMA*</label>
-                        <input type="date" id="tanggal-terima" name="tanggal_terima" required>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <button class="btn float-end btn-success mx-2" data-bs-toggle="modal" data-bs-target="#invoice">Lihat Invoice</button>
+                            <button class="btn float-end btn-success mx-2" data-bs-toggle="modal" data-bs-target="#surat_jalan">Lihat Surat Jalan</button>
+                        </div>
                     </div>
-                    <div class="col-md-6">
+                    <form action="/goods-received-admin" method="POST" enctype="multipart/form-data">
+                        <div class="row d-flex flex-wrap">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="tanggal-terima">TANGGAL TERIMA*</label>
+                                    <input class="form-control" type="date" id="tanggal-terima" name="tanggal_terima" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="jumlah-barang">JUMLAH BARANG*</label>
+                                    <input class="form-control" type="number" id="jumlah-barang" name="jumlah_barang" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="deskripsi-barang">DESKRIPSI BARANG*</label>
+                                    <textarea id="my-textarea" class="form-control" name="deskripsi_barang" rows="3" required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="kondisi-barang">KONDISI BARANG*</label>
+                                    <input type="text" class="form-control" id="kondisi-barang" name="kondisi_barang" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="upload-bukti-foto">UPLOAD BUKTI FOTO*</label>
+                                    <input class="form-control" type="file" id="upload-bukti-foto" name="bukti_foto" required>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary float-end">Submit Bukti</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    <div class="mb-3">
-                        <label for="jumlah-barang">JUMLAH BARANG*</label>
-                        <input type="number" id="jumlah-barang" name="jumlah_barang" required>
-                    </div>
-                    <div class="col-md-6">
-
-                    <div class="mb-3">
-                        <label for="deskripsi-barang">DESKRIPSI BARANG*</label>
-                        <input type="text" class="form-control" id="deskripsi-barang" name="deskripsi_barang" required>
-                    </div>
-                    <div class="col-md-6">
-
-                    <div class="mb-3">
-                        <label for="kondisi-barang">KONDISI BARANG*</label>
-                        <input type="text" class="form-control" id="kondisi-barang" name="kondisi_barang" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="upload-bukti-foto">UPLOAD BUKTI FOTO*</label>
-                        <input type="file" id="upload-bukti-foto" name="bukti_foto" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit Bukti</button>
-                </form>
+    <div id="invoice" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="Invoice" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="Invoice">Invoice</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="<%= result.url_invoice %>" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="surat_jalan" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="Surat Jalan" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="SuratJalan">Surat Jalan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="<%= result.url_surat_jalan %>" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
+                </div>
             </div>
         </div>
     </div>

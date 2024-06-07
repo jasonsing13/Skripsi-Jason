@@ -113,7 +113,8 @@ SELECT
     pengadaan.*,
     jenis_vendor.nama_jenis_vendor, 
     nama_jenis_pengadaan,
-    bidding_tender.bt_id
+    bidding_tender.bt_id,
+    status.nama_status
 FROM 
     pengadaan 
 LEFT JOIN
@@ -122,18 +123,28 @@ LEFT JOIN
     jenis_vendor ON pengadaan.jenis_vendor_id = jenis_vendor.jenis_vendor_id
 LEFT JOIN
     jenis_pengadaan ON pengadaan.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id
+LEFT JOIN
+    status ON pengadaan.status_id = status.status_id
 WHERE 
     pengadaan.pengadaan_id = $1;
 `;
 
 const getItemPengadaan = `
 SELECT 
-    i.nama_item, l.*
+    i.nama_item, l.*, i.harga_item
 FROM 
     public.item i
-INNER JOIN 
+LEFT JOIN 
     public.list_item l ON l.item_id = i.item_id
 WHERE l.pengadaan_id = $1;
+`;
+
+const getVendorPemenang = `
+SELECT 
+    vendor_pemenang
+FROM 
+    public.pengadaan 
+WHERE pengadaan_id = $1;
 `;
 
 const getInformasiPO = `
@@ -445,6 +456,7 @@ module.exports = {
     setPemenang,
     setDitolak,
     setPemenang2,
-    setPemenangTender
+    setPemenangTender,
+    getVendorPemenang
 };
 

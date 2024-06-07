@@ -28,6 +28,9 @@
             <li class="nav-item">
                 <a class="nav-link active" href="/dokumen-purchase-order-approved?id=<%= pengadaan_id %>">Dokumen Purchase Order</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link " href="/goods-received-vendor?id=<%= pengadaan_id %>">Goods Received</a>
+            </li>
         </ul>
         <table class="table">
             <thead>
@@ -41,12 +44,12 @@
                 </tr>
             </thead>
             <tbody>
-                <% items.forEach(function(item) { %>
+                <% items.forEach(function(item, i) { %>
                     <tr>
-                        <td><%= item.no %></td>
-                        <td><%= item.name %></td>
-                        <td><%= item.quantity %></td>
-                        <td><%= item.price %></td>
+                        <td><%= i+1 %></td>
+                        <td><%= item.nama_item %></td>
+                        <td class="qty"><%= item.quantity %></td>
+                        <td class="currency"><%= item.harga_item %></td>
                         <td><%= item.deliveryDate %></td>
                         <td><%= item.status %></td>
                     </tr>

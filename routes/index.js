@@ -2,13 +2,36 @@ var express = require('express');
 const session = require('express-session');
 var router = express.Router();
 router.use(express.static('public'));
+router.use('/uploads', express.static('uploads'))
 router.use(session({ secret: process.env.TOKEN_SECRET, rolling: true,
   cookie: { maxAge: 60 * 1000 * 60 }, resave: false, saveUninitialized: false}));
 
 var db = require("../database/db");
 var { saveAllVendorInformation } = require("../database/db");
 var multer = require('multer');
-var upload = multer({ dest: 'uploads/' });
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    // Define the directory where uploaded files will be saved
+    cb(null, './uploads'); // Replace 'path/to/uploads' with your desired directory
+  },
+  filename: (req, file, cb) => {
+    // Generate a unique filename for each uploaded file
+    const uniqueSuffix = Date.now() + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + '.' + file.mimetype.split('/')[1]);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  // Validate allowed file types
+  if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+    cb(null, true);
+  } else {
+    cb(new Error('Only .png, .jpg, and .jpeg format allowed!'));
+  }
+};
+
+const upload = multer({ storage, fileFilter });
+
 const bodyParser = require('body-parser'); // Jika Anda menggunakan express versi lama
 const jwt = require('jsonwebtoken');
 const { authenticateToken } = require('../middleware/authenticate'); // Impor middleware otentikasi
@@ -1084,61 +1107,67 @@ router.post('/set-pemenang', async function(req, res) {
 router.get('/informasi-pengadaan-approved', async function(req, res) {
   const data = req.session.data;
   const pengadaan_id = req.query.id;
-  const procurementInfo = {
-      procurementName: 'Portal Vendor',
-      procurementType: 'Jasa',
-      vendorType: 'Software House',
-      itemName: 'Website',
-      itemPrice: 'Rp. 150.000.000,00',
-      itemQuantity: 1,
-      startDate: '01-01-2024',
-      endDate: '30-04-2024',
-      actualEndDate: '-'
-  };
-  const result = await pengadaanController.getInformasiPengadaan(pengadaan_id);
+  const result = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
+
   const pengadaanUser = await bidding_tenderController.getBidding_TenderVendorStatus(pengadaan_id, data.parent.id)
-  res.render('informasi-pengadaan-approved', { pengadaanUser: pengadaanUser[0], pengadaan_id, pengadaan: result[0], procurement: procurementInfo, parent: data.parent, page: 'pengadaan' });
+  res.render('informasi-pengadaan-approved', { pengadaanUser: pengadaanUser[0], pengadaan_id, pengadaan: result, parent: data.parent, page: 'pengadaan' });
 });
 
 router.get('/item-pengadaan-approved', async function(req, res) {
   const data = req.session.data;
   const pengadaan_id = req.query.id;
-  const itemsData = [
-      { no: 'IG000001', name: 'MEJA', quantity: 20, price: 'Rp. 200.000', discount: '-', netAmount: 'Rp. 4.000.000' },
-      { no: 'IG000002', name: 'KURSI', quantity: 100, price: 'Rp. 100.000', discount: '-', netAmount: 'Rp. 10.000.000' }
-  ];
-  const result = await pengadaanController.getInformasiPengadaan(pengadaan_id);
+  const result = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
+  const items = await pengadaanController.getItemPengadaan(pengadaan_id);
   const pengadaanUser = await bidding_tenderController.getBidding_TenderVendorStatus(pengadaan_id, data.parent.id)
-  res.render('item-pengadaan-approved', { items: itemsData, pengadaanUser: pengadaanUser[0], pengadaan: result[0], pengadaan_id, parent: data.parent, page: 'pengadaan' });
+  res.render('item-pengadaan-approved', { pengadaanUser: pengadaanUser[0], items, pengadaan: result, pengadaan_id, parent: data.parent, page: 'pengadaan' });
 });
 
 router.get('/informasi-purchase-order-approved', async function(req, res) {
   const data = req.session.data;
   const pengadaan_id = req.query.id;
-  const result = await pengadaanController.getInformasiPengadaan(pengadaan_id);
+  const items = await pengadaanController.getItemPengadaan(pengadaan_id);
+  const result = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
   const pengadaanUser = await bidding_tenderController.getBidding_TenderVendorStatus(pengadaan_id, data.parent.id)
-  const itemsData = [
-      { no: 'IG000001', name: 'MEJA', quantity: 20, price: 'Rp. 200.000', discount: '-', netAmount: 'Rp. 4.000.000' },
-      { no: 'IG000002', name: 'KURSI', quantity: 100, price: 'Rp. 100.000', discount: '-', netAmount: 'Rp. 10.000.000' }
-  ];
-  res.render('informasi-purchase-order-approved', { pengadaanUser: pengadaanUser[0], pengadaan: result[0], items: itemsData, pengadaan_id, parent: data.parent, page: 'pengadaan' });
+  
+  res.render('informasi-purchase-order-approved', { pengadaanUser: pengadaanUser[0], items, pengadaan: result, pengadaan_id, parent: data.parent, page: 'pengadaan' });
+});
+
+router.get('/informasi-purchase-order-previous', async function(req, res) {
+  const data = req.session.data;
+  const pengadaan_id = req.query.id;
+  const items = await pengadaanController.getItemPengadaan(pengadaan_id);
+  const result = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
+  const pengadaanUser = await bidding_tenderController.getBidding_TenderVendorStatus(pengadaan_id, data.parent.id)
+  
+  res.render('informasi-purchase-order-previous', { pengadaanUser: pengadaanUser[0], items, pengadaan: result, pengadaan_id, parent: data.parent, page: 'pengadaan' });
 });
 
 router.get('/dokumen-purchase-order-approved', async function(req, res) {
   const data = req.session.data;
   const pengadaan_id = req.query.id;
-  const result = await pengadaanController.getInformasiPengadaan(pengadaan_id);
+  const items = await pengadaanController.getItemPengadaan(pengadaan_id);
+  const result = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
   const pengadaanUser = await bidding_tenderController.getBidding_TenderVendorStatus(pengadaan_id, data.parent.id)
-  const itemsData = [
-      { no: 'IG000001', name: 'MEJA', quantity: 20, price: 'Rp. 200.000', deliveryDate: '14-04-2024', status: 'TUTUP' },
-      { no: 'IG000002', name: 'KURSI', quantity: 100, price: 'Rp. 100.000', deliveryDate: '12-04-2024', status: 'TUTUP' }
-  ];
-  res.render('dokumen-purchase-order-approved', { pengadaanUser: pengadaanUser[0], pengadaan: result[0], items: itemsData, pengadaan_id, parent: data.parent, page: 'pengadaan' });
+  
+  res.render('dokumen-purchase-order-approved', { pengadaanUser: pengadaanUser[0], items, pengadaan: result, pengadaan_id, parent: data.parent, page: 'pengadaan' });
+});
+
+router.get('/dokumen-purchase-order-previous', async function(req, res) {
+  const data = req.session.data;
+  const pengadaan_id = req.query.id;
+  const items = await pengadaanController.getItemPengadaan(pengadaan_id);
+  const result = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
+  const pengadaanUser = await bidding_tenderController.getBidding_TenderVendorStatus(pengadaan_id, data.parent.id)
+  
+  res.render('dokumen-purchase-order-previous', { pengadaanUser: pengadaanUser[0], items, pengadaan: result, pengadaan_id, parent: data.parent, page: 'pengadaan' });
 });
 
 // GET route for the goods received page
-router.get('/goods-received-vendor', (req, res) => {
-  res.render('goods-received-vendor');
+router.get('/goods-received-vendor', async (req, res) => {
+  const data = req.session.data;
+  const pengadaan_id = req.query.id;
+  const result = await goods_receivedController.getGoods_ReceivedByPengadaanId(pengadaan_id, data.parent.id);
+  res.render('goods-received-vendor', { parent: data.parent, result, page: 'pengadaan', pengadaan_id });
 });
 
 router.post('/goods-received-vendor', 
@@ -1148,8 +1177,11 @@ upload.fields([{ name: 'invoice' }, { name: 'surat_jalan' }]), async (req, res) 
     const url_invoice = req.files['invoice'][0].path;
     const url_surat_jalan = req.files['surat_jalan'][0].path;
 
+    const { id } = req.session.data.parent;
+    const { pengadaan_id } = req.body
+
     // Assuming you have a function to insert data into the database
-    await goods_receivedController.addGoods_Received(url_invoice, url_surat_jalan);
+    await goods_receivedController.addGoods_Received(url_invoice, url_surat_jalan, pengadaan_id, id);
     res.redirect('/daftar-pengadaan'); // Redirect to the list page after successful insertion
   } catch (error) {
     console.error('Failed to add goods received:', error);
@@ -1158,8 +1190,13 @@ upload.fields([{ name: 'invoice' }, { name: 'surat_jalan' }]), async (req, res) 
 });
 
 // GET route for the goods received page
-router.get('/goods-received-admin', (req, res) => {
-  res.render('goods-received-admin');
+router.get('/goods-received-admin', async (req, res) => {
+  const data = req.session.data;
+  const pengadaan_id = req.query.id;
+  const {vendor_pemenang} = await pengadaanController.getVendorPemenang(pengadaan_id)
+  const result = await goods_receivedController.getGoods_ReceivedByPengadaanId(pengadaan_id, vendor_pemenang);
+  console.log(result)
+  res.render('goods-received-admin', { parent: data.parent, result, page: 'pengadaan', pengadaan_id });
 });
 
 router.post('/goods-received-admin', 

@@ -27,17 +27,17 @@
             <li class="nav-item">
                 <a class="nav-link " href="/dokumen-purchase-order-approved?id=<%= pengadaan_id %>">Dokumen Purchase Order</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link " href="/goods-received-vendor?id=<%= pengadaan_id %>">Goods Received</a>
+            </li>
         </ul>
         <div class="card">
             <div class="card-body">
-                <p class="card-text"><strong>Nama Pengadaan:</strong> Portal Vendor</p>
-                <p class="card-text"><strong>Status:</strong> Buka</p>
-                <p class="card-text"><strong>Jenis Pengadaan:</strong> Jasa</p>
-                <p class="card-text"><strong>Nama Barang:</strong> Website</p>
-                <p class="card-text"><strong>Harga Barang:</strong> Rp. 150.000.000,00</p>
-                <p class="card-text"><strong>Jumlah Barang:</strong> 1</p>
-                <p class="card-text"><strong>Tanggal Mulai:</strong> 01-01-2024</p>
-                <p class="card-text"><strong>Tanggal Selesai:</strong> 30-04-2024</p>
+                <p class="card-text"><strong>Nama Pengadaan: </strong><%= pengadaan.nama_pengadaan %></p>
+                <p class="card-text"><strong>Status: </strong><%= pengadaan.nama_status %></p>
+                <p class="card-text"><strong>Jenis Pengadaan: </strong><%= pengadaan.nama_jenis_pengadaan%></p>
+                <p class="card-text"><strong>Tanggal Mulai: </strong><%= pengadaan.tanggal_pemilihan %></p>
+                <p class="card-text"><strong>Tanggal Selesai: </strong><%= pengadaan.tanggal_pemilihan_selesai %></p>
             </div>
         </div>
     </div>

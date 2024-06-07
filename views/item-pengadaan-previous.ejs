@@ -28,6 +28,15 @@
             <li class="nav-item">
                 <a class="nav-link " href="/vendor-pengadaan-previous/<%= pengadaan_id %>">List Vendor</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link " href="/informasi-purchase-order-previous?id=<%= pengadaan_id %>">Informasi Purchase Order</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " href="/dokumen-purchase-order-previous?id=<%= pengadaan_id %>">Dokumen Purchase Order</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " href="/goods-received-admin?id=<%= pengadaan_id %>">Goods Received</a>
+            </li>
             <% } %>  
         </ul>
         <div class="card">
@@ -40,16 +49,17 @@
                             <th>Nama Pengadaan</th>
                             <th>Quantity</th>
                             <th>Harga Item</th>
-                            <!-- <th>Diskon</th>
-                            <th>Net Amount</th> -->
+                            <!-- <th>Diskon</th> -->
+                            <th>Net Amount</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% items.forEach(function(item) { %>
+                        <% items.forEach(function(item, i) { %>
                         <tr>
-                            <td><%= item.item_id %></td>
+                            <td><%= i+1 %></td>
                             <td><%= item.nama_item %></td>
                             <td class="qty"><%= item.quantity %></td>
+                            <td class="currency"><%= item.harga_item %></td>
                             <td class="currency"><%= item.harga_total %></td>
                         </tr>
                         <% }); %>

@@ -161,6 +161,16 @@ const getItem = async (req, res) => {
     }
 };
 
+const getVendorPemenang = async (pengadaan_id) => {
+    try {
+        const result = await db.pool.query(await queries.getVendorPemenang, [pengadaan_id]);
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error executing query:', error.stack);
+        res.status(500).send('Internal Server Error');
+    } 
+};
+
     async function option_PIC() {
   const client = await db.pool.connect();
   try {
@@ -429,5 +439,6 @@ module.exports = {
     addItem,
     removePengadaan,
     validasiPengadaan,
-    setPemenang
+    setPemenang,
+    getVendorPemenang
 };
