@@ -640,6 +640,7 @@ var purchase_orderController = require('../src/purchase_order/controller');
 router.get('/purchase-order/:id', async (req, res) => {
     try {
         const po_id = req.params.id;
+        const data = req.session.data;
         const purchaseOrderData = await purchase_orderController.getPurchase_OrderById(po_id);
         res.render('template-purchase-order', { 
             po_id: purchaseOrderData.po_id,
@@ -654,7 +655,9 @@ router.get('/purchase-order/:id', async (req, res) => {
             biaya: purchaseOrderData.biaya,
             total: purchaseOrderData.total,
             divHead: purchaseOrderData.divHead,
-            vendorApproval: purchaseOrderData.vendorApproval
+            vendorApproval: purchaseOrderData.vendorApproval,
+            parent: data.parent,
+            page: 'pengadaan'
         });
     } catch (error) {
         console.error('Error fetching purchase order:', error);

@@ -8,9 +8,9 @@ const getPurchase_Order = (req,res)=>{
     })
 };
 
-const getPurchase_OrderById = (req,res)=>{
-    const id = req.params.id;
-    pool.query(queries.getPurchase_OrderById,[id], (error, results)=>{
+const getPurchase_OrderById = (po_id)=>{
+    
+    pool.query(queries.getPurchase_OrderById,[po_id], (error, results)=>{
         if(error) throw error;
         res.status(200).json(results.rows);
     })
