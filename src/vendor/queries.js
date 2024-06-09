@@ -1,3 +1,28 @@
+const getListVendor = `SELECT i.*, r.rekening_id,
+r.nama_pemilik_rekening,
+r.no_rekening,
+r.bank_id,
+s.nama_status, 
+s.status_id, 
+jp.nama_kategori_vendor, 
+jv.nama_jenis_vendor,
+p.nama_provinsi,
+kk.nama_kk
+FROM 
+public.vendor i
+LEFT JOIN 
+public.status s ON i.status_verifikasi_id = s.status_id
+LEFT JOIN 
+public.kategori_vendor jp ON i.kategori_vendor_id = jp.kategori_vendor_id
+LEFT JOIN 
+public.jenis_vendor jv ON i.jenis_vendor_id = jv.jenis_vendor_id
+LEFT JOIN
+public.rekening r ON i.rekening_id = r.rekening_id
+LEFT JOIN
+  public.kabupaten_kota kk ON i.kk_id = kk.kk_id
+LEFT JOIN
+  public.provinsi p ON kk.provinsi_id = p.provinsi_id`;
+
 const getVendor = `SELECT 
 i.*,
 r.rekening_id,
@@ -279,6 +304,7 @@ module.exports = {
     updateTax_Vendor,
     updateLegal_Vendor,
     updateVendorURL,
-    updateStatus_Vendor
+    updateStatus_Vendor,
+    getListVendor
 };
 

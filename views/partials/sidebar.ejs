@@ -12,8 +12,8 @@
                 </a>
             </li>
             <li>
-                <a href="/approved-vendor-profile" class="nav-link <%= page == 'profile' ? 'active' : 'link-dark' %>">
-                    Profil Admin
+                <a href="/list-vendor-admin" class="nav-link <%= page == 'list-vendor' ? 'active' : 'link-dark' %>">
+                    List Vendor
                 </a>
             </li>
             <li>
@@ -22,14 +22,10 @@
                 </a>
             </li>
         <% }else{ %>
+            <% if(parent.status_verifikasi_id == 'bec6ed04-e967-4ce8-8865-e6285690174e'){ %>
             <li class="nav-item">
                 <a href="/dashboard-vendor" class="nav-link <%= page == 'dashboard' ? 'active' : 'link-dark' %>" aria-current="page">
                     Dashboard
-                </a>
-            </li>
-            <li>
-                <a href="/approved-vendor-profile" class="nav-link <%= page == 'profile' ? 'active' : 'link-dark' %>">
-                    Profil Vendor
                 </a>
             </li>
             <li>
@@ -37,7 +33,7 @@
                     Pengadaan
                 </a>
             </li>
-            
+            <% } %>
         <% } %>
         <li class="border-top my-3"></li>
         <li class="nav-item">
@@ -46,7 +42,7 @@
             </button>
             <div class="collapse show" id="account-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="#" class="link-dark rounded">Profile</a></li>
+                <li><a href="/approved-vendor-profile" class="rounded <%= page == 'profile' ? 'active' : 'link-dark' %>">Profile</a></li>
                 <li><a href="/logout" class="link-dark rounded">Sign out</a></li>
             </ul>
             </div>

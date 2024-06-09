@@ -139,7 +139,7 @@ router.post('/login', async (req, res) => {
         const token = generateAccessToken({ email: result[0].email });
         result[0]['isAdmin'] = false;
         req.session.data = {parent: result[0]};
-        
+        console.log(result[0].parent)
         res.redirect('/dashboard-vendor');
         // Send data to route 2 via POST request
       } else {
@@ -795,8 +795,8 @@ router.get('/form-vendor-scoring', function(req,res) {
 router.get('/list-vendor-admin', async (req, res) => {
   try {
     const data = req.session.data;
-    const result = await vendorController.getVendor(); // Fetch vendors data using a function from db.js
-    res.render('list-vendor-admin', { vendor: result, parent: data.parent });
+    const result = await vendorController.getListVendor(); // Fetch vendors data using a function from db.js
+    res.render('list-vendor-admin', { vendor: result, parent: data.parent, page: 'list-vendor' });
   } catch (error) {
       console.error('Error fetching vendors:', error);
       res.status(500).send('Error fetching vendor data');

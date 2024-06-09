@@ -14,6 +14,19 @@ async function getVendor(nama) {
     }
   }
 
+async function getListVendor() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getListVendor); // Adjust the SQL query based on your actual table and data structure
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
   async function getEmail(email_perusahaan) {
     const client = await db.pool.connect();
     try {
@@ -445,6 +458,7 @@ module.exports = {
     updateTax_Vendor,
     updateLegal_Vendor,
     updateVendorURL,
-    updateStatus_Vendor
+    updateStatus_Vendor,
+    getListVendor
 };
 
