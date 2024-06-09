@@ -41,6 +41,10 @@
                 <p class="card-text"><strong>Jenis Vendor:</strong> <%= pengadaan.nama_jenis_vendor %></p>
                 <p class="card-text"><strong>Tanggal Mulai:</strong> <%= pengadaan.tanggal_pemilihan %></p>
                 <p class="card-text"><strong>Tanggal Selesai:</strong> <%= pengadaan.tanggal_pemilihan_selesai %></p>
+                <div class="form-group">
+                    <label for="zoom">Link Meeting</label>
+                    <textarea class="form-control" id="zoom" disabled><%= pengadaan.link_zoom %></textarea>
+                </div>
             </div>
         </div>
     </div>

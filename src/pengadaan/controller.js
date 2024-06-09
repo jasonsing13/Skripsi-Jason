@@ -1,6 +1,8 @@
 const session = require('express-session');
 const db = require('../../database/db');
 const queries = require('../pengadaan/queries');
+const queriesDBT = require('../detail_bidding_tender/queries');
+const queriesBT = require('../bidding_tender/queries');
 const { v4: uuidv4 } = require('uuid');
 
 async function getDaftarPengadaan(vendor_id) {
@@ -373,14 +375,45 @@ const removePengadaan = (req,res)=>{
     });
 };
 
-const validasiPengadaan = async (reqa, vendor_id = null) => {
-    const { tanggal_pemilihan, tanggal_pemilihan_selesai, pic, pengadaan_id } = reqa;
+const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
+    const { tanggal_pemilihan, tanggal_pemilihan_selesai, pic, pengadaan_id, harga } = reqa;
     var queryParams = [];
-    console.log(queryParams);
     try {
         if(vendor_id != null){
             queryParams = [tanggal_pemilihan, tanggal_pemilihan_selesai, pic, vendor_id, pengadaan_id];
             await db.pool.query( queries.validasiPengadaanLangsung, queryParams, (error, result) => {
+                if (error) throw error;
+            });
+
+            // GET BT ID
+            const bt = await db.pool.query(queriesBT.getBidding_TenderDetailById, [pengadaan_id]); // Adjust the SQL query based on your actual table and data structure
+            // return result.rows;
+            const bt_id = bt.rows[0].bt_id
+
+            // ADD BIDDING DETAIL
+            const dbt = await db.pool.query( queriesDBT.addDetail_Bidding_Tender, [bt_id, vendor_id]);
+            const dbt_id = dbt.rows[0].dbt_id ;
+
+            // SET PEMENANG
+            // Hitung selisih dalam milidetik
+            const differenceInMilliseconds = parseInt(tanggal_pemilihan_selesai) - parseInt(tanggal_pemilihan);
+
+            // Konversi milidetik ke hari
+            const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
+
+            await db.pool.query( queries.setPemenangTender, [vendor_id, pengadaan_id, harga, differenceInDays], (error, result) => {
+                if (error) throw error;
+            });
+            
+            await db.pool.query( queries.setPemenang2, [dbt_id], (error, result) => {
+                if (error) throw error;
+            });
+        }else if(link_zoom != null){
+            queryParams = [tanggal_pemilihan, tanggal_pemilihan_selesai, pic, pengadaan_id];
+            await db.pool.query( queries.validasiPengadaan, queryParams, (error, result) => {
+                if (error) throw error;
+            });
+            await db.pool.query( queries.validasiPengadaanTender, [link_zoom, pengadaan_id], (error, result) => {
                 if (error) throw error;
             });
         }else{

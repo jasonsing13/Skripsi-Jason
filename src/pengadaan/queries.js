@@ -98,11 +98,14 @@ SELECT
     pengadaan.tanggal_pemilihan,
     pengadaan.tanggal_pemilihan_selesai,
     pengadaan.status_id,
-    pengadaan.tipe_pemilihan_id
+    pengadaan.tipe_pemilihan_id,
+    bidding_tender.link_zoom
 FROM 
     pengadaan 
 INNER JOIN
     jenis_vendor ON pengadaan.jenis_vendor_id = jenis_vendor.jenis_vendor_id
+LEFT JOIN
+    bidding_tender ON pengadaan.pengadaan_id = bidding_tender.pengadaan_id
 WHERE 
     pengadaan.pengadaan_id = $1
     ORDER BY pengadaan.tanggal_permintaan DESC;
@@ -114,7 +117,8 @@ SELECT
     jenis_vendor.nama_jenis_vendor, 
     nama_jenis_pengadaan,
     bidding_tender.bt_id,
-    status.nama_status
+    status.nama_status,
+    bidding_tender.link_zoom
 FROM 
     pengadaan 
 LEFT JOIN
@@ -383,6 +387,14 @@ WHERE pengadaan_id = $4
 ;`
 ;
 
+const validasiPengadaanTender = ` 
+UPDATE public.bidding_tender
+SET 
+link_zoom = $1
+WHERE pengadaan_id = $2
+;`
+;
+
 const validasiPengadaanLangsung = ` 
 UPDATE public.pengadaan
 SET 
@@ -457,6 +469,7 @@ module.exports = {
     setDitolak,
     setPemenang2,
     setPemenangTender,
-    getVendorPemenang
+    getVendorPemenang,
+    validasiPengadaanTender
 };
 
