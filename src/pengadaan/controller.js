@@ -426,7 +426,6 @@ const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
         console.error('Error executing query', error.stack);
         throw error;
     }
-    
 };
 
 async function setPemenang (pengadaan_id, vendor_id, dbt_id, bt_id, harga, durasi) {
