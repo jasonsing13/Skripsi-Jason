@@ -69,7 +69,7 @@ const { option_Select_Status} = require('../src/pengadaan/queries');
 
 /* GET home page. */
 // Daftar rute yang tidak perlu dicek sesinya
-const noSessionCheckRoutes = ['/', '/login'];
+const noSessionCheckRoutes = ['/', '/login', '/registration'];
 
 function checkSession(req, res, next) {
   // Jika rute saat ini ada di daftar noSessionCheckRoutes, lanjutkan ke rute berikutnya

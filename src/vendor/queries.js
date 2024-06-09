@@ -166,11 +166,11 @@ WHERE id = $1;
 
 const getVendorById = `select * from vendor where id = $1`;
 
-const option_Jenis_Vendor = `SELECT jenis_id, nama_jenis_vendor
+const option_Jenis_Vendor = `SELECT jenis_vendor_id, nama_jenis_vendor
 FROM public.jenis_vendor;
 `;
 
-const option_kategori_vendor = `SELECT kategori_id, nama_kategori_vendor
+const option_kategori_vendor = `SELECT kategori_vendor_id, nama_kategori_vendor
 FROM public.kategori_vendor;
 `;
 
