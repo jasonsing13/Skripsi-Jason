@@ -1090,9 +1090,10 @@ router.get('/validasi-pengadaan-admin/:id', async function(req, res) {
 
 router.post('/validasi-pengadaan-admin', async function(req, res) {
   const vendor_id = req.body.vendor_id || null;
+  const link_zoom = req.body.link_zoom || null;
   try {
       // Asumsi Anda memiliki fungsi untuk menyetujui pengadaan
-      await pengadaanController.validasiPengadaan(req.body, vendor_id);
+      await pengadaanController.validasiPengadaan(req.body, vendor_id, link_zoom);
       // const data = req.session.data;
       // const statusOptions = await pengadaanController.option_Select_Status();
       // const result = await pengadaanController.getDaftarPengadaan();

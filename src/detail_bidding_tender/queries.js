@@ -20,7 +20,8 @@ const addDetail_Bidding_Tender = `INSERT INTO public.detail_bidding_tender (bt_i
 VALUES ( 
     $1,
     $2
-    );`
+    )
+RETURNING dbt_id;`
 
 const removeDetail_Bidding_Tender = ` delete from public.detail_bidding_tender where dbt_id = $1 `;
 const updateDetail_Bidding_Tender = `
