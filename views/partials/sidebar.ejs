@@ -32,24 +32,19 @@
                 </a>
             </li>
             <li>
-                <a href="/approved-vendor-profile" class="nav-link <%= page == 'profile' ? 'active' : 'link-dark' %>">
-                    Profil Admin
+                <a href="/daftar-pengadaan-admin" class="nav-link <%= page == 'pengadaan' ? 'active' : 'link-dark' %>">
+                    Pengadaan
                 </a>
             </li>
             <li>
-                <a href="/daftar-pengadaan-admin" class="nav-link <%= page == 'pengadaan' ? 'active' : 'link-dark' %>">
-                    Pengadaan
+                <a href="/list-vendor-admin" class="nav-link <%= page == 'list-vendor' ? 'active' : 'link-dark' %>">
+                    List Vendor
                 </a>
             </li>
         <% }else{ %>
             <li class="nav-item">
                 <a href="/dashboard-vendor" class="nav-link <%= page == 'dashboard' ? 'active' : 'link-dark' %>" aria-current="page">
                     Dashboard
-                </a>
-            </li>
-            <li>
-                <a href="/approved-vendor-profile" class="nav-link <%= page == 'profile' ? 'active' : 'link-dark' %>">
-                    Profil Vendor
                 </a>
             </li>
             <li>
@@ -66,7 +61,7 @@
             </button>
             <div class="collapse show" id="account-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="#" class="link-dark rounded">Profile</a></li>
+                <li><a href="/approved-vendor-profile" class="link-dark rounded">Profile</a></li>
                 <li><a href="/logout" class="link-dark rounded">Sign out</a></li>
             </ul>
             </div>
