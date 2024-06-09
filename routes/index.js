@@ -803,6 +803,17 @@ router.get('/list-vendor-admin', async (req, res) => {
   }
 });
 
+router.get('/list-admin', async (req, res) => {
+  try {
+    const data = req.session.data;
+    const result = await userController.getUser(); // Fetch vendors data using a function from db.js
+    res.render('list-admin', { vendor: result, parent: data.parent, page: 'list-admin' });
+  } catch (error) {
+      console.error('Error fetching vendors:', error);
+      res.status(500).send('Error fetching vendor data');
+  }
+});
+
 
 router.get('/approval-vendor-admin', function(req, res) {
   const data = req.session.data;

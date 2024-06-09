@@ -1,12 +1,18 @@
 const db = require('../../database/db');
 const queries = require('../user/queries');
 
-// const getUser = (req,res)=>{
-//     pool.query(queries.getUser, (error, results)=>{
-//         if(error) throw error;
-//         res.status(200).json(results.rows);
-//     })
-// };
+async function getUser() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getUser);
+        return result.rows; // Asumsi Anda hanya mengambil satu baris data
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+};
 
 // const getUserById = (req,res)=>{
 //     const id = req.params.id;
@@ -88,7 +94,7 @@ async function getUserByEmail(email_perusahaan) {
 
 
 module.exports = {
-    // getUser,
+    getUser,
     // getUserById,
     getUserByEmail,
     // addUser,
