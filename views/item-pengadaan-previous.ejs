@@ -13,9 +13,15 @@
         <h1>Item Pengadaan</h1>
         <h1>Informasi Pengadaan</h1>      
         <% if(pengadaan.status_id == '5b117843-38aa-47cd-b4f2-24c3f88ab472'){ %>
-            <div class="d-flex justify-content-end align-items-start mb-3">
-                <button class="btn btn-success" onclick="location.href='/validasi-pengadaan-admin/<%= pengadaan_id %>'">Validasi Pengadaan</button>        
-            </div>        
+            <% if(pengadaan.tipe_pemilihan_id != '8ef85b64-6d65-4b87-b5ee-5f06016b135c'){ %>
+                <div class="d-flex justify-content-end align-items-start mb-3">
+                    <button class="btn btn-success" onclick="location.href='/validasi-pengadaan-admin/<%= pengadaan_id %>'">Validasi Pengadaan</button>        
+                </div>        
+            <% }else{ %>        
+                <div class="d-flex justify-content-end align-items-start mb-3">
+                    <button class="btn btn-success" onclick="location.href='/form-vendor-scoring/<%= pengadaan_id %>'">Vendor Scoring</button>        
+                </div>        
+            <% } %>  
         <% } %>        
         <ul class="nav nav-tabs">
             <li class="nav-item">

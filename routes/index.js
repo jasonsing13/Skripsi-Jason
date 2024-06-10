@@ -783,9 +783,12 @@ router.get('/link-zoom-tender', async (req, res) => {
   }
 });
 
-router.get('/form-vendor-scoring', function(req,res) {
+router.get('/form-vendor-scoring/:id', function(req,res) {
+  const data = req.session.data;
   res.render('form-vendor-scoring', {
-    title: "Form Vendor Scoring"
+    title: "Form Vendor Scoring",
+    parent: data.parent,
+    page: "pengadaan"
   })
 })
 
