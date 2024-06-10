@@ -139,7 +139,6 @@ router.post('/login', async (req, res) => {
         const token = generateAccessToken({ email: result[0].email });
         result[0]['isAdmin'] = false;
         req.session.data = {parent: result[0]};
-        console.log(result[0].parent)
         res.redirect('/dashboard-vendor');
         // Send data to route 2 via POST request
       } else {

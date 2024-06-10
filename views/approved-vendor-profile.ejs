@@ -1,71 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('partials/head.ejs') %>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Approved Vendor Profile</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <%- include('partials/style.ejs') %> 
-    <style>
-        body {
-            padding: 20px;
-        }
-        .header {
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        .container {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-        }
-        .alert {
-            color: #856404;
-            background-color: #fff3cd;
-            border-color: #ffeeba;
-        }
-    </style>
+    <title>Vendor Profile</title>
+    <%- include('partials/head.ejs') %>
 </head>
 <body>
     <%- include('partials/sidebar.ejs') %>
     <div class="container mt-4">
+        <button class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#detail">Upload Dokumen</button>
         <h1>Vendor Profile</h1>
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" href="/approved-vendor-profile">Informasi Vendor</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/approved-akun-bank">Akun Bank</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/approved-perpajakan">Perpajakan</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/approved-legalitas">Legalitas</a>
-            </li>
-        </ul>
         <h3><%= parent.nama_vendor %></h3>
         <p>Status Verifikasi: <span class="badge <%= parent.status_verifikasi_id == 'bec6ed04-e967-4ce8-8865-e6285690174e' ? 'bg-success' : 'bg-warning' %> "><%= parent.status_verifikasi_id == 'bec6ed04-e967-4ce8-8865-e6285690174e' ? 'Terverifikasi' : 'Data Belum Terverifikasi' %></span></p>
-        <div class="row">
-            <div class="col-md-6">
-                <h4>Informasi Vendor</h4>
-                <p>Kode Vendor: <%= parent.id %></p>
-                <p>Status Kantor: <%= parent.status_kantor %></p>
-                <p>Nama Direktur/Pemilik: <%= parent.nama_direktur %></p>
-                <p>Nomor Telepon Perusahaan: <%= parent.no_telp %></p>
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="informasi-tab" data-bs-toggle="tab" data-bs-target="#informasi" type="button" role="tab" aria-controls="informasi" aria-selected="true">Informasi Vendor</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" class="nav-link" id="bank-tab" data-bs-toggle="tab" data-bs-target="#bank" type="button" role="tab" aria-controls="bank" aria-selected="true">Akun Bank</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" class="nav-link active" id="perpajakan-tab" data-bs-toggle="tab" data-bs-target="#perpajakan" type="button" role="tab" aria-controls="perpajakan" aria-selected="true">Perpajakan</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" class="nav-link active" id="legalitas-tab" data-bs-toggle="tab" data-bs-target="#legalitas" type="button" role="tab" aria-controls="legalitas" aria-selected="true">Legalitas</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="informasi" role="tabpanel" aria-labelledby="informasi-tab">
+                <div class="row">
+                    <!-- <div class="col-12 mt-2">
+                        <p>Status Verifikasi: <span class="badge bg-warning">Data Belum Lengkap</span></p>
+                    </div> -->
+                    <div class="col-md-6">
+                        <h4>Informasi Vendor</h4>
+                        <p>Kode Vendor: <%= parent.id %></p>
+                        <p>Status Kantor: <%= parent.status_kantor %></p>
+                        <p>Nama Direktur/Pemilik: <%= parent.nama_direktur %></p>
+                        <p>Nomor Telepon Perusahaan: <%= parent.no_telp %></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Email Perusahaan</h4>
+                        <p>Email Perusahaan: <%= parent.email_perusahaan %></p>
+                        <h4>Alamat Perusahaan</h4>
+                        <p>Alamat Perusahaan: <%= parent.alamat_perusahaan %></p>
+                        <p>Negara: <%= parent.negara %></p>
+                        <p>Provinsi: <%= parent.nama_provinsi %></p>
+                        <p>Kabupaten/Kota: <%= parent.nama_kk %></p>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-                <h4>Email Perusahaan</h4>
-                <p>Email Perusahaan: <%= parent.email_perusahaan %></p>
-                <h4>Alamat Perusahaan</h4>
-                <p>Alamat Perusahaan: <%= parent.alamat_perusahaan %></p>
-                <p>Negara: <%= parent.negara %></p>
-                <p>Provinsi: <%= parent.nama_provinsi %></p>
-                <p>Kabupaten/Kota: <%= parent.nama_kk %></p>
+            <div class="tab-pane fade" id="bank" role="tabpanel" aria-labelledby="bank-tab">
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <h4>Akun Bank</h4>
+                        <p>Nomor Rekening: <%= parent.no_rekening %></p>
+                        <p>Nama Pemilik Rekening: <%= parent.nama_pemilik_rekening %></p>
+                        <p>Nama Bank: <%= parent.nama_bank %></p>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="perpajakan" role="tabpanel" aria-labelledby="perpajakan-tab">
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <h4>Informasi Perpajakan</h4>
+                        <p>Nomor NPWP: <%= parent.no_npwp %></p>
+                        <p>Status PKP: <%= parent.status_pkp %></p>
+                        <p>NPPKP: <%= parent.nppkp %></p>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="legalitas" role="tabpanel" aria-labelledby="legalitas-tab">
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <p>Nomor NIB RBA: <%= parent.no_nibrba %></p>
+                        <p>Nomor KTP Direktur/Pemilik: <%= parent.no_ktp_direktur %></p>
+                    </div>
+                </div>
             </div>
         </div>
+        
         <!-- <button class="btn btn-primary">Update</button> -->
+    </div>
+    <div id="detail" class="modal fade modal-lg" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detail Dokumen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/approve-vendor" method="post">
+                    <div class="modal-body">
+                        <div class="row flex-warp">
+                            <div class="col-6 my-2">
+                                <label class="form-label" for="ktpDirektur">KTP Direktur</label>
+                                <input type="file" class="form-control m-0" id="ktpDirektur" name="ktpDirektur">
+                            </div>
+                            <div class="col-6 my-2">
+                                <label class="form-label" for="ktpKuasa">KTP Penerima Kuasa</label>
+                                <input type="file" class="form-control m-0" id="ktpKuasa" name="ktpKuasa">
+                            </div>
+                            <div class="col-6 my-2">
+                                <label class="form-label" for="nirlaba">Nibrba</label>
+                                <input type="file" class="form-control m-0" id="nirlaba" name="nirlaba">
+                            </div>
+                            <div class="col-6 my-2">
+                                <label class="form-label" for="akta_pendirian">Akta Pendirian</label>
+                                <input type="file" class="form-control m-0" id="akta_pendirian" name="akta_pendirian">
+                            </div>
+                            <div class="col-6 my-2">
+                                <label class="form-label" for="akta_perubahan">Akta Perubahan</label>
+                                <input type="file" class="form-control m-0" id="akta_perubahan" name="akta_perubahan">
+                            </div>
+                            <div class="col-6 my-2">
+                                <label class="form-label" for="dokumen_ijin_lain">Dokumen Ijin Lain</label>
+                                <input type="file" class="form-control m-0" id="dokumen_ijin_lain" name="dokumen_ijin_lain">
+                            </div>
+                            <div class="col-6 my-2">
+                                <label class="form-label" for="dokumen_npwp">Dokumen NPWP</label>
+                                <input type="file" class="form-control m-0" id="dokumen_npwp" name="dokumen_npwp">
+                            </div>
+                            <div class="col-6 my-2">
+                                <label class="form-label" for="buku_akun_bank">Buku Akun Bank</label>
+                                <input type="file" class="form-control m-0" id="buku_akun_bank" name="buku_akun_bank">
+                            </div>
+                            <div class="col-6 my-2">
+                                <label class="form-label" for="profil_perusahaan">Profil Perusahaan</label>
+                                <input type="file" class="form-control m-0" id="profil_perusahaan" name="profil_perusahaan">
+                            </div>
+                            <div class="col-6 my-2">
+                                <label class="form-label" for="dokumen_ppkp">Dokumen PPKP</label>
+                                <input type="file" class="form-control m-0" id="dokumen_ppkp" name="dokumen_ppkp">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type="hidden" name="id" value="<%= parent.id %>">
+                        <button type="submit" class="btn btn-primary">Approve</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 <%- include('partials/footer.ejs') %>
 </html>

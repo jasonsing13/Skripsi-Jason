@@ -47,8 +47,11 @@ WHERE LOWER(nama_vendor) LIKE '%' || LOWER($1) || '%'
 `;
 
 const getEmail = `
-SELECT * FROM vendor WHERE email_perusahaan = $1 LIMIT 1;
-
+SELECT i.*, r.*
+FROM vendor i
+LEFT JOIN
+public.rekening r ON i.rekening_id = r.rekening_id
+WHERE email_perusahaan = $1 LIMIT 1;
 `
 
 const getProfilInformasi = `
