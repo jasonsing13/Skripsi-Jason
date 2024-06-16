@@ -408,6 +408,176 @@ router.get('/upload-dokumen-vendor', function(req, res) {
   res.render('upload-dokumen-vendor', { vendor_id });
 });
 
+router.post('/upload-ktpDirektur', 
+  upload.fields([{ name: 'ktpDirektur' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_ktp_direktur = req.files['ktpDirektur'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_ktp_direktur', url_ktp_direktur);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-ktpKuasa', 
+  upload.fields([{ name: 'ktpKuasa' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_ktp_penerima_kuasa = req.files['ktpKuasa'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_ktp_penerima_kuasa', url_ktp_penerima_kuasa);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-nirlaba', 
+  upload.fields([{ name: 'nirlaba' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_nirlaba = req.files['nirlaba'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_nirlaba', url_nirlaba);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-akta_pendirian', 
+  upload.fields([{ name: 'akta_pendirian' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_akta_pendirian = req.files['akta_pendirian'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_akta_pendirian', url_akta_pendirian);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-akta_perubahan', 
+  upload.fields([{ name: 'akta_perubahan' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_akta_perubahan = req.files['akta_perubahan'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_akta_perubahan', url_akta_perubahan);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-dokumen_ijin_lain', 
+  upload.fields([{ name: 'dokumen_ijin_lain' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_dokumen_ijin_lain = req.files['dokumen_ijin_lain'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_dokumen_ijin_lain', url_dokumen_ijin_lain);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-dokumen_npwp', 
+  upload.fields([{ name: 'dokumen_npwp' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_dokumen_npwp = req.files['dokumen_npwp'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_dokumen_npwp', url_dokumen_npwp);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-buku_akun_bank', 
+  upload.fields([{ name: 'buku_akun_bank' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_buku_akun_bank = req.files['buku_akun_bank'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_buku_akun_bank', url_buku_akun_bank);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-profil_perusahaan', 
+  upload.fields([{ name: 'profil_perusahaan' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_profil_perusahaan = req.files['profil_perusahaan'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_profil_perusahaan', url_profil_perusahaan);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-dokumen_ppkp', 
+  upload.fields([{ name: 'dokumen_ppkp' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_dokumen_ppkp = req.files['dokumen_ppkp'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_dokumen_ppkp', url_dokumen_ppkp);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
 router.post('/upload-dokumen-vendor', upload.fields([
   { name: 'url_buku_akun_bank', maxCount: 1 },
   { name: 'url_dokumen_npwp', maxCount: 1 },
