@@ -146,12 +146,17 @@ async function getListVendor() {
     }
   }
 
-const getVendorById = (req,res)=>{
-    const id = req.params.id;
-    db.pool.query(queries.getVendorById,[id], (error, results)=>{
-        if(error) throw error;
-        res.status(200).json(results.rows);
-    })
+const getVendorById = async (id)=>{
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getVendorById, [id]); // Adjust the SQL query based on your actual table and data structure
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
 };
 
 // const addVendor = (req,res)=>{

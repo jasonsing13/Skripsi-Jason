@@ -963,11 +963,16 @@ router.get('/link-zoom-tender', async (req, res) => {
   }
 });
 
-router.get('/form-vendor-scoring/:id', function(req,res) {
+router.get('/form-vendor-scoring/:id/:idv', async function(req,res) {
   const data = req.session.data;
+  const pengadaan_id = req.params.id;
+  const vendor_id = req.params.idv;
+  const vendor = await vendorController.getVendorById(vendor_id);
   res.render('form-vendor-scoring', {
     title: "Form Vendor Scoring",
     parent: data.parent,
+    pengadaan_id,
+    vendor,
     page: "pengadaan"
   })
 })
