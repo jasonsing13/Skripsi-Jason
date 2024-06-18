@@ -1,7 +1,7 @@
 const getUser = `select * from public.user u
 LEFT JOIN role r ON r.role_id = u.role_id`;
 const getUserById = `select * from public.user where user_id = $1`;
-const getUserByEmail = `select * from public.user where email = $1`;
+const getUserByEmail = `select u.*, r.role_name from public.user u LEFT JOIN role r ON r.role_id = u.role_id where email = $1`;
 const addUser = `INSERT INTO public.user (user_id, username, password, email, first_name, last_name, phone_number, create_by, create_date, modif_by, modif_date, role_id)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);`
 const removeUser = ` delete from public.user where user_id = $1 `;

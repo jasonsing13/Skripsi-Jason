@@ -17,7 +17,7 @@
                     <th>Nama</th>
                     <th>Phone Number</th>
                     <th>Role</th>
-                    <th>Aksi</th>
+                    <!-- <th>Aksi</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -27,11 +27,8 @@
                         <td><%= vendor.first_name + " " + vendor.last_name %></td>
                         <td><%= vendor.phone_number || "-" %></td>
                         <td><%= vendor.role_name || "-" %></td>
-                        <td>
-                            <!-- <form action="/approval-vendor-admin" method="get"> -->
-                                <!-- <input type="hidden" name="vendor_id" value="<%= vendor.vendor_id %>"> -->
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detail-<%= vendor.id %>">Detail</button>
-                            <!-- </form> -->
+                        <!-- <td>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detail-<%= vendor.id %>">Detail</button>
 
                             <div id="detail-<%= vendor.id %>" class="modal fade modal-lg" tabindex="-1">
                                 <div class="modal-dialog">
@@ -122,7 +119,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </td>
+                        </td> -->
                     </tr>
                 <% }); %>
             </tbody>

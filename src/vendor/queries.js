@@ -325,7 +325,7 @@ const update_url_dokumen_ppkp = `
 const updateStatus_Vendor = `
   UPDATE public.vendor
   SET
-    status_id = $1
+    status_verifikasi_id = $1
   WHERE id = $2;
 `;
 

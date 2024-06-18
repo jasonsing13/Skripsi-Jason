@@ -139,7 +139,7 @@ router.post('/login', async (req, res) => {
         const token = generateAccessToken({ email: result[0].email });
         result[0]['isAdmin'] = false;
         req.session.data = {parent: result[0]};
-        res.redirect('/dashboard-vendor');
+        res.redirect(result[0]['status_verifikasi_id'] == "bec6ed04-e967-4ce8-8865-e6285690174e" ? '/dashboard-vendor' : '/approved-vendor-profile');
         // Send data to route 2 via POST request
       } else {
         return res.status(401).json({ error: 'Autentikasi gagal. Email atau kata sandi tidak valid.' });
@@ -656,8 +656,18 @@ router.get('/dashboard-admin', async(req, res) => {
 router.get('/approved-vendor-profile', async(req, res) => {
   try {
     const data = req.session.data; // Access data from session
-
     res.render('approved-vendor-profile', { parent: data.parent, page: 'profile' });
+  } catch (error) {
+    console.error('Error fetching vendor data', error); // Tampilkan stack error
+    res.status(500).send('Error fetching vendor data');
+  }
+});
+
+router.get('/admin-profile', async(req, res) => {
+  try {
+    const data = req.session.data; // Access data from session
+
+    res.render('admin-profile', { parent: data.parent, page: 'profile' });
   } catch (error) {
     console.error('Error fetching vendor data', error); // Tampilkan stack error
     res.status(500).send('Error fetching vendor data');
@@ -975,6 +985,15 @@ router.get('/list-vendor-admin', async (req, res) => {
   }
 });
 
+router.post('/approve-vendor', async (req, res) => {
+  try {
+    const result = await vendorController.getListVendor(); // Fetch vendors data using a function from db.js
+  } catch (error) {
+      console.error('Error fetching vendors:', error);
+      res.status(500).send('Error fetching vendor data');
+  }
+});
+
 router.get('/list-admin', async (req, res) => {
   try {
     const data = req.session.data;
@@ -986,18 +1005,11 @@ router.get('/list-admin', async (req, res) => {
   }
 });
 
-
-router.get('/approval-vendor-admin', function(req, res) {
-  const data = req.session.data;
-  res.render('approval-vendor-admin', { parent: data.parent });
-});
-
 router.post('/approval-vendor-admin', async (req, res) => {
-  const { vendor_id, status_id } = req.body;
-  const data = req.session.data;
+  const { id } = req.body;
   try {
-      await vendorController.updateVendor_Status(vendor_id, status_id); // Assuming db.updateVendorStatus updates the status
-      res.redirect('/list-vendor-admin', { parent: data.parent });
+      await vendorController.updateStatus_Vendor(id, 'bec6ed04-e967-4ce8-8865-e6285690174e'); // Assuming db.updateVendorStatus updates the status
+      res.redirect('/list-vendor-admin');
   } catch (error) {
       console.error('Failed to update vendor status:', error);
       res.status(500).send('Error updating vendor status');

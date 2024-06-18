@@ -161,7 +161,7 @@
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                             <% if (vendor.status_verifikasi_id != "bec6ed04-e967-4ce8-8865-e6285690174e") { %>
-                                                <form action="/approve-vendor" method="post">
+                                                <form action="/approval-vendor-admin" method="post">
                                                     <input type="hidden" name="id" value="<%= vendor.id %>">
                                                     <button type="submit" class="btn btn-primary">Approve</button>
                                                 </form>

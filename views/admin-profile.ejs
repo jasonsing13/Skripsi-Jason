@@ -2,17 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Vendor Profile</title>
+    <title>Admin Profile</title>
     <%- include('partials/head.ejs') %>
 </head>
 <body>
     <%- include('partials/sidebar.ejs') %>
     <div class="container mt-4">
-        <button class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#detail">Dokumen</button>
-        <h1>Vendor Profile</h1>
-        <h3><%= parent.nama_vendor %></h3>
-        <p>Status Verifikasi: <span class="badge <%= parent.status_verifikasi_id == 'bec6ed04-e967-4ce8-8865-e6285690174e' ? 'bg-success' : 'bg-warning' %> "><%= parent.status_verifikasi_id == 'bec6ed04-e967-4ce8-8865-e6285690174e' ? 'Terverifikasi' : 'Data Belum Terverifikasi' %></span></p>
-        <ul class="nav nav-tabs" role="tablist">
+        <!-- <button class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#detail">Dokumen</button> -->
+        <h1>Admin Profile</h1>
+        <!-- <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="informasi-tab" data-bs-toggle="tab" data-bs-target="#informasi" type="button" role="tab" aria-controls="informasi" aria-selected="true">Informasi Vendor</button>
             </li>
@@ -25,31 +23,27 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link" class="nav-link active" id="legalitas-tab" data-bs-toggle="tab" data-bs-target="#legalitas" type="button" role="tab" aria-controls="legalitas" aria-selected="true">Legalitas</button>
             </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="informasi" role="tabpanel" aria-labelledby="informasi-tab">
-                <div class="row">
-                    <!-- <div class="col-12 mt-2">
-                        <p>Status Verifikasi: <span class="badge bg-warning">Data Belum Lengkap</span></p>
-                    </div> -->
-                    <div class="col-md-6">
-                        <h4>Informasi Vendor</h4>
-                        <p>Kode Vendor: <%= parent.id %></p>
-                        <p>Status Kantor: <%= parent.status_kantor %></p>
-                        <p>Nama Direktur/Pemilik: <%= parent.nama_direktur %></p>
-                        <p>Nomor Telepon Perusahaan: <%= parent.no_telp %></p>
+        </ul> -->
+        <!-- <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="informasi" role="tabpanel" aria-labelledby="informasi-tab"> -->
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Informasi Admin - <%= parent.first_name %> <%= parent.last_name %></h4>
                     </div>
-                    <div class="col-md-6">
-                        <h4>Email Perusahaan</h4>
-                        <p>Email Perusahaan: <%= parent.email_perusahaan %></p>
-                        <h4>Alamat Perusahaan</h4>
-                        <p>Alamat Perusahaan: <%= parent.alamat_perusahaan %></p>
-                        <p>Negara: <%= parent.negara %></p>
-                        <p>Provinsi: <%= parent.nama_provinsi %></p>
-                        <p>Kabupaten/Kota: <%= parent.nama_kk %></p>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- <div class="col-12 mt-2">
+                                <p>Status Verifikasi: <span class="badge bg-warning">Data Belum Lengkap</span></p>
+                            </div> -->
+                            <div class="col-md-12">
+                                <p>Kode: <%= parent.id %></p>
+                                <p>Nomor Telepon: <%= parent.phone_number %></p>
+                                <p>Role: <%= parent.role_name %></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            <!-- </div>
             <div class="tab-pane fade" id="bank" role="tabpanel" aria-labelledby="bank-tab">
                 <div class="row mt-2">
                     <div class="col-md-6">
@@ -78,18 +72,18 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         
         <!-- <button class="btn btn-primary">Update</button> -->
     </div>
-    <div id="detail" class="modal fade modal-xl" tabindex="-1">
+    <!-- <div id="detail" class="modal fade modal-xl" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Detail Dokumen</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <!-- <form action="/approve-vendor" method="post"> -->
+                <form action="/approve-vendor" method="post">
                     <div class="modal-body">
                         <div class="row flex-warp">
                             <div class="col-6 my-2">
@@ -156,19 +150,19 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <!-- <input type="hidden" name="id" value="<%= parent.id %>">
-                        <button type="submit" class="btn btn-primary">Save</button> -->
+                        <input type="hidden" name="id" value="<%= parent.id %>">
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>
         </div>
-    </div>
+    </div> -->
 <%- include('partials/footer.ejs') %>
 
 <script>
     // INPUT
     <% 
-    if(parent.status_verifikasi_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
+    if(parent.status_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
     %>
     $("#ktpDirektur").fileinput({
         uploadUrl: "/upload-ktpDirektur",
@@ -211,9 +205,6 @@
             showUpload: false,
             sortable: false,
             showCaption: false,
-            <%
-            if(parent.url_ktp_direktur){
-            %>
             initialPreview: [
                 // URL gambar yang ingin ditampilkan
                 '<%= parent.url_ktp_direktur.replace(/\s+/g, '').replace(/\\/g, '/') %>',
@@ -222,9 +213,6 @@
             ],
             initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
             initialPreviewFileType: 'image', // image is the default and can be overridden in config below
-            <%
-            }
-            %>
             initialPreviewConfig: [
                 {
                     // Menyembunyikan tombol remove
@@ -257,7 +245,7 @@
     %>
     
     <% 
-    if(parent.status_verifikasi_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
+    if(parent.status_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
     %>
     $("#ktpKuasa").fileinput({
         uploadUrl: "/upload-ktpKuasa",
@@ -300,9 +288,6 @@
             showUpload: false,
             sortable: false,
             showCaption: false,
-            <%
-            if(parent.url_ktp_penerima_kuasa){
-            %>
             initialPreview: [
                 // URL gambar yang ingin ditampilkan
                 '<%= parent.url_ktp_penerima_kuasa.replace(/\s+/g, '').replace(/\\/g, '/') %>',
@@ -311,9 +296,6 @@
             ],
             initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
             initialPreviewFileType: 'image', // image is the default and can be overridden in config below
-            <%
-            }
-            %>
             initialPreviewConfig: [
                 {
                     // Menyembunyikan tombol remove
@@ -346,7 +328,7 @@
     %>
     
     <% 
-    if(parent.status_verifikasi_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
+    if(parent.status_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
     %>
     $("#nirlaba").fileinput({
         uploadUrl: "/upload-nirlaba",
@@ -357,11 +339,11 @@
         resizeImage: true,
         uploadAsync: true,
         <%
-        if(parent.url_nibrba){
+        if(parent.url_nirlaba){
         %>
         initialPreview: [
             // URL gambar yang ingin ditampilkan
-            '<%= parent.url_nibrba.replace(/\s+/g, '').replace(/\\/g, '/') %>',
+            '<%= parent.url_nirlaba.replace(/\s+/g, '').replace(/\\/g, '/') %>',
             
             // ... URL gambar lainnya ...
         ],
@@ -389,20 +371,14 @@
             showUpload: false,
             sortable: false,
             showCaption: false,
-            <%
-            if(parent.url_nibrba){
-            %>
             initialPreview: [
                 // URL gambar yang ingin ditampilkan
-                '<%= parent.url_nibrba.replace(/\s+/g, '').replace(/\\/g, '/') %>',
+                '<%= parent.url_nirlaba.replace(/\s+/g, '').replace(/\\/g, '/') %>',
                 
                 // ... URL gambar lainnya ...
             ],
             initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
             initialPreviewFileType: 'image', // image is the default and can be overridden in config below
-            <%
-            }
-            %>
             initialPreviewConfig: [
                 {
                     // Menyembunyikan tombol remove
@@ -435,7 +411,7 @@
     %>
     
     <% 
-    if(parent.status_verifikasi_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
+    if(parent.status_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
     %>
     $("#akta_pendirian").fileinput({
         uploadUrl: "/upload-akta_pendirian",
@@ -478,9 +454,6 @@
             showUpload: false,
             sortable: false,
             showCaption: false,
-            <%
-            if(parent.url_akta_pendirian){
-            %>
             initialPreview: [
                 // URL gambar yang ingin ditampilkan
                 '<%= parent.url_akta_pendirian.replace(/\s+/g, '').replace(/\\/g, '/') %>',
@@ -489,9 +462,6 @@
             ],
             initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
             initialPreviewFileType: 'image', // image is the default and can be overridden in config below
-            <%
-            }
-            %>
             initialPreviewConfig: [
                 {
                     // Menyembunyikan tombol remove
@@ -524,7 +494,7 @@
     %>
     
     <% 
-    if(parent.status_verifikasi_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
+    if(parent.status_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
     %>
     $("#akta_perubahan").fileinput({
         uploadUrl: "/upload-akta_perubahan",
@@ -567,9 +537,6 @@
             showUpload: false,
             sortable: false,
             showCaption: false,
-            <%
-            if(parent.url_akta_perubahan){
-            %>
             initialPreview: [
                 // URL gambar yang ingin ditampilkan
                 '<%= parent.url_akta_perubahan.replace(/\s+/g, '').replace(/\\/g, '/') %>',
@@ -578,9 +545,6 @@
             ],
             initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
             initialPreviewFileType: 'image', // image is the default and can be overridden in config below
-            <%
-            }
-            %>
             initialPreviewConfig: [
                 {
                     // Menyembunyikan tombol remove
@@ -613,7 +577,7 @@
     %>
     
     <% 
-    if(parent.status_verifikasi_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
+    if(parent.status_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
     %>
     $("#dokumen_ijin_lain").fileinput({
         uploadUrl: "/upload-dokumen_ijin_lain",
@@ -656,9 +620,6 @@
             showUpload: false,
             sortable: false,
             showCaption: false,
-            <%
-            if(parent.url_dokumen_ijin_lain){
-            %>
             initialPreview: [
                 // URL gambar yang ingin ditampilkan
                 '<%= parent.url_dokumen_ijin_lain.replace(/\s+/g, '').replace(/\\/g, '/') %>',
@@ -667,9 +628,6 @@
             ],
             initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
             initialPreviewFileType: 'image', // image is the default and can be overridden in config below
-            <%
-            }
-            %>
             initialPreviewConfig: [
                 {
                     // Menyembunyikan tombol remove
@@ -702,7 +660,7 @@
     %>
     
     <% 
-    if(parent.status_verifikasi_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
+    if(parent.status_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
     %>
     $("#dokumen_npwp").fileinput({
         uploadUrl: "/upload-dokumen_npwp",
@@ -745,9 +703,6 @@
             showUpload: false,
             sortable: false,
             showCaption: false,
-            <%
-            if(parent.url_dokumen_npwp){
-            %>
             initialPreview: [
                 // URL gambar yang ingin ditampilkan
                 '<%= parent.url_dokumen_npwp.replace(/\s+/g, '').replace(/\\/g, '/') %>',
@@ -756,9 +711,6 @@
             ],
             initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
             initialPreviewFileType: 'image', // image is the default and can be overridden in config below
-            <%
-            }
-            %>
             initialPreviewConfig: [
                 {
                     // Menyembunyikan tombol remove
@@ -791,7 +743,7 @@
     %>
     
     <% 
-    if(parent.status_verifikasi_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
+    if(parent.status_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
     %>
     $("#buku_akun_bank").fileinput({
         uploadUrl: "/upload-buku_akun_bank",
@@ -834,9 +786,6 @@
             showUpload: false,
             sortable: false,
             showCaption: false,
-            <%
-            if(parent.url_buku_akun_bank){
-            %>
             initialPreview: [
                 // URL gambar yang ingin ditampilkan
                 '<%= parent.url_buku_akun_bank.replace(/\s+/g, '').replace(/\\/g, '/') %>',
@@ -845,9 +794,6 @@
             ],
             initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
             initialPreviewFileType: 'image', // image is the default and can be overridden in config below
-            <%
-            }
-            %>
             initialPreviewConfig: [
                 {
                     // Menyembunyikan tombol remove
@@ -880,7 +826,7 @@
     %>
     
     <% 
-    if(parent.status_verifikasi_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
+    if(parent.status_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
     %>
     $("#profil_perusahaan").fileinput({
         uploadUrl: "/upload-profil_perusahaan",
@@ -923,9 +869,6 @@
             showUpload: false,
             sortable: false,
             showCaption: false,
-            <%
-            if(parent.url_profil_perusahaan){
-            %>
             initialPreview: [
                 // URL gambar yang ingin ditampilkan
                 '<%= parent.url_profil_perusahaan.replace(/\s+/g, '').replace(/\\/g, '/') %>',
@@ -934,9 +877,6 @@
             ],
             initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
             initialPreviewFileType: 'image', // image is the default and can be overridden in config below
-            <%
-            }
-            %>
             initialPreviewConfig: [
                 {
                     // Menyembunyikan tombol remove
@@ -969,7 +909,7 @@
     %>
     
     <% 
-    if(parent.status_verifikasi_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
+    if(parent.status_id != "bec6ed04-e967-4ce8-8865-e6285690174e"){
     %>
     $("#dokumen_ppkp").fileinput({
         uploadUrl: "/upload-dokumen_ppkp",
@@ -1012,9 +952,6 @@
             showUpload: false,
             sortable: false,
             showCaption: false,
-            <%
-            if(parent.url_dokumen_ppkp){
-            %>
             initialPreview: [
                 // URL gambar yang ingin ditampilkan
                 '<%= parent.url_dokumen_ppkp.replace(/\s+/g, '').replace(/\\/g, '/') %>',
@@ -1023,9 +960,6 @@
             ],
             initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
             initialPreviewFileType: 'image', // image is the default and can be overridden in config below
-            <%
-            }
-            %>
             initialPreviewConfig: [
                 {
                     // Menyembunyikan tombol remove

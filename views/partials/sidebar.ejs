@@ -41,7 +41,13 @@
                     List Vendor
                 </a>
             </li>
+            <li>
+                <a href="/list-admin" class="nav-link <%= page == 'list-admin' ? 'active text-white' : 'link-dark' %>">
+                    List Admin
+                </a>
+            </li>
         <% }else{ %>
+            <% if (parent.status_verifikasi_id == 'bec6ed04-e967-4ce8-8865-e6285690174e') { %>
             <li class="nav-item">
                 <a href="/dashboard-vendor" class="nav-link <%= page == 'dashboard' ? 'active text-white' : 'link-dark' %>" aria-current="page">
                     Dashboard
@@ -52,6 +58,7 @@
                     Pengadaan
                 </a>
             </li>
+            <% } %>
             
         <% } %>
         <li class="border-top my-3"></li>
@@ -61,7 +68,7 @@
             </button>
             <div class="collapse show" id="account-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="/approved-vendor-profile" class="nav-link link-dark rounded  <%= page == 'profile' ? 'active text-white' : 'link-dark' %>">Profile</a></li>
+                <li><a href="<%= !parent.isAdmin ? "/approved-vendor-profile" : "/admin-profile" %>" class="nav-link link-dark rounded  <%= page == 'profile' ? 'active text-white' : 'link-dark' %>">Profile</a></li>
                 <li><a href="/logout" class="link-dark rounded">Sign out</a></li>
             </ul>
             </div>

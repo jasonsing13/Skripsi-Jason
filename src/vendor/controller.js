@@ -441,14 +441,21 @@ async function updateVendorURL(id, url_type, url) {
     }
 }
 
-const updateStatus_Vendor = (req, res) => {
-    const id = req.params.id;
-    const { status_id, vendor_id } = req.body;
-    const queryParams = [status_id, vendor_id];
-    db.pool.query(queries.updateStatus_Vendor, queryParams, (error, result) => {
-      if (error) throw error;
-    });
-  };
+async function updateStatus_Vendor (id, status) {
+    const client = await db.pool.connect();
+    try {
+        const queryParams = [status, id];
+        client.query(queries.updateStatus_Vendor, queryParams, (error, result) => {
+            if (error) throw error;
+        });
+        return true;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
 
 
 module.exports = {
