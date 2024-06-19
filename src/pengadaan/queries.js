@@ -2,38 +2,36 @@ const { get } = require("../../routes");
 
 const getDaftarPengadaan = `
 SELECT
-    pengadaan.pengadaan_id,
-    pengadaan.nama_pengadaan,
-    pengadaan.tanggal_permintaan::DATE AS tanggal_permintaan,
-    pengadaan.tanggal_pemilihan::DATE AS tanggal_pemilihan,
-    pengadaan.tanggal_pemilihan_selesai::DATE AS tanggal_pemilihan_selesai,
+    p.pengadaan_id,
+    p.nama_pengadaan,
+    p.tanggal_permintaan::DATE AS tanggal_permintaan,
+    p.tanggal_pemilihan::DATE AS tanggal_pemilihan,
+    p.tanggal_pemilihan_selesai::DATE AS tanggal_pemilihan_selesai,
     jenis_pengadaan.nama_jenis_pengadaan,
     nama_tipe_pemilihan,
-    status.nama_status,
-    dbt.status_id,
+    COALESCE(status.nama_status, 'Diterima') AS nama_status,
     nama_jenis_vendor
 FROM
-    pengadaan
+    pengadaan p
 LEFT JOIN
-    bidding_tender bt ON pengadaan.pengadaan_id = bt.pengadaan_id
+    bidding_tender bt ON p.pengadaan_id = bt.pengadaan_id
 LEFT JOIN
     detail_bidding_tender dbt ON dbt.bt_id = bt.bt_id
-INNER JOIN
-    list_item ON pengadaan.pengadaan_id = list_item.pengadaan_id
+LEFT JOIN
+    vendor_score vs ON vs.pengadaan_id = p.pengadaan_id
 LEFT JOIN
     status ON dbt.status_id = status.status_id
 LEFT JOIN
-    jenis_pengadaan ON pengadaan.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id
+    jenis_pengadaan ON p.jenis_pengadaan_id = jenis_pengadaan.jenis_pengadaan_id
 LEFT JOIN
-    jenis_vendor ON pengadaan.jenis_vendor_id = jenis_vendor.jenis_vendor_id
+    jenis_vendor ON p.jenis_vendor_id = jenis_vendor.jenis_vendor_id
 INNER JOIN
-    tipe_pemilihan ON tipe_pemilihan.tipe_pemilihan_id = pengadaan.tipe_pemilihan_id
+    tipe_pemilihan ON tipe_pemilihan.tipe_pemilihan_id = p.tipe_pemilihan_id
 WHERE 
-    dbt.vendor_id = $1
-GROUP BY pengadaan.pengadaan_id, jenis_pengadaan.nama_jenis_pengadaan,
+    dbt.vendor_id = $1 OR (vs.vendor_id = $2 AND vs.approve_presdir IS NOT NULL AND vs.approve_division IS NOT NULL AND vs.approve_department IS NOT NULL)
+GROUP BY p.pengadaan_id, jenis_pengadaan.nama_jenis_pengadaan,
 nama_tipe_pemilihan,
 status.nama_status,
-dbt.status_id,
 nama_jenis_vendor
 `;
 

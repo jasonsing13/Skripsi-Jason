@@ -9,74 +9,59 @@
 <body>
     <%- include('partials/sidebar.ejs') %>
     <div class="container mt-4">
-        <h1>Daftar Pengadaan</h1>
-        <p>Informasi daftar pengadaan</p>
-        <div class="mb-3">
-            <input type="text" class="form-control" placeholder="Cari Pengadaan">
+        <div class="card mb-3">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col">
+                        <h1>Daftar Pengadaan</h1>
+                        <p>Informasi daftar pengadaan</p>
+                    </div>
+                    <div class="col d-flex justify-content-end align-items-center">
+                        <form action="buat-pengadaan" method="get">
+                            <button type="submit" class="btn btn-primary">Tambah Pengadaan</button>        
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table dataTables">
+                        <thead>
+                            <tr>
+                                <th>Nomor Procurement</th>
+                                <th>Nama Pengadaan</th>
+                                <th>Tanggal Permintaan</th>
+                                <th>Tanggal Mulai</th>
+                                <th>Tanggal Selesai</th>
+                                <th>Jenis Pengadaan</th>
+                                <th>Jenis Pemilihan</th>
+                                <th>Jenis Vendor</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% pengadaan.forEach(function(pengadaan) { %>
+                            <tr>
+                                <td><%= pengadaan.pengadaan_id %></td>
+                                <td><%= pengadaan.nama_pengadaan %></td>
+                                <td><%= pengadaan.tanggal_permintaan || "-"  %></td>
+                                <td><%= pengadaan.tanggal_pemilihan || "-"  %></td>
+                                <td><%= pengadaan.tanggal_pemilihan_selesai || "-"  %></td>
+                                <td><%= pengadaan.nama_jenis_pengadaan || "-" %></td>
+                                <td><%= pengadaan.nama_tipe_pemilihan || "-" %></td>
+                                <td><%= pengadaan.nama_jenis_vendor || "-" %></td>
+                                <td><%= pengadaan.nama_status %></td>
+                                <td>
+                                    <button class="btn btn-orange" onclick="location.href='informasi-pengadaan-previous/<%= pengadaan.pengadaan_id %>'">Detail</button>                    
+                                </td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="d-flex justify-content-between mb-3">
-            <!-- <select class="form-select w-auto">
-                <option selected>Semua Vendor</option>
-                <option value="1">Vendor 1</option>
-                <option value="2">Vendor 2</option>
-                <option value="3">Vendor 3</option>
-                <option value="4">Vendor 4</option>
-                <option value="5">Vendor 5</option>
-                <option value="6">Vendor 6</option>
-            </select> -->
-            <select class="form-select w-auto" id="filter-status" onchange="filterByStatus()">
-                <option selected value="">Semua Status</option>
-                <% status.forEach(status => { %>
-                    <option value="<%= status.status_id %>"><%= status.nama_status %></option>
-                <% }); %>
-            </select>
-            <form action="buat-pengadaan" method="get">
-                <button type="submit" class="btn btn-primary">Tambah Pengadaan</button>        
-            </form>
-        </div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Nomor Procurement</th>
-                    <th>Nama Pengadaan</th>
-                    <th>Tanggal Permintaan</th>
-                    <th>Tanggal Mulai</th>
-                    <th>Tanggal Selesai</th>
-                    <th>Jenis Pengadaan</th>
-                    <th>Jenis Pemilihan</th>
-                    <th>Jenis Vendor</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% pengadaan.forEach(function(pengadaan) { %>
-                <tr>
-                    <td><%= pengadaan.pengadaan_id %></td>
-                    <td><%= pengadaan.nama_pengadaan %></td>
-                    <td><%= pengadaan.tanggal_permintaan || "-"  %></td>
-                    <td><%= pengadaan.tanggal_pemilihan || "-"  %></td>
-                    <td><%= pengadaan.tanggal_pemilihan_selesai || "-"  %></td>
-                    <td><%= pengadaan.nama_jenis_pengadaan || "-" %></td>
-                    <td><%= pengadaan.nama_tipe_pemilihan || "-" %></td>
-                    <td><%= pengadaan.nama_jenis_vendor || "-" %></td>
-                    <td><%= pengadaan.nama_status %></td>
-                    <td>
-                        <button class="btn btn-orange" onclick="location.href='informasi-pengadaan-previous/<%= pengadaan.pengadaan_id %>'">Detail</button>                    
-                    </td>
-                </tr>
-                <% }); %>
-            </tbody>
-        </table>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            </ul>
-        </nav>
     </div>
     <script>
         function filterByStatus() {

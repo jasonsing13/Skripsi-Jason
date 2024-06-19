@@ -1,11 +1,17 @@
 const pool = require('../../database/db');
 const queries = require('../detail_vs/queries');
 
-const getDetail_Vs = (req,res)=>{
-    pool.query(queries.getDetail_Vs, (error, results)=>{
-        if(error) throw error;
-        res.status(200).json(results.rows);
-    })
+const getDetail_Vs = async (vs_id)=>{
+    const client = await pool.pool.connect();
+    try {
+        const result = await client.query(queries.getDetail_Vs, [vs_id]); // Adjust the SQL query based on your actual table and data structure
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
 };
 
 const getDetail_VsById = (req,res)=>{

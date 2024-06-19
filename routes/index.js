@@ -43,18 +43,19 @@ dotenv.config(); // Load konfigurasi dari file .env
 // CONTROLLER
 var bidding_tenderController = require('../src/bidding_tender/controller');
 var detail_bidding_tenderController = require('../src/detail_bidding_tender/controller');
-//var detail_template_vsController = require('../src/detail_template_vs/controller');
-//var detail_vsController = require('../src/detail_vs/controller');
+var kriteriaController = require('../src/kriteria/controller');
+var detail_vsController = require('../src/detail_vs/controller');
 var goods_receivedController = require('../src/goods_received/controller');
 var itemController = require('../src/item/controller');
 var purchase_orderController = require('../src/purchase_order/controller');
 //var roleController = require('../src/role/controller');
 //var statusController = require('../src/status/controller');
-//var template_vsController = require('../src/template_vs/controller');
+var template_vsController = require('../src/template_vs/controller');
+var detail_template_vsController = require('../src/detail_template_vs/controller');
 //var tipe_pemilihanController = require('../src/tipe_pemilihan/controller');
 var userController = require('../src/user/controller');
 var pengadaanController = require('../src/pengadaan/controller');
-//var vendor_scoreController = require('../src/vendor_score/controller');
+var vendor_scoreController = require('../src/vendor_score/controller');
 var vendorController = require('../src/vendor/controller');
 //var jenis_pengadaanController = require('../src/jenis_pengadaan/controller');
 //var jenis_vendorController = require('../src/jenis_vendor/controller');
@@ -707,22 +708,6 @@ router.get('/approved-legalitas', async function(req, res) {
   }
 });
 
-// router.get('/daftar-pengadaan', async function(req, res) {
-//   try {
-//       const result = await pengadaanController.getDaftarPengadaan();
-//       const vendor_id = req.query.id; // Sesuaikan ini
-//       // const pengadaan_id = req.query.pengadaan_id; // Sesuaikan ini
-//       res.render('daftar-pengadaan', {
-//           pengadaan: result,
-//           vendor_id: vendor_id,
-//           pengadaan_id: result.pengadaan_id
-//       });
-//   } catch (error) {
-//       console.error('Error fetching pengadaan data:', error);
-//       res.status(500).send('Error fetching pengadaan data: ' + error.message);
-//   }
-// });
-
 router.get('/daftar-pengadaan', async function(req, res) {
   const data = req.session.data;
   try {
@@ -879,10 +864,14 @@ router.get('/form-bidding/:id', async (req, res) => {
 });
 
 router.post('/add-bidding-tender', async (req, res) => {
-  const { bt_id, vendor_id, pengadaan_id } = req.body;
+  const { bt_id, vendor_id, type, pengadaan_id } = req.body;
   try {
       // Assuming you have a function to insert data into the database
-      await detail_bidding_tenderController.addDetail_Bidding_Tender(bt_id, vendor_id);
+      if(type != '8ef85b64-6d65-4b87-b5ee-5f06016b135c'){
+        await detail_bidding_tenderController.addDetail_Bidding_Tender(bt_id, vendor_id);
+      }else{
+        await vendor_scoreController.addVendor_Score(pengadaan_id, vendor_id);
+      }
       res.redirect('back')
   } catch (error) {
       console.error('Failed to add new detail bidding tender:', error);
@@ -968,11 +957,22 @@ router.get('/form-vendor-scoring/:id/:idv', async function(req,res) {
   const pengadaan_id = req.params.id;
   const vendor_id = req.params.idv;
   const vendor = await vendorController.getVendorById(vendor_id);
+  const vendorS = await vendor_scoreController.getVendor_ScoreById(pengadaan_id, vendor_id);
+  const vendorSD = await detail_vsController.getDetail_Vs(vendorS.vs_id);
+  const detailVS = [];
+  vendorSD.forEach( async e => {
+    detailVS[e.template_vs_id] = await detail_template_vsController.getDetail_Template_Vs(e.template_vs_id)
+  });
+  const template = await template_vsController.getTemplate_Vs();
   res.render('form-vendor-scoring', {
     title: "Form Vendor Scoring",
     parent: data.parent,
     pengadaan_id,
     vendor,
+    vendorS,
+    vendorSD,
+    detailVS,
+    template,
     page: "pengadaan"
   })
 })
@@ -1258,7 +1258,12 @@ router.get('/vendor-pengadaan-previous/:id', async (req, res) => {
     const data = req.session.data;
     const pengadaan_id = req.params.id
     const pengadaan = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
-    const result = await detail_bidding_tenderController.getDetail_Bidding_TenderById(pengadaan.bt_id);
+    var result = []
+    if(pengadaan.tipe_pemilihan_id == '8ef85b64-6d65-4b87-b5ee-5f06016b135c'){
+      result = await vendor_scoreController.getVendor_Score(pengadaan_id);
+    }else{
+      result = await detail_bidding_tenderController.getDetail_Bidding_TenderById(pengadaan.bt_id);
+    }
     res.render('vendor-pengadaan-previous', { pengadaan_id, pengadaan, result, parent: data.parent, page: 'pengadaan' });
   } catch (error) {
       console.error('Error fetching procurement data:', error);
@@ -1441,6 +1446,20 @@ router.post('/api/getVendor', async (req, res) => {
     } = req.body;
     // Assuming you have a function to insert data into the database
     const item = await vendorController.getVendor(nama_vendor)
+    res.send(item); // Redirect to the list page after successful insertion
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/api/getDetailVsTemplate', async (req, res) => {
+  try {
+    const {
+      nama_template 
+    } = req.body;
+    // Assuming you have a function to insert data into the database
+    const item = await template_vsController.getTemplate_VsByName(nama_template)
     res.send(item); // Redirect to the list page after successful insertion
   } catch (error) {
     console.error('Failed to add goods received:', error);
