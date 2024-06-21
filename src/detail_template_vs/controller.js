@@ -1,11 +1,17 @@
 const pool = require('../../database/db');
 const queries = require('../detail_template_vs/queries');
 
-const getDetail_Template_Vs = (req,res)=>{
-    pool.query(queries.getDetail_Template_Vs, (error, results)=>{
-        if(error) throw error;
-        res.status(200).json(results.rows);
-    })
+const getDetail_Template_Vs = async (input)=>{
+    const client = await pool.pool.connect();
+    try {
+        const result = await client.query(queries.getDetail_Template_Vs, [input]); // Adjust the SQL query based on your actual table and data structure
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
 };
 
 const getDetail_Template_VsById = (req,res)=>{
@@ -14,6 +20,20 @@ const getDetail_Template_VsById = (req,res)=>{
         if(error) throw error;
         res.status(200).json(results.rows);
     })
+};
+
+const getDetail_Template_VsByName = async (input)=>{
+    const client = await pool.pool.connect();
+    try {
+        const result = await client.query(queries.getDetail_Template_VsByName, [input]); // Adjust the SQL query based on your actual table and data structure
+        console.log(result)
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
 };
 
 const addDetail_Template_Vs = (req,res)=>{
@@ -77,6 +97,7 @@ const updateDetail_Template_Vs = (req, res) => {
 module.exports = {
     getDetail_Template_Vs,
     getDetail_Template_VsById,
+    getDetail_Template_VsByName,
     addDetail_Template_Vs,
     removeDetail_Template_Vs,
     updateDetail_Template_Vs,

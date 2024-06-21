@@ -43,18 +43,19 @@ dotenv.config(); // Load konfigurasi dari file .env
 // CONTROLLER
 var bidding_tenderController = require('../src/bidding_tender/controller');
 var detail_bidding_tenderController = require('../src/detail_bidding_tender/controller');
-//var detail_template_vsController = require('../src/detail_template_vs/controller');
-//var detail_vsController = require('../src/detail_vs/controller');
+var kriteriaController = require('../src/kriteria/controller');
+var detail_vsController = require('../src/detail_vs/controller');
 var goods_receivedController = require('../src/goods_received/controller');
 var itemController = require('../src/item/controller');
 var purchase_orderController = require('../src/purchase_order/controller');
 //var roleController = require('../src/role/controller');
 //var statusController = require('../src/status/controller');
-//var template_vsController = require('../src/template_vs/controller');
+var template_vsController = require('../src/template_vs/controller');
+var detail_template_vsController = require('../src/detail_template_vs/controller');
 //var tipe_pemilihanController = require('../src/tipe_pemilihan/controller');
 var userController = require('../src/user/controller');
 var pengadaanController = require('../src/pengadaan/controller');
-//var vendor_scoreController = require('../src/vendor_score/controller');
+var vendor_scoreController = require('../src/vendor_score/controller');
 var vendorController = require('../src/vendor/controller');
 //var jenis_pengadaanController = require('../src/jenis_pengadaan/controller');
 //var jenis_vendorController = require('../src/jenis_vendor/controller');
@@ -139,7 +140,7 @@ router.post('/login', async (req, res) => {
         const token = generateAccessToken({ email: result[0].email });
         result[0]['isAdmin'] = false;
         req.session.data = {parent: result[0]};
-        res.redirect('/dashboard-vendor');
+        res.redirect(result[0]['status_verifikasi_id'] == "bec6ed04-e967-4ce8-8865-e6285690174e" ? '/dashboard-vendor' : '/approved-vendor-profile');
         // Send data to route 2 via POST request
       } else {
         return res.status(401).json({ error: 'Autentikasi gagal. Email atau kata sandi tidak valid.' });
@@ -408,6 +409,176 @@ router.get('/upload-dokumen-vendor', function(req, res) {
   res.render('upload-dokumen-vendor', { vendor_id });
 });
 
+router.post('/upload-ktpDirektur', 
+  upload.fields([{ name: 'ktpDirektur' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_ktp_direktur = req.files['ktpDirektur'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_ktp_direktur', url_ktp_direktur);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-ktpKuasa', 
+  upload.fields([{ name: 'ktpKuasa' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_ktp_penerima_kuasa = req.files['ktpKuasa'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_ktp_penerima_kuasa', url_ktp_penerima_kuasa);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-nirlaba', 
+  upload.fields([{ name: 'nirlaba' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_nirlaba = req.files['nirlaba'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_nirlaba', url_nirlaba);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-akta_pendirian', 
+  upload.fields([{ name: 'akta_pendirian' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_akta_pendirian = req.files['akta_pendirian'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_akta_pendirian', url_akta_pendirian);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-akta_perubahan', 
+  upload.fields([{ name: 'akta_perubahan' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_akta_perubahan = req.files['akta_perubahan'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_akta_perubahan', url_akta_perubahan);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-dokumen_ijin_lain', 
+  upload.fields([{ name: 'dokumen_ijin_lain' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_dokumen_ijin_lain = req.files['dokumen_ijin_lain'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_dokumen_ijin_lain', url_dokumen_ijin_lain);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-dokumen_npwp', 
+  upload.fields([{ name: 'dokumen_npwp' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_dokumen_npwp = req.files['dokumen_npwp'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_dokumen_npwp', url_dokumen_npwp);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-buku_akun_bank', 
+  upload.fields([{ name: 'buku_akun_bank' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_buku_akun_bank = req.files['buku_akun_bank'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_buku_akun_bank', url_buku_akun_bank);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-profil_perusahaan', 
+  upload.fields([{ name: 'profil_perusahaan' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_profil_perusahaan = req.files['profil_perusahaan'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_profil_perusahaan', url_profil_perusahaan);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/upload-dokumen_ppkp', 
+  upload.fields([{ name: 'dokumen_ppkp' }]), async (req, res) => {
+  try {
+    // Extract file paths from the uploaded files
+    const url_dokumen_ppkp = req.files['dokumen_ppkp'][0].path;
+
+    const { id } = req.session.data.parent;
+
+    // Assuming you have a function to insert data into the database
+    await vendorController.updateVendorURL(id, 'url_dokumen_ppkp', url_dokumen_ppkp);
+    res.json({ message: 'File uploaded successfully!' });
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
 router.post('/upload-dokumen-vendor', upload.fields([
   { name: 'url_buku_akun_bank', maxCount: 1 },
   { name: 'url_dokumen_npwp', maxCount: 1 },
@@ -486,8 +657,18 @@ router.get('/dashboard-admin', async(req, res) => {
 router.get('/approved-vendor-profile', async(req, res) => {
   try {
     const data = req.session.data; // Access data from session
-
     res.render('approved-vendor-profile', { parent: data.parent, page: 'profile' });
+  } catch (error) {
+    console.error('Error fetching vendor data', error); // Tampilkan stack error
+    res.status(500).send('Error fetching vendor data');
+  }
+});
+
+router.get('/admin-profile', async(req, res) => {
+  try {
+    const data = req.session.data; // Access data from session
+
+    res.render('admin-profile', { parent: data.parent, page: 'profile' });
   } catch (error) {
     console.error('Error fetching vendor data', error); // Tampilkan stack error
     res.status(500).send('Error fetching vendor data');
@@ -526,22 +707,6 @@ router.get('/approved-legalitas', async function(req, res) {
     res.status(500).send('Error fetching vendor data');
   }
 });
-
-// router.get('/daftar-pengadaan', async function(req, res) {
-//   try {
-//       const result = await pengadaanController.getDaftarPengadaan();
-//       const vendor_id = req.query.id; // Sesuaikan ini
-//       // const pengadaan_id = req.query.pengadaan_id; // Sesuaikan ini
-//       res.render('daftar-pengadaan', {
-//           pengadaan: result,
-//           vendor_id: vendor_id,
-//           pengadaan_id: result.pengadaan_id
-//       });
-//   } catch (error) {
-//       console.error('Error fetching pengadaan data:', error);
-//       res.status(500).send('Error fetching pengadaan data: ' + error.message);
-//   }
-// });
 
 router.get('/daftar-pengadaan', async function(req, res) {
   const data = req.session.data;
@@ -699,10 +864,14 @@ router.get('/form-bidding/:id', async (req, res) => {
 });
 
 router.post('/add-bidding-tender', async (req, res) => {
-  const { bt_id, vendor_id, pengadaan_id } = req.body;
+  const { bt_id, vendor_id, type, pengadaan_id } = req.body;
   try {
       // Assuming you have a function to insert data into the database
-      await detail_bidding_tenderController.addDetail_Bidding_Tender(bt_id, vendor_id);
+      if(type != '8ef85b64-6d65-4b87-b5ee-5f06016b135c'){
+        await detail_bidding_tenderController.addDetail_Bidding_Tender(bt_id, vendor_id);
+      }else{
+        await vendor_scoreController.addVendor_Score(pengadaan_id, vendor_id);
+      }
       res.redirect('back')
   } catch (error) {
       console.error('Failed to add new detail bidding tender:', error);
@@ -783,11 +952,27 @@ router.get('/link-zoom-tender', async (req, res) => {
   }
 });
 
-router.get('/form-vendor-scoring/:id', function(req,res) {
+router.get('/form-vendor-scoring/:id/:idv', async function(req,res) {
   const data = req.session.data;
+  const pengadaan_id = req.params.id;
+  const vendor_id = req.params.idv;
+  const vendor = await vendorController.getVendorById(vendor_id);
+  const vendorS = await vendor_scoreController.getVendor_ScoreById(pengadaan_id, vendor_id);
+  const vendorSD = await detail_vsController.getDetail_Vs(vendorS.vs_id);
+  const detailVS = [];
+  vendorSD.forEach( async e => {
+    detailVS[e.template_vs_id] = await detail_template_vsController.getDetail_Template_Vs(e.template_vs_id)
+  });
+  const template = await template_vsController.getTemplate_Vs();
   res.render('form-vendor-scoring', {
     title: "Form Vendor Scoring",
     parent: data.parent,
+    pengadaan_id,
+    vendor,
+    vendorS,
+    vendorSD,
+    detailVS,
+    template,
     page: "pengadaan"
   })
 })
@@ -805,6 +990,15 @@ router.get('/list-vendor-admin', async (req, res) => {
   }
 });
 
+router.post('/approve-vendor', async (req, res) => {
+  try {
+    const result = await vendorController.getListVendor(); // Fetch vendors data using a function from db.js
+  } catch (error) {
+      console.error('Error fetching vendors:', error);
+      res.status(500).send('Error fetching vendor data');
+  }
+});
+
 router.get('/list-admin', async (req, res) => {
   try {
     const data = req.session.data;
@@ -816,18 +1010,11 @@ router.get('/list-admin', async (req, res) => {
   }
 });
 
-
-router.get('/approval-vendor-admin', function(req, res) {
-  const data = req.session.data;
-  res.render('approval-vendor-admin', { parent: data.parent });
-});
-
 router.post('/approval-vendor-admin', async (req, res) => {
-  const { vendor_id, status_id } = req.body;
-  const data = req.session.data;
+  const { id } = req.body;
   try {
-      await vendorController.updateVendor_Status(vendor_id, status_id); // Assuming db.updateVendorStatus updates the status
-      res.redirect('/list-vendor-admin', { parent: data.parent });
+      await vendorController.updateStatus_Vendor(id, 'bec6ed04-e967-4ce8-8865-e6285690174e'); // Assuming db.updateVendorStatus updates the status
+      res.redirect('/list-vendor-admin');
   } catch (error) {
       console.error('Failed to update vendor status:', error);
       res.status(500).send('Error updating vendor status');
@@ -1071,7 +1258,12 @@ router.get('/vendor-pengadaan-previous/:id', async (req, res) => {
     const data = req.session.data;
     const pengadaan_id = req.params.id
     const pengadaan = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
-    const result = await detail_bidding_tenderController.getDetail_Bidding_TenderById(pengadaan.bt_id);
+    var result = []
+    if(pengadaan.tipe_pemilihan_id == '8ef85b64-6d65-4b87-b5ee-5f06016b135c'){
+      result = await vendor_scoreController.getVendor_Score(pengadaan_id);
+    }else{
+      result = await detail_bidding_tenderController.getDetail_Bidding_TenderById(pengadaan.bt_id);
+    }
     res.render('vendor-pengadaan-previous', { pengadaan_id, pengadaan, result, parent: data.parent, page: 'pengadaan' });
   } catch (error) {
       console.error('Error fetching procurement data:', error);
@@ -1254,6 +1446,20 @@ router.post('/api/getVendor', async (req, res) => {
     } = req.body;
     // Assuming you have a function to insert data into the database
     const item = await vendorController.getVendor(nama_vendor)
+    res.send(item); // Redirect to the list page after successful insertion
+  } catch (error) {
+    console.error('Failed to add goods received:', error);
+    res.status(500).send('Error adding goods received');
+  }
+});
+
+router.post('/api/getDetailVsTemplate', async (req, res) => {
+  try {
+    const {
+      nama_template 
+    } = req.body;
+    // Assuming you have a function to insert data into the database
+    const item = await template_vsController.getTemplate_VsByName(nama_template)
     res.send(item); // Redirect to the list page after successful insertion
   } catch (error) {
     console.error('Failed to add goods received:', error);

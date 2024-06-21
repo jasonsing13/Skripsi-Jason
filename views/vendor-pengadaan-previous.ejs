@@ -40,27 +40,35 @@
             <% } %>  
         </ul>
         <div class="card">
-            <div class="card-header">
-                <div class="form-group mb-3">
-                    <input type="hidden" id="bt_id" name="bt_id" value="<%= pengadaan.bt_id %>">
-                    <input type="hidden" id="pengadaan_id" name="pengadaan_id" value="<%= pengadaan_id %>">
-                    <label class="col-sm-3" for="selVendor">Invite Vendor:</label>
-                    <div class='input-group col-sm'>
-                        <input class="form-control input-sm selVendor m-0" type="text" name="selVendor" id="selVendor">
-                        <label class="input-group-text load" id="loadItem"></label>
+            <% if (!pengadaan.vendor_pemenang) { %>
+                <div class="card-header">
+                    <div class="form-group mb-3">
+                        <input type="hidden" id="bt_id" name="bt_id" value="<%= pengadaan.bt_id %>">
+                        <input type="hidden" id="pengadaan_id" value="<%= pengadaan_id %>">
+                        <input type="hidden" id="type" name="type" value="<%= pengadaan.tipe_pemilihan_id %>">
+                        <label class="col-sm-3" for="selVendor">Invite Vendor:</label>
+                        <div class='input-group col-sm'>
+                            <input class="form-control input-sm selVendor m-0" type="text" name="selVendor" id="selVendor">
+                            <label class="input-group-text load" id="loadItem"></label>
+                        </div>
                     </div>
                 </div>
-            </div>
+            <% } %>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table dataTables">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Nama Vendor</th>
                                 <th>Jenis Vendor</th>
-                                <th>Pengajuan Harga</th>
-                                <th>Durasi Pekerjaan (Day)</th>
+                                <% if (pengadaan.tipe_pemilihan_id == '4ff07c90-7efb-4a4a-8715-d53748a387d6' || pengadaan.tipe_pemilihan_id == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f') { %>
+                                    <th>Pengajuan Harga</th>
+                                    <th>Durasi Pekerjaan (Day)</th>
+                                <% } %>
+                                <% if (pengadaan.tipe_pemilihan_id == '8ef85b64-6d65-4b87-b5ee-5f06016b135c') { %>
+                                    <th>Score</th>
+                                <% } %>
                                 <th>Status</th>
                                 <th></th>
                             </tr>
@@ -71,9 +79,16 @@
                                 <td class="qty"><%= i+1 %></td>
                                 <td><%= bt.nama_vendor %></td>
                                 <td><%= bt.nama_jenis_vendor || '-'  %></td>
+                                <% if (pengadaan.tipe_pemilihan_id == '4ff07c90-7efb-4a4a-8715-d53748a387d6' || pengadaan.tipe_pemilihan_id == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f') { %>
                                 <td class="currency"><%= bt.pengajuan_harga || '-' %></td>
                                 <td class="qty"><%= bt.durasi_pekerjaan || '-' %></td>
+                                <% } %>
+                                <% if (pengadaan.tipe_pemilihan_id == '8ef85b64-6d65-4b87-b5ee-5f06016b135c') { %>
+                                <td class="qty"><%= bt.final_score || 0 %></td>
+                                <td><%= bt.approve_department && bt.approve_division && bt.approve_presdir ? "Verified" : "Pending" %></td>
+                                <% }else{ %>
                                 <td><%= bt.nama_status %></td>
+                                <% } %>
                                 <td>
                                     <% if (bt.status_id == '9e18ab27-4557-41eb-b3c1-430c67377830' || (bt.status_id == 'ae00536a-78c1-42e7-af53-ebe6cd68903d' && pengadaan.tipe_pemilihan_id == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f')) { %>
                                         <form id="setPemenang" action="/set-pemenang" method="post">
@@ -85,7 +100,7 @@
                                         </form>
                                     <% } %>
                                     <% if (pengadaan.tipe_pemilihan_id == '8ef85b64-6d65-4b87-b5ee-5f06016b135c') { %>
-                                        <button class="btn btn-success" onclick="location.href='/form-vendor-scoring/<%= pengadaan_id %>'">Vendor Scoring</button> 
+                                        <button class="btn btn-success" onclick="location.href='/form-vendor-scoring/<%= pengadaan_id %>/<%= bt.vendor_id %>'">Vendor Scoring</button> 
                                     <% } %>
                                 </td>
                             </tr>
@@ -174,12 +189,13 @@ $("#selVendor").autocomplete({
     select: function(event, ui) { 
         $("#selProd").val("")
         var itemSelected = ui.item;
+        const type = $('#type').val()
         const pengadaan_id = $('#pengadaan_id').val()
         const bt_id = $('#bt_id').val()
         // INPUT KE DB
         $.ajax({
             type: "POST",
-            data: { bt_id: bt_id, vendor_id: itemSelected.id, pengadaan_id },
+            data: { bt_id: bt_id, vendor_id: itemSelected.id, type, pengadaan_id },
             url: "/add-bidding-tender",
             beforeSend: function(){
                 return confirm('Apakah Anda Yakin?');

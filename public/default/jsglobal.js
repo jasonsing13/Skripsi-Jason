@@ -1,3 +1,7 @@
+$(document).ready(function () {
+    $(".dataTables").dataTable();
+});
+
 // AUTONUMERIC
 function initAutoNumeric(id = '', type){
     let anElement

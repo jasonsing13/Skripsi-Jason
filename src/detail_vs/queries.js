@@ -1,4 +1,6 @@
-const getDetail_Vs = `select * from public.detail_vs `;
+const getDetail_Vs = `select d.*, t.nama_template, t.deskripsi_template from detail_vs d 
+LEFT JOIN template_vs t ON t.template_vs_id = d.template_vs_id 
+WHERE d.vs_id = $1`;
 const getDetail_VsById = `select * from public.detail_vs where detail_vs_id = $1`;
 const addDetail_Vs = `INSERT INTO public.detail_vs (detail_vs_id, vs_id, template_vs_id, score, deskripsi_sub_kriteria, bobot)
 VALUES ($1, $2, $3, $4, $5, $6);`

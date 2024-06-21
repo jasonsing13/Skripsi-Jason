@@ -1,31 +1,42 @@
 const pool = require('../../database/db');
 const queries = require('../vendor_score/queries');
 
-const getVendor_Score = (req,res)=>{
-    pool.query(queries.getVendor_Score, (error, results)=>{
-        if(error) throw error;
-        res.status(200).json(results.rows);
-    })
+const getVendor_Score = async (pengadaan_id)=>{
+    const client = await pool.pool.connect();
+    try {
+        const result = await client.query(queries.getVendor_Score, [pengadaan_id]); // Adjust the SQL query based on your actual table and data structure
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
 };
 
-const getVendor_ScoreById = (req,res)=>{
-    const id = req.params.id;
-    pool.query(queries.getVendor_ScoreById,[id], (error, results)=>{
-        if(error) throw error;
-        res.status(200).json(results.rows);
-    })
+const getVendor_ScoreById = async (pengadaan_id, vendor_id)=>{
+    const client = await pool.pool.connect();
+    try {
+        const result = await client.query(queries.getVendor_ScoreById, [pengadaan_id, vendor_id]); // Adjust the SQL query based on your actual table and data structure
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
 };
 
-const addVendor_Score = (req,res)=>{
-    const { vs_id, pengadaan_id, score_vendor, template_vs_id, vendor_id } = req.body;
-    pool.query(
-        queries.addUser,
-        [vs_id, pengadaan_id, score_vendor, template_vs_id, vendor_id],
-        (error, results) => {
-            if (error) throw error;
-            res.status(201).send("vendor score created success")
-        }
-    );
+const addVendor_Score = async (pengadaan_id, vendor_id)=>{
+    const client = await pool.pool.connect();
+    try {
+        await client.query(queries.addVendor_Score, [pengadaan_id, vendor_id]); // Adjust the SQL query based on your actual table and data structure
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
 };
 
 const removeVendor_Score = (req,res)=>{

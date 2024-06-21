@@ -8,7 +8,7 @@ const { v4: uuidv4 } = require('uuid');
 async function getDaftarPengadaan(vendor_id) {
     const client = await db.pool.connect();
     try {
-        const result = await client.query(queries.getDaftarPengadaan, [vendor_id]); 
+        const result = await client.query(queries.getDaftarPengadaan, [vendor_id, vendor_id]); 
         return result.rows;
     } catch (error) {
         console.error('Error executing query', error.stack);

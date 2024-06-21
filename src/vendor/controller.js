@@ -146,12 +146,17 @@ async function getListVendor() {
     }
   }
 
-const getVendorById = (req,res)=>{
-    const id = req.params.id;
-    db.pool.query(queries.getVendorById,[id], (error, results)=>{
-        if(error) throw error;
-        res.status(200).json(results.rows);
-    })
+const getVendorById = async (id)=>{
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getVendorById, [id]); // Adjust the SQL query based on your actual table and data structure
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
 };
 
 // const addVendor = (req,res)=>{
@@ -396,43 +401,66 @@ const updateTax_Vendor = (req, res) => {
     });
   };
 
-const updateVendorURL = (req, res) => {
-    const id = req.params.id;
-    const { 
-        url_buku_akun_bank, 
-        url_dokumen_npwp, 
-        url_dokumen_pkpp,
-        url_ktp_direktur,
-        url_akta_perubahan,
-        url_akta_pendirian,
-        url_nibrba,
-        url_dokumen_ijin_lain, 
-        url_profil_perusahaan, 
-        vendor_id } = req.body;
-    const queryParams = [
-        url_buku_akun_bank, 
-        url_dokumen_npwp, 
-        url_dokumen_pkpp,
-        url_ktp_direktur,
-        url_akta_perubahan,
-        url_akta_pendirian,
-        url_nibrba,
-        url_dokumen_ijin_lain, 
-        url_profil_perusahaan, 
-        req.query.id];
-    db.pool.query(queries.updateVendorURL, queryParams, (error, result) => {
-        if (error) throw error;
-    });
-};
+async function updateVendorURL(id, url_type, url) {
+    const client = await db.pool.connect();
+    try {
+        switch(url_type){
+            case 'url_ktp_direktur':
+                await client.query(queries.update_url_ktp_direktur, [id, url]); // Adjust the SQL query based on your actual table and data structure
+                break;
+            case 'url_ktp_penerima_kuasa':
+                await client.query(queries.update_url_ktp_penerima_kuasa, [id, url]); // Adjust the SQL query based on your actual table and data structure
+                break;
+            case 'url_nirlaba':
+                await client.query(queries.update_url_nibrba, [id, url]); // Adjust the SQL query based on your actual table and data structure
+                break;
+            case 'url_akta_pendirian':
+                await client.query(queries.update_url_akta_pendirian, [id, url]); // Adjust the SQL query based on your actual table and data structure
+                break;
+            case 'url_akta_perubahan':
+                await client.query(queries.update_url_akta_perubahan, [id, url]); // Adjust the SQL query based on your actual table and data structure
+                break;
+            case 'url_dokumen_ijin_lain':
+                await client.query(queries.update_url_dokumen_ijin_lain, [id, url]); // Adjust the SQL query based on your actual table and data structure
+                break;
+            case 'url_dokumen_npwp':
+                await client.query(queries.update_url_dokumen_npwp, [id, url]); // Adjust the SQL query based on your actual table and data structure
+                break;
+            case 'url_buku_akun_bank':
+                await client.query(queries.update_url_buku_akun_bank, [id, url]); // Adjust the SQL query based on your actual table and data structure
+                break;
+            case 'url_profil_perusahaan':
+                await client.query(queries.update_url_profil_perusahaan, [id, url]); // Adjust the SQL query based on your actual table and data structure
+                break;
+            case 'url_dokumen_ppkp':
+                await client.query(queries.update_url_dokumen_ppkp, [id, url]); // Adjust the SQL query based on your actual table and data structure
+                break;
 
-const updateStatus_Vendor = (req, res) => {
-    const id = req.params.id;
-    const { status_id, vendor_id } = req.body;
-    const queryParams = [status_id, vendor_id];
-    db.pool.query(queries.updateStatus_Vendor, queryParams, (error, result) => {
-      if (error) throw error;
-    });
-  };
+        }
+        return true;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
+async function updateStatus_Vendor (id, status) {
+    const client = await db.pool.connect();
+    try {
+        const queryParams = [status, id];
+        client.query(queries.updateStatus_Vendor, queryParams, (error, result) => {
+            if (error) throw error;
+        });
+        return true;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
 
 
 module.exports = {

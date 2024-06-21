@@ -261,25 +261,71 @@ const updateLegal_Vendor = `
   WHERE id = $3;
 `;
 
-const updateVendorURL = ` 
+const update_url_ktp_direktur = ` 
   UPDATE public.vendor
   SET 
-    url_buku_akun_bank = $1,
-    url_dokumen_npwp = $2, 
-    url_dokumen_ppkp = $3, 
-    url_ktp_direktur = $4,
-    url_akta_perubahan = $5,
-    url_akta_pendirian = $6,
-    url_nibrba = $7,
-    url_dokumen_ijin_lain = $8,
-    url_profil_perusahaan = $9 
-  WHERE id = $10;
+    url_ktp_direktur = $2
+  WHERE id = $1;
+`;
+const update_url_ktp_penerima_kuasa = ` 
+  UPDATE public.vendor
+  SET 
+    url_ktp_penerima_kuasa = $2
+  WHERE id = $1;
+`;
+const update_url_nibrba = ` 
+  UPDATE public.vendor
+  SET 
+    url_nibrba = $2
+  WHERE id = $1;
+`;
+const update_url_akta_pendirian = ` 
+  UPDATE public.vendor
+  SET 
+    url_akta_pendirian = $2
+  WHERE id = $1;
+`;
+const update_url_akta_perubahan = ` 
+  UPDATE public.vendor
+  SET 
+    url_akta_perubahan = $2
+  WHERE id = $1;
+`;
+const update_url_dokumen_ijin_lain = ` 
+  UPDATE public.vendor
+  SET 
+    url_dokumen_ijin_lain = $2
+  WHERE id = $1;
+`;
+const update_url_dokumen_npwp = ` 
+  UPDATE public.vendor
+  SET 
+    url_dokumen_npwp = $2
+  WHERE id = $1;
+`;
+const update_url_buku_akun_bank = ` 
+  UPDATE public.vendor
+  SET 
+    url_buku_akun_bank = $2
+  WHERE id = $1;
+`;
+const update_url_profil_perusahaan = ` 
+  UPDATE public.vendor
+  SET 
+    url_profil_perusahaan = $2
+  WHERE id = $1;
+`;
+const update_url_dokumen_ppkp = ` 
+  UPDATE public.vendor
+  SET 
+    url_dokumen_ppkp = $2
+  WHERE id = $1;
 `;
 
 const updateStatus_Vendor = `
   UPDATE public.vendor
   SET
-    status_id = $1
+    status_verifikasi_id = $1
   WHERE id = $2;
 `;
 
@@ -306,7 +352,16 @@ module.exports = {
     updateRekening_Vendor,
     updateTax_Vendor,
     updateLegal_Vendor,
-    updateVendorURL,
+    update_url_ktp_direktur,
+    update_url_ktp_penerima_kuasa,
+    update_url_nibrba,
+    update_url_akta_pendirian,
+    update_url_akta_perubahan,
+    update_url_dokumen_ijin_lain,
+    update_url_dokumen_npwp,
+    update_url_buku_akun_bank,
+    update_url_profil_perusahaan,
+    update_url_dokumen_ppkp,
     updateStatus_Vendor,
     getListVendor
 };
