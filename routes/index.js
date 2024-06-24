@@ -70,7 +70,7 @@ const { option_Select_Status} = require('../src/pengadaan/queries');
 
 /* GET home page. */
 // Daftar rute yang tidak perlu dicek sesinya
-const noSessionCheckRoutes = ['/', '/login', '/registration'];
+const noSessionCheckRoutes = ['/', '/login', '/registration', '/kabupaten-kota'];
 
 function checkSession(req, res, next) {
   // Jika rute saat ini ada di daftar noSessionCheckRoutes, lanjutkan ke rute berikutnya
@@ -241,8 +241,8 @@ const idMiddleware = (req, res, next) => {
 
 router.post('/registration', async function(req, res) {
   try {
-      const vendor_id = await vendorController.addVendor(req, res);
-      res.redirect(`/bank-info?id=${vendor_id}`);
+      await vendorController.addVendor(req, res);
+      res.redirect(`/login`);
   } catch (error) {
       console.error('Error saving vendor information:', error);
       res.status(500).send('An error occurred during registration: ' + error.message);

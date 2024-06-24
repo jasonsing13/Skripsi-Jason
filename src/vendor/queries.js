@@ -182,7 +182,7 @@ FROM public.provinsi;
 `;
 
 const option_Kabupaten_Kota = `SELECT kk_id, nama_kk
-FROM public.kabupaten_kota WHERE provinsi_id = $1`;
+FROM kabupaten_kota WHERE provinsi_id = $1`;
 
 const option_Bank = `SELECT bank_id, nama_bank
 FROM public.bank;
@@ -191,10 +191,12 @@ FROM public.bank;
 
 const addVendor = `
 INSERT INTO public.vendor( 
-  id,
   nama_vendor,
   email_perusahaan,
-  jenis_id,
+  username,
+  password,
+  jenis_vendor_id,
+  kategori_vendor_id,
   status_kantor,
   alamat_perusahaan,
   nama_direktur,
@@ -202,10 +204,13 @@ INSERT INTO public.vendor(
   negara,
   provinsi_id,
   kk_id,
-  create_by,
-  create_date
+  no_npwp,
+  status_pkp,
+  nppkp,
+  no_nibrba,
+  no_ktp_direktur,
+  rekening_id
 ) VALUES (
-  gen_random_uuid(), --id
   $1,  -- nama_vendor
   $2,  -- email_perusahaan
   $3,  -- jenis_id
@@ -216,8 +221,15 @@ INSERT INTO public.vendor(
   $8,  -- negara
   $9, -- provinsi_id
   $10, -- kk_id
-  $11, -- create_by
-  now() -- create_date
+  $11,
+  $12,
+  $13,
+  $14,
+  $15,
+  $16,
+  $17,
+  $18,
+  $19
 ) RETURNING id;`
 
 
@@ -232,10 +244,24 @@ INSERT INTO public.vendor
 
 const removeVendor = ` delete from vendor where id = $1 `;
 
+const getRekening_Vendor = 
+` SELECT r.rekening_id, b.bank_id 
+FROM rekening r
+LEFT JOIN bank b ON b.bank_id = r.bank_id
+WHERE LOWER(r.nama_pemilik_rekening) = LOWER($1) AND LOWER(r.no_rekening) = LOWER($2) AND LOWER(b.nama_bank) = LOWER($3)`;
+
+const addBank_Vendor = 
+` INSERT INTO bank
+  (nama_bank)
+  VALUES ($1) 
+  RETURNING bank_id
+  `;
+
 const addRekening_Vendor = 
-` INSERT INTO public.rekening
-  (rekening_id, nama_pemilik_rekening, no_rekening, bank_id)
-  VALUES (gen_random_uuid(), $2, $3, $4) 
+` INSERT INTO rekening
+  (nama_pemilik_rekening, no_rekening, bank_id)
+  VALUES ($1, $2, $3) 
+  RETURNING rekening_id
   `;
 
 const updateRekening_Vendor = `
@@ -348,6 +374,8 @@ module.exports = {
     addVendor,
     option_kategori_vendor,
     removeVendor,
+    getRekening_Vendor,
+    addBank_Vendor,
     addRekening_Vendor,
     updateRekening_Vendor,
     updateTax_Vendor,

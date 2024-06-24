@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Registration</title>
     <%- include('partials/head.ejs') %>
     <style>
         body {
@@ -54,9 +55,19 @@
                                     <input type="email" class="form-control" id="email_perusahaan" name="email_perusahaan" >
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="username">Username</label>
+                                    <input type="text" class="form-control" id="username" name="username" >
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="password">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password" >
+                                </div>
+                            </div>
                             <div class="col-md-6 mb-3">
                                 <label for="jenis_vendor" class="form-label">Jenis Vendor</label>
-                                <select class="form-select" id="jenis_vendor" name="jenis_vendor" >
+                                <select class="form-select" id="jenis_vendor" name="jenis_vendor_id" >
                                     <option selected>Choose...</option>
                                     <% option_Jenis_Vendor.forEach(option => { %>
                                         <option value="<%= option.jenis_vendor_id %>"><%= option.nama_jenis_vendor %></option>
@@ -65,7 +76,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="kategori_vendor" class="form-label">Kategori Vendor</label>
-                                <select class="form-select" id="kategori_vendor" name="kategori_vendor" >
+                                <select class="form-select" id="kategori_vendor" name="kategori_vendor_id" >
                                     <option selected>Choose...</option>
                                     <% option_kategori_vendor.forEach(option => { %>
                                         <option value="<%= option.kategori_vendor_id %>"><%= option.nama_kategori_vendor %></option>
@@ -79,6 +90,7 @@
                                         <option selected>Pilih Status Kantor</option>
                                         <option value="Pusat">Pusat</option>
                                         <option value="Cabang">Cabang</option>
+                                        <option value="Perorangan">Perorangan</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -108,7 +120,7 @@
             
                         <div class="col-md-6 mb-3">
                             <label for="provinsi" class="form-label">Provinsi</label>
-                            <select class="form-select" id="provinsi" name="provinsi" >
+                            <select class="form-select" id="provinsi" name="provinsi_id" >
                                 <option selected>Choose...</option>
                                 <% option_Provinsi.forEach(option => { %>
                                     <option value="<%= option.provinsi_id %>"><%= option.nama_provinsi %></option>
@@ -118,7 +130,7 @@
             
                         <div class="col-md-6 mb-3">
                             <label for="kabupaten_kota" class="form-label">Kabupaten/Kota</label>
-                            <select class="form-select" id="kabupaten_kota" name="kabupaten_kota" >
+                            <select class="form-select" id="kabupaten_kota" name="kk_id" >
                                 <option selected>Choose...</option>
                             </select>
                         </div>
@@ -130,17 +142,20 @@
                         <div class="row mt-2">
                             <div class="col-md-6">
                                 <h4>Akun Bank</h4>
+                                <!-- KONEK KE TABLE REKENING -->
                                 <div class="form-group">
                                     <label for="noRekening">Nomor Rekening</label>
-                                    <input id="noRekening" class="form-control" type="text" name="noRekening">
+                                    <input id="noRekening" class="form-control" type="text" name="no_rekening">
                                 </div>
                                 <div class="form-group">
                                     <label for="namaRekening">Nama Pemilik Rekening</label>
-                                    <input id="namaRekening" class="form-control" type="text" name="namaRekening">
+                                    <input id="namaRekening" class="form-control" type="text" name="nama_pemilik_rekening">
                                 </div>
+
+                                <!-- REKENING KE BANK -->
                                 <div class="form-group">
                                     <label for="namaBank">Nama Bank</label>
-                                    <input id="namaBank" class="form-control" type="text" name="namaBank">
+                                    <input id="namaBank" class="form-control" type="text" name="nama_bank">
                                 </div>
                             </div>
                         </div>
@@ -152,11 +167,11 @@
                             <h4>Informasi Perpajakan</h4>
                             <div class="form-group">
                                 <label for="noNPWP">Nomor NPWP</label>
-                                <input id="noNPWP" class="form-control" type="text" name="noNPWP">
+                                <input id="noNPWP" class="form-control" type="text" name="no_npwp">
                             </div>
                             <div class="form-group">
                                 <label for="statusPKP">Status PKP</label>
-                                <input id="statusPKP" class="form-control" type="text" name="statusPKP">
+                                <input id="statusPKP" class="form-control" type="text" name="status_pkp">
                             </div>
                             <div class="form-group">
                                 <label for="nppkp">NPPKP</label>
@@ -171,11 +186,11 @@
                             <h4>Informasi Legalitas</h4>
                             <div class="form-group">
                                 <label for="nibrba">Nomor NIB RBA</label>
-                                <input id="nibrba" class="form-control" type="text" name="nibrba">
+                                <input id="nibrba" class="form-control" type="text" name="no_nibrba">
                             </div>
                             <div class="form-group">
                                 <label for="ktpD">Nomor KTP Direktur/Pemilik</label>
-                                <input id="ktpD" class="form-control" type="text" name="ktpD">
+                                <input id="ktpD" class="form-control" type="text" name="no_ktp_direktur">
                             </div>
                         </div>
                         <button type="button" class="btn btn-primary float-start" onclick="nextTab('perpajakan')">Back</button>
