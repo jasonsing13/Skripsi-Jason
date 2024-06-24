@@ -21,8 +21,24 @@ const getKriteriaById = async (id)=>{
     }
 };
 
+const addKriteria = async (kriteria_val, subKriteria_val)=>{
+    const client = await pool.pool.connect();
+    try {
+        const result = await client.query(queries.addKriteria, [kriteria_val, subKriteria_val]); // Adjust the SQL query based on your actual table and data structure
+        console.log("CNT:")
+        console.table(result)
+        return result.rows[0].vs_kriteria_id;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+};
+
 module.exports = {
     getKriteria,
     getKriteriaById,
+    addKriteria
 };
 

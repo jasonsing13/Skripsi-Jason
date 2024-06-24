@@ -1,10 +1,10 @@
 const getDetail_Vs = `select d.*, t.nama_template, t.deskripsi_template from detail_vs d 
 LEFT JOIN template_vs t ON t.template_vs_id = d.template_vs_id 
 WHERE d.vs_id = $1`;
-const getDetail_VsById = `select * from public.detail_vs where detail_vs_id = $1`;
-const addDetail_Vs = `INSERT INTO public.detail_vs (detail_vs_id, vs_id, template_vs_id, score, deskripsi_sub_kriteria, bobot)
+const getDetail_VsById = `select * from detail_vs where vs_id = $1`;
+const addDetail_Vs = `INSERT INTO detail_vs (vs_id, template_vs_id, score1, score2, type, user_id)
 VALUES ($1, $2, $3, $4, $5, $6);`
-const removeDetail_Vs = ` delete from public.detail_vs where detail_vs_id = $1 `;
+const removeDetail_Vs = ` delete from detail_vs where vs_id = $1 AND type = $2 `;
 const updateDetail_Vs = `update public.detail_vs set username =$1 where detail_vs_id = $2 `;
 
 

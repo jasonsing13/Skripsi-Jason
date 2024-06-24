@@ -14,58 +14,56 @@ const getDetail_Vs = async (vs_id)=>{
     }
 };
 
-const getDetail_VsById = (req,res)=>{
-    const id = req.params.id;
-    pool.query(queries.getDetail_VsById,[id], (error, results)=>{
-        if(error) throw error;
-        res.status(200).json(results.rows);
-    })
+const getDetail_VsById = async (vs_id)=>{
+    const client = await pool.pool.connect();
+    try {
+        const result = await client.query(queries.getDetail_VsById, [vs_id]); // Adjust the SQL query based on your actual table and data structure
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
 };
 
-const addDetail_Vs = (req,res)=>{
-    const { detail_vs_id, vs_id, template_vs_id, score, deskripsi_sub_kriteria, bobot } = req.body;
-    pool.query(
-        queries.addDetail_Vs,
-        [detail_vs_id, vs_id, template_vs_id, score, deskripsi_sub_kriteria, bobot],
-        (error, results) => {
-            if (error) throw error;
-            res.status(201).send("detail vendor scoring created success")
-        }
-    );
-};
-
-const removeDetail_Vs = (req,res)=>{
-    const id = req.params.id;
-    pool.query(queries.removeDetail_Vs, [id], (error, result)=>{
-        if (error) {
-            // Handle error
-            console.error('Error:', error);
-            res.status(500).send('Terjadi kesalahan pada server');
-            return;
-        }
-
-        if (result && result.rowCount > 0) {
-            // Jika ada baris yang terhapus, kirim respons berhasil
-            res.status(200).send('Detail vendor scoring berhasil dihapus');
-        } 
+const addDetail_Vs = async (vs_id, template_vs_id, score1, score2, type, user_id)=>{
+    const client = await pool.pool.connect();
+    try {
+        await client.query(queries.addDetail_Vs, [vs_id, template_vs_id, score1, score2, type, user_id]); // Adjust the SQL query based on your actual table and data structure
         
-        else {
-            // Jika tidak ada baris yang terhapus, kirim pesan bahwa pengguna tidak ditemukan
-            res.status(404).send('Detail vendor scoring tidak ditemukan');
-        }
-        
-
-    });
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
 };
 
-const updateDetail_Vs = (req, res) => {
-    const id = req.params.id;
-    const { username } = req.body;
+const removeDetail_Vs = async (vs_id, type)=>{
+    const client = await pool.pool.connect();
+    try {
+        await client.query(queries.removeDetail_Vs, [vs_id, type]); // Adjust the SQL query based on your actual table and data structure
+        
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+};
 
-    pool.query(queries.updateDetail_Vs, [username, id], (error, result) => {
-        if (error) throw error;
-        res.status(200).send("Pembaruan Detail vendor scoring berhasil");
-    });
+const updateDetail_Vs = async (req, res) => {
+    const client = await pool.pool.connect();
+    try {
+        await client.query(queries.updateDetail_Vs, [vs_id, type, template_vs_id, score1, score2, user_id]); // Adjust the SQL query based on your actual table and data structure
+        
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
 };
 
 

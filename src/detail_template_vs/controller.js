@@ -36,16 +36,16 @@ const getDetail_Template_VsByName = async (input)=>{
     }
 };
 
-const addDetail_Template_Vs = (req,res)=>{
-    const { dtemplate_vs_id, template_vs_id, vs_kriteria_id, bobot } = req.body;
-    pool.query(
-        queries.addDetail_Template_Vs,
-        [dtemplate_vs_id, template_vs_id, vs_kriteria_id, bobot],
-        (error, results) => {
-            if (error) throw error;
-            res.status(201).send("Detail Template  created success")
-        }
-    );
+const addDetail_Template_Vs = async (template_vs_id, vs_kriteria_id)=>{
+    const client = await pool.pool.connect();
+    try {
+        await client.query(queries.addDetail_Template_Vs, [template_vs_id, vs_kriteria_id]); // Adjust the SQL query based on your actual table and data structure
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
 };
 
 const removeDetail_Template_Vs = (req,res)=>{

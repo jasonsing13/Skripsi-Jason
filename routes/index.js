@@ -960,9 +960,10 @@ router.get('/form-vendor-scoring/:id/:idv', async function(req,res) {
   const vendorS = await vendor_scoreController.getVendor_ScoreById(pengadaan_id, vendor_id);
   const vendorSD = await detail_vsController.getDetail_Vs(vendorS.vs_id);
   const detailVS = [];
-  vendorSD.forEach( async e => {
+  for (const e of vendorSD){
     detailVS[e.template_vs_id] = await detail_template_vsController.getDetail_Template_Vs(e.template_vs_id)
-  });
+  };
+
   const template = await template_vsController.getTemplate_Vs();
   res.render('form-vendor-scoring', {
     title: "Form Vendor Scoring",
@@ -976,6 +977,122 @@ router.get('/form-vendor-scoring/:id/:idv', async function(req,res) {
     page: "pengadaan"
   })
 })
+
+router.post('/form-vendor-scoring', async (req, res) => {
+  const data = req.session.data.parent;
+  const {vendor_id, pengadaan_id, final_score} = req.body
+  
+  
+  // const { id } = req.body;
+  try {
+    // TEKNIKAL
+    if(data.role_id == '123e4567-e89b-12d3-a456-426614174001'){
+      const {bobot_teknikal, desc_teknikal} = req.body
+      var nama_template_val = req.body['nama_template[1][]']; 
+      var deskripsi_template_val = req.body['deskripsi_template[1][]']; 
+      var kriteria_val = req.body['kriteria[1][]']; 
+      var subKriteria_val = req.body['subKriteria[1][]']; 
+      var score1_val = req.body['score1[1][]']; 
+      var score2_val = req.body['score2[1][]']; 
+
+      const vs = await vendor_scoreController.updateVendor_Score(pengadaan_id, vendor_id, final_score, bobot_teknikal, null, desc_teknikal, null, null, null, null); // Assuming db.updateVendorStatus updates the status
+      await detail_vsController.removeDetail_Vs(vs.vs_id, 1);
+      if(Array.isArray(nama_template_val)){
+        nama_template_val.forEach(async (e, i) => {
+          const nama = await template_vsController.getTemplate_VsByName(e)
+          var template_id_new = '';
+          console.log(nama)
+          if(!nama){
+            template_id_new = await template_vsController.addTemplate_Vs(e, deskripsi_template_val[i])
+            const vs_kriteria_id = await kriteriaController.addKriteria(kriteria_val[i], subKriteria_val[i])
+            await detail_template_vsController.addDetail_Template_Vs(template_id_new, vs_kriteria_id)
+          }else{
+            template_id_new = nama.template_vs_id
+          }
+  
+          await detail_vsController.addDetail_Vs(vs.vs_id, template_id_new, score1_val[i], score2_val[i], 1, data.id)
+          
+        });
+      }else{
+        const nama = await template_vsController.getTemplate_VsByName(nama_template_val)
+          var template_id_new = '';
+          
+          if(!nama){
+            template_id_new = await template_vsController.addTemplate_Vs(nama_template_val, deskripsi_template_val)
+            const vs_kriteria_id = await kriteriaController.addKriteria(kriteria_val, subKriteria_val)
+            await detail_template_vsController.addDetail_Template_Vs(template_id_new, vs_kriteria_id)
+          }else{
+            template_id_new = nama.template_vs_id
+          }
+  
+          await detail_vsController.addDetail_Vs(vs.vs_id, template_id_new, score1_val, score2_val, 1, data.id)
+      }
+    }
+    // KOMERSIL
+    else if(data.role_id == '123e4567-e89b-12d3-a456-426614174002'){
+      const {bobot_komersial, desc_komersil} = req.body
+      var nama_template_val = req.body['nama_template[2][]']; 
+      var deskripsi_template_val = req.body['deskripsi_template[2][]']; 
+      var kriteria_val = req.body['kriteria[2][]']; 
+      var subKriteria_val = req.body['subKriteria[2][]']; 
+      var score1_val = req.body['score1[2][]']; 
+      var score2_val = req.body['score2[2][]']; 
+
+      const vs = await vendor_scoreController.updateVendor_Score(pengadaan_id, vendor_id, final_score, null, bobot_komersial, null, desc_komersil, null, null, null); // Assuming db.updateVendorStatus updates the status
+      await detail_vsController.removeDetail_Vs(vs.vs_id, 2);
+      if(Array.isArray(nama_template_val)){
+        nama_template_val.forEach(async (e, i) => {
+          const nama = await template_vsController.getTemplate_VsByName(e)
+          var template_id_new = '';
+          if(!nama){
+            template_id_new = await template_vsController.addTemplate_Vs(e, deskripsi_template_val[i])
+            const vs_kriteria_id = await kriteriaController.addKriteria(kriteria_val[i], subKriteria_val[i])
+            await detail_template_vsController.addDetail_Template_Vs(template_id_new, vs_kriteria_id)
+          }else{
+            template_id_new = nama.template_vs_id
+          }
+  
+          await detail_vsController.addDetail_Vs(vs.vs_id, template_id_new, score1_val[i], score2_val[i], 2, data.id)
+          
+        });
+      }else{
+        const nama = await template_vsController.getTemplate_VsByName(nama_template_val)
+          var template_id_new = '';
+          
+          if(!nama){
+            template_id_new = await template_vsController.addTemplate_Vs(nama_template_val, deskripsi_template_val)
+            const vs_kriteria_id = await kriteriaController.addKriteria(kriteria_val, subKriteria_val)
+            await detail_template_vsController.addDetail_Template_Vs(template_id_new, vs_kriteria_id)
+          }else{
+            template_id_new = nama.template_vs_id
+          }
+  
+          await detail_vsController.addDetail_Vs(vs.vs_id, template_id_new, score1_val, score2_val, 2, data.id)
+      }
+
+
+    }
+    // 3 orang penting
+    else{
+      switch(data.role_id){
+        case '123e4567-e89b-12d3-a456-426614174004':
+          await vendor_scoreController.updateVendor_Score(pengadaan_id, vendor_id, final_score, null, null, null, null, data.id, null, null);
+          break;
+        case '123e4567-e89b-12d3-a456-426614174003':
+          await vendor_scoreController.updateVendor_Score(pengadaan_id, vendor_id, final_score, null, null, null, null, null, data.id, null);
+          break;
+        case '123e4567-e89b-12d3-a456-426614174005':
+          await vendor_scoreController.updateVendor_Score(pengadaan_id, vendor_id, final_score, null, null, null, null, null, null, data.id);
+          break;
+      }
+    }
+
+    res.redirect('/vendor-pengadaan-previous/'+pengadaan_id);
+  } catch (error) {
+      console.error('Failed to update vendor status:', error);
+      res.status(500).send('Error updating vendor status');
+  }
+});
 
 //ADMIN
 

@@ -63,14 +63,49 @@ const removeVendor_Score = (req,res)=>{
     });
 };
 
-const updateVendor_Score = (req, res) => {
-    const id = req.params.id;
-    const { username } = req.body;
+const updateVendor_Score = async (
+    pengadaan_id, vendor_id,
+    final_score, 
+    bobot_teknikal, 
+    bobot_komersil,
+    desc_teknikal,
+    desc_komersil,
+    approve_division,
+    approve_department,
+    approve_presdir
+    ) => {
 
-    pool.query(queries.updateUser, [username, id], (error, result) => {
-        if (error) throw error;
-        res.status(200).send("Pembaruan pengguna berhasil");
-    });
+    const client = await pool.pool.connect();
+    try {
+        if(bobot_teknikal){
+            const result = await client.query(queries.updateVendor_Score, [pengadaan_id, vendor_id,
+                final_score, 
+                bobot_teknikal, 
+                desc_teknikal]); // Adjust the SQL query based on your actual table and data structure
+            return result.rows[0];
+        }else if(bobot_komersil){
+            console.log("COBA")
+            const result = await client.query(queries.updateVendor_ScoreKomersil, [pengadaan_id, vendor_id,
+                final_score, 
+                bobot_komersil,
+                desc_komersil]); // Adjust the SQL query based on your actual table and data structure
+            return result.rows[0];
+        }else if (approve_division){
+            await client.query(queries.updateVendor_ScoreDiv, [pengadaan_id, vendor_id,
+                approve_division]); // Adjust the SQL query based on your actual table and data structure
+        } else if(approve_department){
+            await client.query(queries.updateVendor_ScoreDep, [pengadaan_id, vendor_id,
+                approve_department]); // Adjust the SQL query based on your actual table and data structure
+        } else if(approve_presdir){
+            await client.query(queries.updateVendor_ScoreP, [pengadaan_id, vendor_id,
+                approve_presdir]); // Adjust the SQL query based on your actual table and data structure
+        }
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
 };
 
 
