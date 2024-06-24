@@ -8,7 +8,7 @@
 <body>
     <%- include('partials/sidebar.ejs') %>
     <div class="container mt-4">
-        <button class="btn btn-success float-end">Tambah</button>
+        <button class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#modalAdd">Tambah</button>
         <h1>List Admin</h1>
         <table class="table">
             <thead>
@@ -124,6 +124,74 @@
                 <% }); %>
             </tbody>
         </table>
+    </div>
+
+    <div id="modalAdd" class="modal fade modal-lg" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/add-admin" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tambah Admin</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="first_name">First Name</label>
+                                    <input id="first_name" class="form-control" type="text" name="first_name" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="last_name">Last Name</label>
+                                    <input id="last_name" class="form-control" type="text" name="last_name">
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input id="email" class="form-control" type="email" name="email" required>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <input id="username" class="form-control" type="text" name="username" required>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input id="password" class="form-control" type="password" name="password" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="phone_number">Phone Number</label>
+                                    <input id="phone_number" class="form-control" type="text" name="phone_number" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="role_id">Role</label>
+                                    <select id="role_id" class="form-control" name="role_id">
+                                        <option selected>Choose...</option>
+                                        <% option_role.forEach(option => { %>
+                                            <option value="<%= option.role_id %>"><%= option.role_name %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Buat</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 <%- include('partials/footer.ejs') %>
 </html>

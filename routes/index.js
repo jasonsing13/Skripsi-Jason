@@ -48,7 +48,7 @@ var detail_vsController = require('../src/detail_vs/controller');
 var goods_receivedController = require('../src/goods_received/controller');
 var itemController = require('../src/item/controller');
 var purchase_orderController = require('../src/purchase_order/controller');
-//var roleController = require('../src/role/controller');
+var roleController = require('../src/role/controller');
 //var statusController = require('../src/status/controller');
 var template_vsController = require('../src/template_vs/controller');
 var detail_template_vsController = require('../src/detail_template_vs/controller');
@@ -1120,7 +1120,18 @@ router.get('/list-admin', async (req, res) => {
   try {
     const data = req.session.data;
     const result = await userController.getUser(); // Fetch vendors data using a function from db.js
-    res.render('list-admin', { vendor: result, parent: data.parent, page: 'list-admin' });
+    const option_role = await roleController.getRole();
+    res.render('list-admin', { vendor: result, parent: data.parent, option_role, page: 'list-admin' });
+  } catch (error) {
+      console.error('Error fetching vendors:', error);
+      res.status(500).send('Error fetching vendor data');
+  }
+});
+
+router.post('/add-admin', async (req, res) => {
+  try {
+    await userController.addUser(req, res);
+    res.redirect('/list-admin');
   } catch (error) {
       console.error('Error fetching vendors:', error);
       res.status(500).send('Error fetching vendor data');
@@ -1151,113 +1162,6 @@ router.get('/buat-pengadaan', async function(req, res) {
     page: 'pengadaan'
   });
 });
-
-// router.post('/buat-pengadaan', async function(req, res) {
-//   const { 
-//           // nama_pengadaan, 
-//           // tipe_pemilihan_id, 
-//           // jenis_pengadaan_id, 
-//           // jenis_vendor_id, 
-//           // termin_pembayaran, 
-//           // tanggal_pemilihan, 
-//           // create_date, 
-//           // create_by, 
-//           // modif_date, 
-//           // modif_by 
-//         } = req.body;
-//         console.log(req.body);
-//   try {
-//       // Assuming you have a function to insert data into the database
-//       const pengadaan_id = await pengadaanController.addPengadaan(req, res);
-//       res.redirect('/daftar-pengadaan-admin'); // Redirect to the list page after successful insertion
-//   } catch (error) {
-//       console.error('Failed to add new pengadaan:', error);
-//       res.status(500).send('Error adding new pengadaan');
-//   }
-// });
-
-// router.post('/buat-pengadaan', async (req, res) => {
-//   const {
-//       nama_pengadaan,
-//       tipe_pemilihan_id,
-//       jenis_pengadaan_id,
-//       jenis_vendor_id,
-//       termin_pembayaran,
-//       nama_barang,
-//       harga_barang,
-//       jumlah_barang,
-//       url_foto_item,
-//       create_by
-//   } = req.body;
-
-//   try {
-//       const client = await pool.connect();
-//       try {
-//           await client.query('BEGIN');
-//           const result = await client.query(addPengadaan, [
-//               nama_pengadaan,
-//               tipe_pemilihan_id,
-//               jenis_pengadaan_id,
-//               jenis_vendor_id,
-//               termin_pembayaran,
-//               create_by
-//           ]);
-
-//           const pengadaan_id = result.rows[0].pengadaan_id;
-
-//           await client.query(addItem, [
-//               pengadaan_id,
-//               nama_barang,
-//               harga_barang,
-//               jumlah_barang,
-//               url_foto_item
-//           ]);
-
-//           await client.query('COMMIT');
-//           res.redirect('/daftar-pengadaan-admin');
-//       } catch (error) {
-//           await client.query('ROLLBACK');
-//           console.error('Error during transaction', error);
-//           res.status(500).send('Something went wrong');
-//       } finally {
-//           client.release();
-//       }
-//   } catch (error) {
-//       console.error('Database connection error', error);
-//       res.status(500).send('Something went wrong');
-//   }
-// });
-
-// index.js
-// router.post('/buat-pengadaan', async (req, res) => {
-//   const {
-//       nama_pengadaan,
-//       tipe_pemilihan_id,
-//       jenis_pengadaan_id,
-//       jenis_vendor_id,
-//       termin_pembayaran,
-//       tanggal_pemilihan,
-//       create_date,
-//       create_by
-//   } = req.body;
-
-//   try {
-//       // Buat pengadaan baru dan dapatkan pengadaan_id
-//       const pengadaan_id = await pengadaanController.addPengadaan(req, res);
-
-//       // Tambahkan item ke pengadaan yang baru dibuat
-//       const items = JSON.parse(req.body.items);
-//       for (const item of items) {
-//           await pengadaanController.addItem(pengadaan_id, item);
-//       }
-
-//       // Redirect ke halaman daftar-pengadaan-admin dengan pengadaan_id sebagai query parameter
-//       res.redirect(`/daftar-pengadaan-admin?pengadaan_id=${pengadaan_id}`);
-//   } catch (error) {
-//       console.error('Database connection error', error);
-//       res.status(500).send('Something went wrong');
-//   }
-// });
 
 router.post('/buat-pengadaan', async (req, res) => {
   const {

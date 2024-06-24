@@ -35,17 +35,17 @@ async function getUserByEmail(email_perusahaan) {
     }
 };
 
-// const addUser = (req,res)=>{
-//     const { user_id, username, password, email, first_name, last_name, phone_number, create_by, create_date, modif_by, modif_date, role_id } = req.body;
-//     pool.query(
-//         queries.addUser,
-//         [user_id, username, password, email, first_name, last_name, phone_number, create_by, create_date, modif_by, modif_date, role_id],
-//         (error, results) => {
-//             if (error) throw error;
-//             res.status(201).send("user created success")
-//         }
-//     );
-// };
+const addUser = async (req,res)=>{
+    const created_by = req.session.data.parent.id;
+    const { username, password, email, first_name, last_name, phone_number, role_id } = req.body;
+    await db.pool.query(
+        queries.addUser,
+        [username, password, email, first_name, last_name, phone_number, created_by, role_id],
+        (error, results) => {
+            if (error) throw error;
+        }
+    );
+};
 
 // const removeUser = (req,res)=>{
 //     const id = req.params.id;
@@ -97,7 +97,7 @@ module.exports = {
     getUser,
     // getUserById,
     getUserByEmail,
-    // addUser,
+    addUser,
     // removeUser,
     // updateUser,
 };
