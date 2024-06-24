@@ -112,6 +112,7 @@ WHERE
 const getInformasiPengadaanPrevious = `
 SELECT 
     pengadaan.*,
+    pengadaan.jenis_vendor_id AS jenis_v,
     jenis_vendor.nama_jenis_vendor, 
     nama_jenis_pengadaan,
     bidding_tender.bt_id,

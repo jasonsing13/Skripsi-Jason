@@ -46,7 +46,7 @@ LEFT JOIN
 public.jenis_vendor jv ON i.jenis_vendor_id = jv.jenis_vendor_id
 LEFT JOIN
 public.rekening r ON i.rekening_id = r.rekening_id
-WHERE LOWER(nama_vendor) LIKE '%' || LOWER($1) || '%'
+WHERE LOWER(nama_vendor) LIKE '%' || LOWER($1) || '%' AND i.jenis_vendor_id = $2
 `;
 
 const getEmail = `

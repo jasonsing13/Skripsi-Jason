@@ -1463,10 +1463,11 @@ router.post('/api/getProduct', async (req, res) => {
 router.post('/api/getVendor', async (req, res) => {
   try {
     const {
-      nama_vendor 
+      nama_vendor,
+      jenis_vendor_id
     } = req.body;
     // Assuming you have a function to insert data into the database
-    const item = await vendorController.getVendor(nama_vendor)
+    const item = await vendorController.getVendor(nama_vendor, jenis_vendor_id)
     res.send(item); // Redirect to the list page after successful insertion
   } catch (error) {
     console.error('Failed to add goods received:', error);

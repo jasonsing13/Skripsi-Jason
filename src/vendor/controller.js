@@ -1,10 +1,10 @@
 const db = require('../../database/db');
 const queries = require('../vendor/queries');
 
-async function getVendor(nama) {
+async function getVendor(nama, jenis) {
     const client = await db.pool.connect();
     try {
-        const result = await client.query(queries.getVendor, [nama]); // Adjust the SQL query based on your actual table and data structure
+        const result = await client.query(queries.getVendor, [nama, jenis]); // Adjust the SQL query based on your actual table and data structure
         return result.rows;
     } catch (error) {
         console.error('Error executing query', error.stack);

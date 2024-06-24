@@ -46,6 +46,7 @@
                         <input type="hidden" id="bt_id" name="bt_id" value="<%= pengadaan.bt_id %>">
                         <input type="hidden" id="pengadaan_id" value="<%= pengadaan_id %>">
                         <input type="hidden" id="type" name="type" value="<%= pengadaan.tipe_pemilihan_id %>">
+                        <input type="hidden" id="jenis_vendor_id" value="<%= pengadaan.jenis_v %>">
                         <label class="col-sm-3" for="selVendor">Invite Vendor:</label>
                         <div class='input-group col-sm'>
                             <input class="form-control input-sm selVendor m-0" type="text" name="selVendor" id="selVendor">
@@ -157,7 +158,7 @@ $("#selVendor").autocomplete({
     source: function(request,response) {
         $.ajax({
             type: "POST",
-            data: {nama_vendor: $("#selVendor").val()},
+            data: {nama_vendor: $("#selVendor").val(), jenis_vendor_id: $("#jenis_vendor_id").val()},
             url: "/api/getVendor",
             beforeSend: function(){
                 $("#loadItem").html('<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><path fill-rule="evenodd" d="M12 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14m0 3c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10" clip-rule="evenodd" opacity="0.2"/><path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7z"/></g></svg>');
