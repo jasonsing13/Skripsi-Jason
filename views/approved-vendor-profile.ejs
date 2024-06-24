@@ -8,73 +8,79 @@
 <body>
     <%- include('partials/sidebar.ejs') %>
     <div class="container mt-4">
-        <button class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#detail">Dokumen</button>
-        <h1>Vendor Profile</h1>
-        <h3><%= parent.nama_vendor %></h3>
-        <p>Status Verifikasi: <span class="badge <%= parent.status_verifikasi_id == 'bec6ed04-e967-4ce8-8865-e6285690174e' ? 'bg-success' : 'bg-warning' %> "><%= parent.status_verifikasi_id == 'bec6ed04-e967-4ce8-8865-e6285690174e' ? 'Terverifikasi' : 'Data Belum Terverifikasi' %></span></p>
-        <ul class="nav nav-tabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="informasi-tab" data-bs-toggle="tab" data-bs-target="#informasi" type="button" role="tab" aria-controls="informasi" aria-selected="true">Informasi Vendor</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" class="nav-link" id="bank-tab" data-bs-toggle="tab" data-bs-target="#bank" type="button" role="tab" aria-controls="bank" aria-selected="true">Akun Bank</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" class="nav-link active" id="perpajakan-tab" data-bs-toggle="tab" data-bs-target="#perpajakan" type="button" role="tab" aria-controls="perpajakan" aria-selected="true">Perpajakan</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" class="nav-link active" id="legalitas-tab" data-bs-toggle="tab" data-bs-target="#legalitas" type="button" role="tab" aria-controls="legalitas" aria-selected="true">Legalitas</button>
-            </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="informasi" role="tabpanel" aria-labelledby="informasi-tab">
-                <div class="row">
-                    <!-- <div class="col-12 mt-2">
-                        <p>Status Verifikasi: <span class="badge bg-warning">Data Belum Lengkap</span></p>
-                    </div> -->
-                    <div class="col-md-6">
-                        <h4>Informasi Vendor</h4>
-                        <p>Kode Vendor: <%= parent.id %></p>
-                        <p>Status Kantor: <%= parent.status_kantor %></p>
-                        <p>Nama Direktur/Pemilik: <%= parent.nama_direktur %></p>
-                        <p>Nomor Telepon Perusahaan: <%= parent.no_telp %></p>
-                    </div>
-                    <div class="col-md-6">
-                        <h4>Email Perusahaan</h4>
-                        <p>Email Perusahaan: <%= parent.email_perusahaan %></p>
-                        <h4>Alamat Perusahaan</h4>
-                        <p>Alamat Perusahaan: <%= parent.alamat_perusahaan %></p>
-                        <p>Negara: <%= parent.negara %></p>
-                        <p>Provinsi: <%= parent.nama_provinsi %></p>
-                        <p>Kabupaten/Kota: <%= parent.nama_kk %></p>
-                    </div>
-                </div>
+        <div class="card">
+            <div class="card-header">
+                <button class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#detail">Dokumen</button>
+                <h1>Vendor Profile</h1>
+                <h3><%= parent.nama_vendor %></h3>
+                <p>Status Verifikasi: <span class="badge <%= parent.status_verifikasi_id == 'bec6ed04-e967-4ce8-8865-e6285690174e' ? 'bg-success' : 'bg-warning' %> "><%= parent.status_verifikasi_id == 'bec6ed04-e967-4ce8-8865-e6285690174e' ? 'Terverifikasi' : 'Data Belum Terverifikasi' %></span></p>
             </div>
-            <div class="tab-pane fade" id="bank" role="tabpanel" aria-labelledby="bank-tab">
-                <div class="row mt-2">
-                    <div class="col-md-6">
-                        <h4>Akun Bank</h4>
-                        <p>Nomor Rekening: <%= parent.no_rekening %></p>
-                        <p>Nama Pemilik Rekening: <%= parent.nama_pemilik_rekening %></p>
-                        <p>Nama Bank: <%= parent.nama_bank %></p>
+            <div class="card-body">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="informasi-tab" data-bs-toggle="tab" data-bs-target="#informasi" type="button" role="tab" aria-controls="informasi" aria-selected="true">Informasi Vendor</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" class="nav-link" id="bank-tab" data-bs-toggle="tab" data-bs-target="#bank" type="button" role="tab" aria-controls="bank" aria-selected="true">Akun Bank</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" class="nav-link active" id="perpajakan-tab" data-bs-toggle="tab" data-bs-target="#perpajakan" type="button" role="tab" aria-controls="perpajakan" aria-selected="true">Perpajakan</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" class="nav-link active" id="legalitas-tab" data-bs-toggle="tab" data-bs-target="#legalitas" type="button" role="tab" aria-controls="legalitas" aria-selected="true">Legalitas</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="informasi" role="tabpanel" aria-labelledby="informasi-tab">
+                        <div class="row">
+                            <!-- <div class="col-12 mt-2">
+                                <p>Status Verifikasi: <span class="badge bg-warning">Data Belum Lengkap</span></p>
+                            </div> -->
+                            <div class="col-md-6">
+                                <h4>Informasi Vendor</h4>
+                                <p>Kode Vendor: <%= parent.id %></p>
+                                <p>Status Kantor: <%= parent.status_kantor %></p>
+                                <p>Nama Direktur/Pemilik: <%= parent.nama_direktur %></p>
+                                <p>Nomor Telepon Perusahaan: <%= parent.no_telp %></p>
+                            </div>
+                            <div class="col-md-6">
+                                <h4>Email Perusahaan</h4>
+                                <p>Email Perusahaan: <%= parent.email_perusahaan %></p>
+                                <h4>Alamat Perusahaan</h4>
+                                <p>Alamat Perusahaan: <%= parent.alamat_perusahaan %></p>
+                                <p>Negara: <%= parent.negara %></p>
+                                <p>Provinsi: <%= parent.nama_provinsi %></p>
+                                <p>Kabupaten/Kota: <%= parent.nama_kk %></p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="perpajakan" role="tabpanel" aria-labelledby="perpajakan-tab">
-                <div class="row mt-2">
-                    <div class="col-md-6">
-                        <h4>Informasi Perpajakan</h4>
-                        <p>Nomor NPWP: <%= parent.no_npwp %></p>
-                        <p>Status PKP: <%= parent.status_pkp %></p>
-                        <p>NPPKP: <%= parent.nppkp %></p>
+                    <div class="tab-pane fade" id="bank" role="tabpanel" aria-labelledby="bank-tab">
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <h4>Akun Bank</h4>
+                                <p>Nomor Rekening: <%= parent.no_rekening %></p>
+                                <p>Nama Pemilik Rekening: <%= parent.nama_pemilik_rekening %></p>
+                                <p>Nama Bank: <%= parent.nama_bank %></p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="legalitas" role="tabpanel" aria-labelledby="legalitas-tab">
-                <div class="row mt-2">
-                    <div class="col-md-6">
-                        <p>Nomor NIB RBA: <%= parent.no_nibrba %></p>
-                        <p>Nomor KTP Direktur/Pemilik: <%= parent.no_ktp_direktur %></p>
+                    <div class="tab-pane fade" id="perpajakan" role="tabpanel" aria-labelledby="perpajakan-tab">
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <h4>Informasi Perpajakan</h4>
+                                <p>Nomor NPWP: <%= parent.no_npwp %></p>
+                                <p>Status PKP: <%= parent.status_pkp %></p>
+                                <p>NPPKP: <%= parent.nppkp %></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="legalitas" role="tabpanel" aria-labelledby="legalitas-tab">
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <p>Nomor NIB RBA: <%= parent.no_nibrba %></p>
+                                <p>Nomor KTP Direktur/Pemilik: <%= parent.no_ktp_direktur %></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

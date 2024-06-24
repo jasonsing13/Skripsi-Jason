@@ -8,122 +8,129 @@
 <body>
     <%- include('partials/sidebar.ejs') %>
     <div class="container mt-4">
-        <button class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#modalAdd">Tambah</button>
-        <h1>List Admin</h1>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Kode</th>
-                    <th>Nama</th>
-                    <th>Phone Number</th>
-                    <th>Role</th>
-                    <!-- <th>Aksi</th> -->
-                </tr>
-            </thead>
-            <tbody>
-                <% vendor.forEach(function(vendor, i) { %>
-                    <tr>
-                        <td><%= vendor.id %></td>
-                        <td><%= vendor.first_name + " " + vendor.last_name %></td>
-                        <td><%= vendor.phone_number || "-" %></td>
-                        <td><%= vendor.role_name || "-" %></td>
-                        <!-- <td>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detail-<%= vendor.id %>">Detail</button>
-
-                            <div id="detail-<%= vendor.id %>" class="modal fade modal-lg" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title"><%= vendor.nama_vendor %></h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <ul class="nav nav-tabs" role="tablist">
-                                                <li class="nav-item" role="presentation">
-                                                    <button class="nav-link active" id="informasi-<%= vendor.id %>-tab" data-bs-toggle="tab" data-bs-target="#informasi-<%= vendor.id %>" type="button" role="tab" aria-controls="informasi-<%= vendor.id %>" aria-selected="true">Informasi Vendor</button>
-                                                </li>
-                                                <li class="nav-item" role="presentation">
-                                                    <button class="nav-link" class="nav-link" id="bank-<%= vendor.id %>-tab" data-bs-toggle="tab" data-bs-target="#bank-<%= vendor.id %>" type="button" role="tab" aria-controls="bank-<%= vendor.id %>" aria-selected="true">Akun Bank</button>
-                                                </li>
-                                                <li class="nav-item" role="presentation">
-                                                    <button class="nav-link" class="nav-link active" id="perpajakan-<%= vendor.id %>-tab" data-bs-toggle="tab" data-bs-target="#perpajakan-<%= vendor.id %>" type="button" role="tab" aria-controls="perpajakan-<%= vendor.id %>" aria-selected="true">Perpajakan</button>
-                                                </li>
-                                                <li class="nav-item" role="presentation">
-                                                    <button class="nav-link" class="nav-link active" id="legalitas-<%= vendor.id %>-tab" data-bs-toggle="tab" data-bs-target="#legalitas-<%= vendor.id %>" type="button" role="tab" aria-controls="legalitas-<%= vendor.id %>" aria-selected="true">Legalitas</button>
-                                                </li>
-                                            </ul>
-                                            <div class="tab-content" id="myTabContent">
-                                                <div class="tab-pane fade show active" id="informasi-<%= vendor.id %>" role="tabpanel" aria-labelledby="informasi-<%= vendor.id %>-tab">
-                                                    <div class="row">
-                                                        <div class="col-12 mt-2">
-                                                            <p>Status Verifikasi: <span class="badge bg-warning">Data Belum Lengkap</span></p>
+        <div class="card">
+            <div class="card-header">
+                <button class="btn btn-success float-end justify-content-center" data-bs-toggle="modal" data-bs-target="#modalAdd">Tambah</button>
+                <h1>List Admin</h1>
+                <p>Informasi daftar admin</p>
+            </div>
+            <div class="card-body">
+                <table class="table dataTables">
+                    <thead>
+                        <tr>
+                            <th>Kode</th>
+                            <th>Nama</th>
+                            <th>Phone Number</th>
+                            <th>Role</th>
+                            <!-- <th>Aksi</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% vendor.forEach(function(vendor, i) { %>
+                            <tr>
+                                <td><%= vendor.id %></td>
+                                <td><%= vendor.first_name + " " + vendor.last_name %></td>
+                                <td><%= vendor.phone_number || "-" %></td>
+                                <td><%= vendor.role_name || "-" %></td>
+                                <!-- <td>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detail-<%= vendor.id %>">Detail</button>
+        
+                                    <div id="detail-<%= vendor.id %>" class="modal fade modal-lg" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title"><%= vendor.nama_vendor %></h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <ul class="nav nav-tabs" role="tablist">
+                                                        <li class="nav-item" role="presentation">
+                                                            <button class="nav-link active" id="informasi-<%= vendor.id %>-tab" data-bs-toggle="tab" data-bs-target="#informasi-<%= vendor.id %>" type="button" role="tab" aria-controls="informasi-<%= vendor.id %>" aria-selected="true">Informasi Vendor</button>
+                                                        </li>
+                                                        <li class="nav-item" role="presentation">
+                                                            <button class="nav-link" class="nav-link" id="bank-<%= vendor.id %>-tab" data-bs-toggle="tab" data-bs-target="#bank-<%= vendor.id %>" type="button" role="tab" aria-controls="bank-<%= vendor.id %>" aria-selected="true">Akun Bank</button>
+                                                        </li>
+                                                        <li class="nav-item" role="presentation">
+                                                            <button class="nav-link" class="nav-link active" id="perpajakan-<%= vendor.id %>-tab" data-bs-toggle="tab" data-bs-target="#perpajakan-<%= vendor.id %>" type="button" role="tab" aria-controls="perpajakan-<%= vendor.id %>" aria-selected="true">Perpajakan</button>
+                                                        </li>
+                                                        <li class="nav-item" role="presentation">
+                                                            <button class="nav-link" class="nav-link active" id="legalitas-<%= vendor.id %>-tab" data-bs-toggle="tab" data-bs-target="#legalitas-<%= vendor.id %>" type="button" role="tab" aria-controls="legalitas-<%= vendor.id %>" aria-selected="true">Legalitas</button>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="tab-content" id="myTabContent">
+                                                        <div class="tab-pane fade show active" id="informasi-<%= vendor.id %>" role="tabpanel" aria-labelledby="informasi-<%= vendor.id %>-tab">
+                                                            <div class="row">
+                                                                <div class="col-12 mt-2">
+                                                                    <p>Status Verifikasi: <span class="badge bg-warning">Data Belum Lengkap</span></p>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <h4>Informasi Vendor</h4>
+                                                                    <p>Kode Vendor: <%= vendor.id %></p>
+                                                                    <p>Nama Vendor: <%= vendor.nama_vendor %></p>
+                                                                    <p>Status Kantor: <%= vendor.status_kantor %></p>
+                                                                    <p>Nama Direktur/Pemilik: <%= vendor.nama_direktur %></p>
+                                                                    <p>Nomor Telepon Perusahaan: <%= vendor.no_telp %></p>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <h4>Email Perusahaan</h4>
+                                                                    <p>Email Perusahaan: <%= vendor.email_perusahaan %></p>
+                                                                    <h4>Alamat Perusahaan</h4>
+                                                                    <p>Alamat Perusahaan: <%= vendor.alamat_perusahaan %></p>
+                                                                    <p>Negara: <%= vendor.negara %></p>
+                                                                    <p>Provinsi: <%= vendor.nama_provinsi %></p>
+                                                                    <p>Kabupaten/Kota: <%= vendor.nama_kk %></p>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="col-md-6">
-                                                            <h4>Informasi Vendor</h4>
-                                                            <p>Kode Vendor: <%= vendor.id %></p>
-                                                            <p>Nama Vendor: <%= vendor.nama_vendor %></p>
-                                                            <p>Status Kantor: <%= vendor.status_kantor %></p>
-                                                            <p>Nama Direktur/Pemilik: <%= vendor.nama_direktur %></p>
-                                                            <p>Nomor Telepon Perusahaan: <%= vendor.no_telp %></p>
+                                                        <div class="tab-pane fade" id="bank-<%= vendor.id %>" role="tabpanel" aria-labelledby="bank-<%= vendor.id %>-tab">
+                                                            <div class="row mt-2">
+                                                                <div class="col-md-6">
+                                                                    <h4>Akun Bank</h4>
+                                                                    <p>Nomor Rekening: <%= vendor.no_rekening %></p>
+                                                                    <p>Nama Pemilik Rekening: <%= vendor.nama_pemilik_rekening %></p>
+                                                                    <p>Nama Bank: <%= vendor.nama_bank %></p>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="col-md-6">
-                                                            <h4>Email Perusahaan</h4>
-                                                            <p>Email Perusahaan: <%= vendor.email_perusahaan %></p>
-                                                            <h4>Alamat Perusahaan</h4>
-                                                            <p>Alamat Perusahaan: <%= vendor.alamat_perusahaan %></p>
-                                                            <p>Negara: <%= vendor.negara %></p>
-                                                            <p>Provinsi: <%= vendor.nama_provinsi %></p>
-                                                            <p>Kabupaten/Kota: <%= vendor.nama_kk %></p>
+                                                        <div class="tab-pane fade" id="perpajakan-<%= vendor.id %>" role="tabpanel" aria-labelledby="perpajakan-<%= vendor.id %>-tab">
+                                                            <div class="row mt-2">
+                                                                <div class="col-md-6">
+                                                                    <h4>Informasi Perpajakan</h4>
+                                                                    <p>Nomor NPWP: <%= vendor.no_npwp %></p>
+                                                                    <p>Status PKP: <%= vendor.status_pkp %></p>
+                                                                    <p>NPPKP: <%= vendor.nppkp %></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tab-pane fade" id="legalitas-<%= vendor.id %>" role="tabpanel" aria-labelledby="legalitas-<%= vendor.id %>-tab">
+                                                            <div class="row mt-2">
+                                                                <div class="col-md-6">
+                                                                    <p>Nomor NIB RBA: <%= vendor.no_nibrba %></p>
+                                                                    <p>Nomor KTP Direktur/Pemilik: <%= vendor.no_ktp_direktur %></p>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="tab-pane fade" id="bank-<%= vendor.id %>" role="tabpanel" aria-labelledby="bank-<%= vendor.id %>-tab">
-                                                    <div class="row mt-2">
-                                                        <div class="col-md-6">
-                                                            <h4>Akun Bank</h4>
-                                                            <p>Nomor Rekening: <%= vendor.no_rekening %></p>
-                                                            <p>Nama Pemilik Rekening: <%= vendor.nama_pemilik_rekening %></p>
-                                                            <p>Nama Bank: <%= vendor.nama_bank %></p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="tab-pane fade" id="perpajakan-<%= vendor.id %>" role="tabpanel" aria-labelledby="perpajakan-<%= vendor.id %>-tab">
-                                                    <div class="row mt-2">
-                                                        <div class="col-md-6">
-                                                            <h4>Informasi Perpajakan</h4>
-                                                            <p>Nomor NPWP: <%= vendor.no_npwp %></p>
-                                                            <p>Status PKP: <%= vendor.status_pkp %></p>
-                                                            <p>NPPKP: <%= vendor.nppkp %></p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="tab-pane fade" id="legalitas-<%= vendor.id %>" role="tabpanel" aria-labelledby="legalitas-<%= vendor.id %>-tab">
-                                                    <div class="row mt-2">
-                                                        <div class="col-md-6">
-                                                            <p>Nomor NIB RBA: <%= vendor.no_nibrba %></p>
-                                                            <p>Nomor KTP Direktur/Pemilik: <%= vendor.no_ktp_direktur %></p>
-                                                        </div>
-                                                    </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <% if (vendor.status_verifikasi_id != "bec6ed04-e967-4ce8-8865-e6285690174e") { %>
+                                                        <form action="/approve-vendor" method="post">
+                                                            <input type="hidden" name="id" value="<%= vendor.id %>">
+                                                            <button type="submit" class="btn btn-primary">Approve</button>
+                                                        </form>
+                                                    <% } %>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <% if (vendor.status_verifikasi_id != "bec6ed04-e967-4ce8-8865-e6285690174e") { %>
-                                                <form action="/approve-vendor" method="post">
-                                                    <input type="hidden" name="id" value="<%= vendor.id %>">
-                                                    <button type="submit" class="btn btn-primary">Approve</button>
-                                                </form>
-                                            <% } %>
-                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </td> -->
-                    </tr>
-                <% }); %>
-            </tbody>
-        </table>
+                                </td> -->
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <div id="modalAdd" class="modal fade modal-lg" tabindex="-1">

@@ -2,42 +2,45 @@
 <html lang="en">
 <head>
     <%- include('partials/head.ejs') %>
-    <%- include('partials/style.ejs') %>
     <title>Admin Portal</title>
 </head>
 <body>
     <%- include('partials/sidebar.ejs') %>
-    <div class="container">
-        <div class="header">
-            <h1>PORTAL ADMIN</h1>
-            <p>Selamat Datang, <%= parent.first_name %></p>
-        </div>
+    <div class="container mt-4">
         <div class="card">
             <div class="card-header">
-                Dokumen Purchase Order
+                <h1>PORTAL ADMIN</h1>
+                <p>Selamat Datang, <%= parent.first_name %></p>
             </div>
             <div class="card-body">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">NO. ITEM</th>
-                            <th scope="col">NAMA ITEM</th>
-                            <th scope="col">QUANTITY</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>IG000001</td>
-                            <td>MEJA</td>
-                            <td class="qty">20</td>
-                        </tr>
-                        <tr>
-                            <td>IG000002</td>
-                            <td>KURSI</td>
-                            <td class="qty">100</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="card">
+                    <div class="card-header">
+                        Dokumen Purchase Order
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">NO. ITEM</th>
+                                    <th scope="col">NAMA ITEM</th>
+                                    <th scope="col">QUANTITY</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>IG000001</td>
+                                    <td>MEJA</td>
+                                    <td class="qty">20</td>
+                                </tr>
+                                <tr>
+                                    <td>IG000002</td>
+                                    <td>KURSI</td>
+                                    <td class="qty">100</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
