@@ -7,7 +7,8 @@ s.status_id,
 jp.nama_kategori_vendor, 
 jv.nama_jenis_vendor,
 p.nama_provinsi,
-kk.nama_kk
+kk.nama_kk,
+b.*
 FROM 
 public.vendor i
 LEFT JOIN 
@@ -18,6 +19,8 @@ LEFT JOIN
 public.jenis_vendor jv ON i.jenis_vendor_id = jv.jenis_vendor_id
 LEFT JOIN
 public.rekening r ON i.rekening_id = r.rekening_id
+LEFT JOIN
+public.bank b ON b.bank_id = r.bank_id
 LEFT JOIN
   public.kabupaten_kota kk ON i.kk_id = kk.kk_id
 LEFT JOIN
@@ -47,10 +50,16 @@ WHERE LOWER(nama_vendor) LIKE '%' || LOWER($1) || '%'
 `;
 
 const getEmail = `
-SELECT i.*, r.*
+SELECT i.*, r.*, b.*, kk.*, p.*
 FROM vendor i
 LEFT JOIN
 public.rekening r ON i.rekening_id = r.rekening_id
+LEFT JOIN
+public.bank b ON b.bank_id = r.bank_id
+LEFT JOIN
+public.provinsi p ON p.provinsi_id = i.provinsi_id
+LEFT JOIN
+public.kabupaten_kota kk ON kk.provinsi_id = p.provinsi_id
 WHERE email_perusahaan = $1 LIMIT 1;
 `
 
