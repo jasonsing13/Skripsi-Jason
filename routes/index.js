@@ -1370,10 +1370,11 @@ router.get('/informasi-purchase-order-approved', async function(req, res) {
   const data = req.session.data;
   const pengadaan_id = req.query.id;
   const items = await pengadaanController.getItemPengadaan(pengadaan_id);
+  const po = await pengadaanController.getInformasiPO(pengadaan_id);
   const result = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
   const pengadaanUser = await bidding_tenderController.getBidding_TenderVendorStatus(pengadaan_id, data.parent.id)
   
-  res.render('informasi-purchase-order-approved', { pengadaanUser: pengadaanUser[0], items, pengadaan: result, pengadaan_id, parent: data.parent, page: 'pengadaan' });
+  res.render('informasi-purchase-order-approved', { pengadaanUser: pengadaanUser[0], po, items, pengadaan: result, pengadaan_id, parent: data.parent, page: 'pengadaan' });
 });
 
 router.get('/informasi-purchase-order-previous', async function(req, res) {
@@ -1401,6 +1402,7 @@ router.get('/download-po/:pid/:id', async function(req, res){
 
     </head>
     <body>
+    <div class="container mt-4">
       <div class="card">
         <div class="card-header">
           <h5 class="card-title">Informasi Purchase Order</h5>

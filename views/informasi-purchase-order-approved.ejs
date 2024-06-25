@@ -32,22 +32,37 @@
             </li>
         </ul>
         <div class="card">
-            <div class="card-body">
+            <div class="card-header">
+                <% 
+                if(po.length != 0){
+                %>
+                <button type="button" class="btn btn-primary float-end" onclick="window.location.href='/download-po/<%= pengadaan_id %>/<%= po[0].po_id %>';">Download Dokumen PO</button>
+                <%
+                } 
+                %>
                 <h5 class="card-title">Informasi Purchase Order</h5>
-                <p class="card-text"><strong>Delivery Date:</strong> 25 Januari 2024</p>
-                <p class="card-text"><strong>Purchase ID:</strong> PO-MML-2024-01</p>
+                <% 
+                if(po.length != 0){
+                %>
+                <p class="card-text"><strong>Delivery Date:</strong> <%= po ? po[0].tanggal_pengiriman : "-" %></p>
+                <p class="card-text"><strong>Purchase ID:</strong> <%= po ? po[0].po_id : "-" %></p>
+                <%
+                } 
+                %>
+            </div>
+            <div class="card-body">
                 <table class="table">
                     <thead>
                         <tr>
                             <th scope="col">NO. ITEM</th>
-                            <th scope="col">NAMA PENGADAAN</th>
+                            <th scope="col">NAMA BARANG</th>
                             <th scope="col">QUANTITY</th>
                             <th scope="col">HARGA ITEM</th>
                             <th scope="col">NET AMOUNT</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% items.forEach(function(item, i) { %>
+                        <% po.forEach(function(item, i) { %>
                             <tr>
                                 <td><%= i+1 %></td>
                                 <td><%= item.nama_item %></td>
