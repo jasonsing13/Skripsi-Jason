@@ -16,14 +16,12 @@ const getPurchase_OrderById = (po_id)=>{
     })
 };
 
-const addPurchase_Order = (req, res) => {
-    const { po_id, tanggal_po, pengadaan_id, tanggal_pengiriman, alamat_pengiriman, nama_vendor, subTotal, discount, ppn, biaya, total, divHead, vendorApproval } = req.body;
-    pool.query(
+const addPurchase_Order = async (pengadaan_id, tanggal_pengiriman, user_id) => {
+    await pool.pool.query(
         queries.addPurchase_Order,
-        [po_id, tanggal_po, pengadaan_id, tanggal_pengiriman, alamat_pengiriman, nama_vendor, subTotal, discount, ppn, biaya, total, divHead, vendorApproval],
+        [pengadaan_id, tanggal_pengiriman, user_id],
         (error, results) => {
             if (error) throw error;
-            res.status(201).send("Purchase Order created successfully");
         }
     );
 };

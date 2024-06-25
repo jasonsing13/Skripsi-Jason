@@ -24,9 +24,9 @@
             <li class="nav-item">
                 <a class="nav-link active" href="/informasi-purchase-order-previous?id=<%= pengadaan_id %>">Informasi Purchase Order</a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link " href="/dokumen-purchase-order-previous?id=<%= pengadaan_id %>">Dokumen Purchase Order</a>
-            </li>
+            </li> -->
             <% if (pengadaan.vendor_pemenang) { %>
                 <li class="nav-item">
                     <a class="nav-link " href="/goods-received-admin?id=<%= pengadaan_id %>">Goods Received</a>
@@ -34,22 +34,41 @@
             <% } %>
         </ul>
         <div class="card">
-            <div class="card-body">
+            <div class="card-header">
+                <% 
+                if(po.length == 0){
+                %>
+                <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#modalAdd">Tambah PO</button>
+                <%
+                }else{
+                %>
+                <button type="button" class="btn btn-primary float-end" onclick="window.location.href='/download-po/<%= pengadaan_id %>/<%= po[0].po_id %>';">Download Dokumen PO</button>
+                <%
+                } 
+                %>
                 <h5 class="card-title">Informasi Purchase Order</h5>
-                <p class="card-text"><strong>Delivery Date:</strong> 25 Januari 2024</p>
-                <p class="card-text"><strong>Purchase ID:</strong> PO-MML-2024-01</p>
+                <% 
+                if(po.length != 0){
+                %>
+                <p class="card-text"><strong>Delivery Date:</strong> <%= po ? po[0].tanggal_pengiriman : "-" %></p>
+                <p class="card-text"><strong>Purchase ID:</strong> <%= po ? po[0].po_id : "-" %></p>
+                <%
+                } 
+                %>
+            </div>
+            <div class="card-body">
                 <table class="table">
                     <thead>
                         <tr>
                             <th scope="col">NO. ITEM</th>
-                            <th scope="col">NAMA PENGADAAN</th>
+                            <th scope="col">NAMA BARANG</th>
                             <th scope="col">QUANTITY</th>
                             <th scope="col">HARGA ITEM</th>
                             <th scope="col">NET AMOUNT</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% items.forEach(function(item, i) { %>
+                        <% po.forEach(function(item, i) { %>
                             <tr>
                                 <td><%= i+1 %></td>
                                 <td><%= item.nama_item %></td>
@@ -60,6 +79,68 @@
                         <% }); %>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalAdd" class="modal fade modal-lg" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/add-po" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tambah PO</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="tanggal_pengiriman">Tanggal Pengiriman</label>
+                                    <input id="tanggal_pengiriman" class="form-control" type="date" name="tanggal_pengiriman" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <p class="card-title">List Barang</p>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <th>No</th>
+                                                    <th>Nama Barang</th>
+                                                    <th>Quantity</th>
+                                                    <th>Harga Item</th>
+                                                    <th>Net Amount</th>
+                                                </thead>
+                                                <tbody>
+                                                    <% items.forEach(function(item, i) { %>
+                                                        <tr>
+                                                            <td class="qty"><%= i+1 %></td>
+                                                            <td><%= item.nama_item %></td>
+                                                            <td class="qty"><%= item.quantity %></td>
+                                                            <td class="currency"><%= item.harga_item %></td>
+                                                            <td class="currency"><%= item.harga_total %></td>
+                                                        </tr>
+                                                    <% }); %>
+                                                </tbody>
+                                                <tfoot>
+
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="pengadaan_id" value="<%= pengadaan_id %>">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Buat</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -151,7 +151,14 @@ WHERE pengadaan_id = $1;
 `;
 
 const getInformasiPO = `
-SELECT * FROM po WHERE pengadaan_id = $1;
+SELECT 
+    i.nama_item, l.*, i.harga_item, po.tanggal_pengiriman, po.po_id
+FROM 
+    public.item i
+LEFT JOIN 
+    public.list_item l ON l.item_id = i.item_id
+JOIN purchase_order po ON po.pengadaan_id = l.pengadaan_id
+WHERE l.pengadaan_id = $1;
 `;
 
 const getDokumenPO = `
