@@ -195,6 +195,13 @@ const update_PIC = (req, res) => {
     });
 };
 
+const update_evaluasi = async (pengadaan_id, bukti_evaluasi) => {
+    const queryParams = [bukti_evaluasi, pengadaan_id];
+    db.pool.query(queries.update_evaluasi, queryParams, (error, result) => {
+        if (error) throw error;
+    });
+};
+
 async function option_Vendor() {
     const client = await db.pool.connect();
     try {
@@ -460,6 +467,7 @@ module.exports = {
     option_Select_Status,
     option_Select_Status_Admin,
     update_PIC,
+    update_evaluasi,
     option_Vendor,
     option_Tipe_Pemilihan1,
     option_Tipe_Pemilihan2,

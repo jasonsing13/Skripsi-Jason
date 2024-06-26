@@ -321,7 +321,14 @@ const update_PIC = `
   UPDATE public.pengadaan
   SET 
     pic =$1
-  WHERE id = $2;
+  WHERE pengadaan_id = $2;
+`;
+
+const update_evaluasi = `
+  UPDATE public.pengadaan
+  SET 
+    evaluasi_vendor =$1
+  WHERE pengadaan_id = $2;
 `;
 
 const option_Vendor =`
@@ -456,6 +463,7 @@ module.exports = {
     option_Select_Status_Admin,
     option_PIC,
     update_PIC,
+    update_evaluasi,
     option_Vendor,
     getPengadaanById,
     option_Tipe_Pemilihan1,

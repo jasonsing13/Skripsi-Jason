@@ -36,57 +36,74 @@
                 <div class="card-header">
                     <p class="m-0">Review hasil yang diterima</p>
                 </div>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col">
-                            <button class="btn float-end btn-success mx-2" data-bs-toggle="modal" data-bs-target="#invoice">Lihat Invoice</button>
-                            <button class="btn float-end btn-success mx-2" data-bs-toggle="modal" data-bs-target="#surat_jalan">Lihat Surat Jalan</button>
+                <form action="/goods-received-admin" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="pengadaan_id" value="<%= pengadaan_id %>">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col">
+                                <button type="button" class="btn float-end btn-success mx-2" data-bs-toggle="modal" data-bs-target="#invoice">Lihat Invoice</button>
+                                <button type="button" class="btn float-end btn-success mx-2" data-bs-toggle="modal" data-bs-target="#surat_jalan">Lihat Surat Jalan</button>
+                            </div>
                         </div>
+                        <% if (result) { %>
+                            <div class="row d-flex flex-wrap">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="tanggal-terima">TANGGAL TERIMA*</label>
+                                        <input class="form-control" type="date" id="tanggal-terima" name="tanggal_terima" <%= result.tanggal_terimas ? `value=${moment(result.tanggal_terimas).format('YYYY-MM-DD')} disabled` : '' %> required>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="jumlah-barang">JUMLAH BARANG*</label>
+                                        <input class="form-control" type="number" id="jumlah-barang" name="jumlah_barang" <%= result.jumlah_barang ? `value=${result.jumlah_barang} disabled` : '' %> required>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="deskripsi-barang">DESKRIPSI BARANG*</label>
+                                        <textarea id="my-textarea" class="form-control" name="deskripsi_barang" rows="3" required <%= result.deskripsi_barang ? 'disabled' : '' %>> <%= result.deskripsi_barang ? result.deskripsi_barang : '' %></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="kondisi-barang">KONDISI BARANG*</label>
+                                        <input type="text" class="form-control" id="kondisi-barang" name="kondisi_barang" <%= result.kondisi_barang ? `value=${result.kondisi_barang} disabled` : '' %> required>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <% if (result.bukti_foto) { %>
+                                            <label class="form-label" for="profil_perusahaan">BUKTI FOTO</label>
+                                            <img id="profil_perusahaan" src="<%= result.bukti_foto ?? "/images/empty.jpg" %>" class="img-thumbnail" alt="...">
+                                        <% }else{ %>
+                                            <label class="form-label" for="upload-bukti-foto">UPLOAD BUKTI FOTO*</label>
+                                            <input class="form-control" type="file" id="upload-bukti-foto" name="bukti_foto" required>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <% if (result.evaluasi_vendor) { %>
+                                            <label class="form-label" for="profil_perusahaan">HASIL EVALUASI VENDOR</label>
+                                            <img id="profil_perusahaan" src="<%= result.evaluasi_vendor ?? "/images/empty.jpg" %>" class="img-thumbnail" alt="...">
+                                        <% }else{ %>
+                                            <label class="form-label" for="upload-evaluasi">UPLOAD FILE HASIL EVALUASI VENDOR*</label>
+                                            <input class="form-control" type="file" id="upload-evaluasi" name="bukti_evaluasi" required>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
                     </div>
-                    <form action="/goods-received-admin" method="POST" enctype="multipart/form-data">
-                        <div class="row d-flex flex-wrap">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="tanggal-terima">TANGGAL TERIMA*</label>
-                                    <input class="form-control" type="date" id="tanggal-terima" name="tanggal_terima" required>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="jumlah-barang">JUMLAH BARANG*</label>
-                                    <input class="form-control" type="number" id="jumlah-barang" name="jumlah_barang" required>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="deskripsi-barang">DESKRIPSI BARANG*</label>
-                                    <textarea id="my-textarea" class="form-control" name="deskripsi_barang" rows="3" required></textarea>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="kondisi-barang">KONDISI BARANG*</label>
-                                    <input type="text" class="form-control" id="kondisi-barang" name="kondisi_barang" required>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="upload-bukti-foto">UPLOAD BUKTI FOTO*</label>
-                                    <input class="form-control" type="file" id="upload-bukti-foto" name="bukti_foto" required>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="upload-evaluasi">UPLOAD FILE HASIL EVALUASI VENDOR*</label>
-                                    <input class="form-control" type="file" id="upload-evaluasi" name="bukti_evaluasi" required>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary float-end">Submit Bukti</button>
-                </div>
+                    <div class="card-footer">
+                        <% if (result) { %>
+                            <% if (!result.evaluasi_vendor) { %>
+                            <button type="submit" class="btn btn-primary float-end">Submit Bukti</button>
+                            <% } %>
+                        <% } %>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -99,7 +116,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <img src="<%= result.url_invoice %>" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
+                    <% if (result) { %>
+                        <img src="<%= result.url_invoice ?? '' %>" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
+                    <% }else{ %>
+                        <p>Vendor Belum Upload</p>
+                    <% } %>
                 </div>
             </div>
         </div>
@@ -113,7 +134,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <img src="<%= result.url_surat_jalan %>" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
+                    <% if (result) { %>
+                    <img src="<%= result.url_surat_jalan ?? ''%>" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
+                    <% }else{ %>
+                        <p>Vendor Belum Upload</p>
+                    <% } %>
                 </div>
             </div>
         </div>

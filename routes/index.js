@@ -38,6 +38,7 @@ const { authenticateToken } = require('../middleware/authenticate'); // Impor mi
 const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
 const pdf = require('html-pdf');
+const axios = require('axios');
 
 
 dotenv.config(); // Load konfigurasi dari file .env
@@ -1445,8 +1446,11 @@ router.get('/download-po/:pid/:id', async function(req, res){
   </html
   
 `;
+  const response = await axios.get('http://localhost:3000/informasi-purchase-order-approved');
+  console.log(response);
+  const htmlContent = response.data;
 
-  await pdf.create(pageData, { format: 'Letter' }).toFile('./uploads/po-'+po_id+'.pdf', async (err, resa) => {
+  await pdf.create(htmlContent, { format: 'Letter' }).toFile('./uploads/po-'+po_id+'.pdf', async (err, resa) => {
     if (err) return console.log(err);
       await res.download('./uploads/po-'+po_id+'.pdf', 'po-'+po_id+'.pdf');
   });
@@ -1511,15 +1515,20 @@ router.get('/goods-received-admin', async (req, res) => {
 });
 
 router.post('/goods-received-admin', 
-upload.fields([{ name: 'invoice' }, { name: 'surat_jalan' }]), async (req, res) => {
+upload.fields([{ name: 'bukti_evaluasi' }, { name: 'bukti_foto' }]), async (req, res) => {
   try {
     // Extract file paths from the uploaded files
-    const url_invoice = req.files['invoice'][0].path;
-    const url_surat_jalan = req.files['surat_jalan'][0].path;
-
+    const bukti_evaluasi = req.files['bukti_evaluasi'][0].path;
+    const bukti_foto = req.files['bukti_foto'][0].path;
+    const {pengadaan_id, jumlah_barang, kondisi_barang, tanggal_terima, deskripsi_barang} = req.body;
+    const result = await pengadaanController.getVendorPemenang(pengadaan_id)
+    const gr = await goods_receivedController.getGoods_ReceivedByPengadaanId(pengadaan_id, result.vendor_pemenang);
     // Assuming you have a function to insert data into the database
-    await goods_receivedController.addGoods_Received(url_invoice, url_surat_jalan);
-    res.redirect('/daftar-pengadaan-vendor'); // Redirect to the list page after successful insertion
+    await goods_receivedController.addGoods_ReceivedItem(jumlah_barang, kondisi_barang, bukti_foto, tanggal_terima, deskripsi_barang, gr.received_id);
+
+    await pengadaanController.update_evaluasi(pengadaan_id, bukti_evaluasi);
+
+    res.redirect('/goods-received-admin?id='+pengadaan_id); // Redirect to the list page after successful insertion
   } catch (error) {
     console.error('Failed to add goods received:', error);
     res.status(500).send('Error adding goods received');

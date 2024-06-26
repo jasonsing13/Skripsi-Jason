@@ -21,15 +21,17 @@
             <li class="nav-item">
                 <a class="nav-link active" href="/item-pengadaan-approved?id=<%= pengadaan_id %>">Item Pengadaan</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link " href="/informasi-purchase-order-approved?id=<%= pengadaan_id %>">Informasi Purchase Order</a>
-            </li>
-            <!-- <li class="nav-item">
-                <a class="nav-link " href="/dokumen-purchase-order-approved?id=<%= pengadaan_id %>">Dokumen Purchase Order</a>
-            </li> -->
-            <li class="nav-item">
-                <a class="nav-link " href="/goods-received-vendor?id=<%= pengadaan_id %>">Goods Received</a>
-            </li>
+            <% if((pengadaan.tipe_pemilihan_id == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f' && pengadaanUser.status_id == '9e18ab27-4557-41eb-b3c1-430c67377830') || pengadaan.tipe_pemilihan_id != 'b8649cf1-3da3-4258-8e2d-459e10b1b95f'){ %>
+                <li class="nav-item">
+                    <a class="nav-link " href="/informasi-purchase-order-approved?id=<%= pengadaan_id %>">Informasi Purchase Order</a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link " href="/dokumen-purchase-order-approved?id=<%= pengadaan_id %>">Dokumen Purchase Order</a>
+                </li> -->
+                <li class="nav-item">
+                    <a class="nav-link " href="/goods-received-vendor?id=<%= pengadaan_id %>">Goods Received</a>
+                </li>
+            <% } %>
         </ul>
         <div class="card">
             <div class="card-body">

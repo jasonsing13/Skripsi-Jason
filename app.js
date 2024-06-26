@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const dotenv = require('dotenv');
+const moment = require('moment');
 
 
 // var indexRouter = require('./routes/index');
@@ -19,7 +20,10 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.set('src', path.join(__dirname, 'src'));
 
-
+app.use((req, res, next)=>{
+  res.locals.moment = moment;
+  next();
+});
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

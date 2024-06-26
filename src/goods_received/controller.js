@@ -45,6 +45,12 @@ const addGoods_Received = async (url_invoice, url_surat_jalan, pengadaan_id, cre
         [pengadaan_id, url_invoice, url_surat_jalan, create_by]);
 };
 
+const addGoods_ReceivedItem = async (jumlah_barang, kondisi_barang, bukti_foto, tanggal_terima, deskripsi_barang, received_id)=>{
+    pool.pool.query(
+        await queries.addGoods_ReceivedItem,
+        [jumlah_barang, kondisi_barang, bukti_foto, tanggal_terima, deskripsi_barang, received_id]);
+};
+
 const removeGoods_Received = (req,res)=>{
     const id = req.params.id;
     pool.query(queries.removeGoods_Received, [id], (error, result)=>{
@@ -96,6 +102,7 @@ module.exports = {
     option_Jenis_Vendor,
     getGoods_ReceivedById,
     addGoods_Received,
+    addGoods_ReceivedItem,
     removeGoods_Received,
     updateGoods_Received,
     getGoods_ReceivedByPengadaanId
