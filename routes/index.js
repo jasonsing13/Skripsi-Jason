@@ -651,7 +651,8 @@ router.get('/dashboard-admin', async(req, res) => {
   try {
     const data = req.session.data; // Access data from session
     const terbaik = await pengadaanController.getTerbaik()
-    res.render('dashboard-admin', { parent: data.parent, terbaik, page: 'dashboard' });
+    const pengadaan = await pengadaanController.getDaftarPengadaanAdmin()
+    res.render('dashboard-admin', { parent: data.parent, terbaik, pengadaan, page: 'dashboard' });
   } catch (error) {
     console.error('Error fetching admin data', error); // Tampilkan stack error
     res.status(500).send('Error fetching admin data');

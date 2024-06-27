@@ -15,6 +15,14 @@
             <div class="card-body">
                 <div class="card">
                     <div class="card-header">
+                        Kalender Pengadaan
+                    </div>
+                    <div class="card-body">
+                        <div id='calendar'></div>
+                    </div>
+                </div>
+                <div class="card mt-3">
+                    <div class="card-header">
                         Vendor Terbaik
                     </div>
                     <div class="card-body">
@@ -41,5 +49,35 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const eventDate = new Date('2024-06-26'); // Buat objek Date dengan tanggal yang diinginkan
+            // const eventData = {
+            //     title: 'Acara Spesial',
+            //     start: eventDate, // Tanggal mulai acara
+            //     // ... tambahkan properti lain sesuai kebutuhan
+            // };
+
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                themeSystem: 'bootstrap5',
+                initialView: 'dayGridMonth',
+                events: [
+                    <% pengadaan.forEach(e => { %>
+                    <% if(e.tanggal_pemilihan && e.tanggal_pemilihan_selesai){ %>
+                    {
+                        title: '<%= e.nama_pengadaan %>',
+                        start: '<%= moment(e.tanggal_pemilihan).format("YYYY-MM-DD") %>', // Start date (ISO format)
+                        end: '<%= moment(e.tanggal_pemilihan_selesai).format("YYYY-MM-DD") %>' // Start date (ISO format)
+                    },
+                    <% } %>
+                    <% }) %>
+                    // You can add more events here if needed
+                ]
+            });
+            calendar.render();
+        });
+    </script>
 <%- include('partials/footer.ejs') %>
 </html>
