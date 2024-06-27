@@ -639,7 +639,8 @@ router.post('/upload-dokumen-vendor', upload.fields([
 router.get('/dashboard-vendor', async(req, res) => {
   try {
     const data = req.session.data; // Access data from session
-    res.render('dashboard-vendor', { parent: data.parent, page: 'dashboard' });
+    const pengadaan = await pengadaanController.getDaftarPengadaanByStatus('760ad69f-7739-41e1-baf9-7a68665b21e8', data.parent.id)
+    res.render('dashboard-vendor', { parent: data.parent, pengadaan, page: 'dashboard' });
   } catch (error) {
     console.error('Error fetching vendor data', error); // Tampilkan stack error
     res.status(500).send('Error fetching vendor data');
@@ -649,8 +650,8 @@ router.get('/dashboard-vendor', async(req, res) => {
 router.get('/dashboard-admin', async(req, res) => {
   try {
     const data = req.session.data; // Access data from session
-    
-    res.render('dashboard-admin', { parent: data.parent, page: 'dashboard' });
+    const terbaik = await pengadaanController.getTerbaik()
+    res.render('dashboard-admin', { parent: data.parent, terbaik, page: 'dashboard' });
   } catch (error) {
     console.error('Error fetching admin data', error); // Tampilkan stack error
     res.status(500).send('Error fetching admin data');

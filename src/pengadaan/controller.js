@@ -18,6 +18,19 @@ async function getDaftarPengadaan(vendor_id) {
     }
 }
 
+async function getTerbaik() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getTerbaik); 
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
 async function getDaftarPengadaanByVendor(vendor_id) {
     const client = await db.pool.connect();
     try {
@@ -472,6 +485,7 @@ async function setPemenang (pengadaan_id, vendor_id, dbt_id, bt_id, harga, duras
 };
 
 module.exports = {
+    getTerbaik,
     getDaftarPengadaan,
     getDaftarPengadaanAdmin,
     getDaftarPengadaanByStatus,

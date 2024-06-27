@@ -458,8 +458,18 @@ status_id = '49cd669e-a2e1-4589-8473-d63b110ebbfc'
 WHERE bt_id = $1 AND dbt_id != $2;`
 ;
 
+const getTerbaik = ` 
+SELECT COUNT(p.pengadaan_id) AS total, v.nama_vendor
+FROM pengadaan p 
+JOIN vendor v ON v.id = p.vendor_pemenang
+GROUP BY v.id
+ORDER BY total DESC
+LIMIT 5;
+`;
+
 
 module.exports = {
+    getTerbaik,
     getDaftarPengadaan,
     getDaftarPengadaanAdmin,
     getDaftarPengadaanByStatus,

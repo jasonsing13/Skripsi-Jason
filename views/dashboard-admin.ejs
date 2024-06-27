@@ -15,28 +15,25 @@
             <div class="card-body">
                 <div class="card">
                     <div class="card-header">
-                        Dokumen Purchase Order
+                        Vendor Terbaik
                     </div>
                     <div class="card-body">
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th scope="col">NO. ITEM</th>
-                                    <th scope="col">NAMA ITEM</th>
-                                    <th scope="col">QUANTITY</th>
+                                    <th scope="col">NO.</th>
+                                    <th scope="col">NAMA VENDOR</th>
+                                    <th scope="col">JUMLAH PENGADAAN</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>IG000001</td>
-                                    <td>MEJA</td>
-                                    <td class="qty">20</td>
-                                </tr>
-                                <tr>
-                                    <td>IG000002</td>
-                                    <td>KURSI</td>
-                                    <td class="qty">100</td>
-                                </tr>
+                                <% terbaik.forEach((e, i) => { %>
+                                    <tr>
+                                        <td><%= i+1 %></td>
+                                        <td><%= e.nama_vendor %></td>
+                                        <td class="qty"><%= e.total %></td>
+                                    </tr>
+                                <% }) %>
                             </tbody>
                         </table>
                     </div>
