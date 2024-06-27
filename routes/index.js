@@ -1103,7 +1103,22 @@ router.get('/list-vendor-admin', async (req, res) => {
   try {
     const data = req.session.data;
     const result = await vendorController.getListVendor(); // Fetch vendors data using a function from db.js
-    res.render('list-vendor-admin', { vendor: result, parent: data.parent, page: 'list-vendor' });
+    const pengadaan = await pengadaanController.getDaftarPengadaanAdmin();
+    // for (const e of result) {
+    //   pengadaan.push({ [e.id]: await pengadaanController.getDaftarPengadaanByVendor(e.id) });
+    // }
+    res.render('list-vendor-admin', { vendor: result, parent: data.parent, pengadaan, page: 'list-vendor' });
+  } catch (error) {
+      console.error('Error fetching vendors:', error);
+      res.status(500).send('Error fetching vendor data');
+  }
+});
+
+router.get('/get-eval', async (req, res) => {
+  try {
+    const {evaluasi_vendor} = req.query;
+    console.log(evaluasi_vendor)
+    res.download(evaluasi_vendor);
   } catch (error) {
       console.error('Error fetching vendors:', error);
       res.status(500).send('Error fetching vendor data');

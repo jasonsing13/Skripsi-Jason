@@ -42,6 +42,7 @@ SELECT
     pengadaan.tanggal_permintaan::DATE AS tanggal_permintaan,
     pengadaan.tanggal_pemilihan::DATE AS tanggal_pemilihan,
     pengadaan.tanggal_pemilihan_selesai::DATE AS tanggal_pemilihan_selesai,
+    pengadaan.*,
     jenis_pengadaan.nama_jenis_pengadaan,
     nama_tipe_pemilihan,
     status.nama_status,
@@ -210,6 +211,15 @@ GROUP BY pengadaan.pengadaan_id, jenis_pengadaan.nama_jenis_pengadaan,
     dbt.status_id,
     nama_jenis_vendor
 ORDER BY pengadaan.tanggal_permintaan DESC
+`;
+
+const getDaftarPengadaanByVendor = `
+SELECT
+    *
+FROM
+    pengadaan
+WHERE
+    vendor_pemenang = $1
 `;
 
 const getDaftarPengadaanAdminByStatus = `
@@ -459,6 +469,7 @@ module.exports = {
     getItemPengadaan,
     getInformasiPO,
     getDokumenPO,
+    getDaftarPengadaanByVendor,
     option_Select_Status,
     option_Select_Status_Admin,
     option_PIC,

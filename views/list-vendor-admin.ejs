@@ -63,6 +63,9 @@
                                                         <li class="nav-item" role="presentation">
                                                             <button class="nav-link" class="nav-link" id="dokumen-<%= vendor.id %>-tab" data-bs-toggle="tab" data-bs-target="#dokumen-<%= vendor.id %>" type="button" role="tab" aria-controls="dokumen-<%= vendor.id %>" aria-selected="true">Dokumen</button>
                                                         </li>
+                                                        <li class="nav-item" role="presentation">
+                                                            <button class="nav-link" class="nav-link" id="eval-<%= vendor.id %>-tab" data-bs-toggle="tab" data-bs-target="#eval-<%= vendor.id %>" type="button" role="tab" aria-controls="eval-<%= vendor.id %>" aria-selected="true">Evaluasi</button>
+                                                        </li>
                                                     </ul>
                                                     <div class="tab-content" id="myTabContent">
                                                         <div class="tab-pane fade show active" id="informasi-<%= vendor.id %>" role="tabpanel" aria-labelledby="informasi-<%= vendor.id %>-tab">
@@ -158,6 +161,39 @@
                                                                 <div class="col-md-6">
                                                                     <label class="form-label" for="dokumen_ppkp">Dokumen PPKP</label>
                                                                     <img id="dokumen_ppkp" src="<%= vendor.url_dokumen_ppkp ?? "/images/empty.jpg" %>" class="img-thumbnail" alt="...">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tab-pane fade" id="eval-<%= vendor.id %>" role="tabpanel" aria-labelledby="eval-<%= vendor.id %>-tab">
+                                                            <div class="row mt-2">
+                                                                <div class="col">
+                                                                    <div class="table-responsive">
+                                                                        <table class="table">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>No</th>
+                                                                                    <th>Pengadaan</th>
+                                                                                    <th>Evaluasi</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <% pengadaan.forEach((e, i) => { %>
+                                                                                    <% if (e.vendor_pemenang == vendor.id && e.evaluasi_vendor) { %>
+                                                                                        <tr>
+                                                                                            <td><%= i+1 %></td>
+                                                                                            <td><%= e.nama_pengadaan %></td>
+                                                                                            <td>
+                                                                                                <form action="/get-eval" method="get">
+                                                                                                    <input type="hidden" name="evaluasi_vendor" value="<%= e.evaluasi_vendor %>">
+                                                                                                    <button type="submit" class="btn btn-sm">Download</button>
+                                                                                                </form>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    <% } %>
+                                                                                <% }) %>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>

@@ -18,6 +18,19 @@ async function getDaftarPengadaan(vendor_id) {
     }
 }
 
+async function getDaftarPengadaanByVendor(vendor_id) {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getDaftarPengadaanByVendor, [vendor_id]); 
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
 async function getDaftarPengadaanAdmin() {
     const client = await db.pool.connect();
     try {
@@ -268,12 +281,17 @@ async function option_Vendor() {
     }
   }
 
-const getPengadaanById = (req,res)=>{
-    const id = req.params.id;
-    pool.query(queries.getPengadaanById,[id], (error, results)=>{
-        if(error) throw error;
-        res.status(200).json(results.rows);
-    })
+const getPengadaanById = async (id)=>{
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.getPengadaanById, [id]); // Adjust the SQL query based on your actual table and data structure
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
 };
 
 // const addPengadaan = (req,res)=>{ 
@@ -458,6 +476,7 @@ module.exports = {
     getDaftarPengadaanAdmin,
     getDaftarPengadaanByStatus,
     getDaftarPengadaanAdminByStatus,
+    getDaftarPengadaanByVendor,
     getInformasiPengadaan,
     getInformasiPengadaanPrevious,
     getItemPengadaan,
