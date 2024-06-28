@@ -45,9 +45,9 @@
                             <tr>
                                 <td><%= pengadaan.pengadaan_id %></td>
                                 <td><%= pengadaan.nama_pengadaan %></td>
-                                <td><%= pengadaan.tanggal_permintaan || "-"  %></td>
-                                <td><%= pengadaan.tanggal_pemilihan || "-"  %></td>
-                                <td><%= pengadaan.tanggal_pemilihan_selesai || "-"  %></td>
+                                <td><%= moment(pengadaan.tanggal_permintaan).format("DD/MM/YYYY") || "-" %></td>
+                                <td><%= moment(pengadaan.tanggal_pemilihan).format("DD/MM/YYYY") || "-" %></td>
+                                <td><%= moment(pengadaan.tanggal_pemilihan_selesai).format("DD/MM/YYYY") || "-" %></td>
                                 <td><%= pengadaan.nama_jenis_pengadaan || "-" %></td>
                                 <td><%= pengadaan.nama_tipe_pemilihan || "-" %></td>
                                 <td><%= pengadaan.nama_jenis_vendor || "-" %></td>

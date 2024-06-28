@@ -37,18 +37,18 @@
                         </thead>
                         <tbody>
                             <% if(pengadaan.length > 0){
-                                pengadaan.forEach(function(pengadaan) { %>
+                                pengadaan.forEach(function(p) { %>
                                 <tr>
-                                    <td><%= pengadaan.pengadaan_id %></td>
-                                    <td><%= pengadaan.nama_pengadaan %></td>
-                                    <td><%= pengadaan.tanggal_permintaan || "-"  %></td>
-                                    <td><%= pengadaan.nama_jenis_pengadaan || "-" %></td>
-                                    <td><%= pengadaan.nama_tipe_pemilihan || "-" %></td>
-                                    <td><%= pengadaan.nama_jenis_vendor || "-" %></td>
-                                    <td><%= pengadaan.nama_status %></td>
+                                    <td><%= p.pengadaan_id %></td>
+                                    <td><%= p.nama_pengadaan %></td>
+                                    <td><%= moment(p.tanggal_permintaan).format("DD/MM/YYYY") || "-" %></td>
+                                    <td><%= p.nama_jenis_pengadaan || "-" %></td>
+                                    <td><%= p.nama_tipe_pemilihan || "-" %></td>
+                                    <td><%= p.nama_jenis_vendor || "-" %></td>
+                                    <td><%= p.nama_status %></td>
                                     <td>
-                                        <form action="<%= pengadaan.status_id != 'ae00536a-78c1-42e7-af53-ebe6cd68903d' ? '/informasi-pengadaan-approved' : '/informasi-pengadaan' %>" method="get">
-                                            <input type="hidden" name="id" value="<%= pengadaan.pengadaan_id %>">
+                                        <form action="/informasi-pengadaan-approved" method="get">
+                                            <input type="hidden" name="id" value="<%= p.pengadaan_id %>">
                                             <button class="btn btn-orange" type="submit">Detail</button>
                                         </form>
                                     </td>

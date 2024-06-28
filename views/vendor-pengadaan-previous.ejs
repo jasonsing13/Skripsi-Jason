@@ -97,7 +97,9 @@
                                             <input type="hidden" name="vendor_id" value="<%= bt.vendor_id %>">
                                             <input type="hidden" name="dbt_id" value="<%= bt.dbt_id %>">
                                             <input type="hidden" name="bt_id" value="<%= bt.bt_id %>">
-                                            <button class="btn btn-success" <%= pengadaan.tipe_pemilihan_id == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f' ? "type=button data-bs-toggle=modal data-bs-target=#setPemenang-modal-"+i : "type='submit'" %> >Set Pemenang</button>
+                                            <% if (((pengadaan.tipe_pemilihan_id == '4ff07c90-7efb-4a4a-8715-d53748a387d6' || pengadaan.tipe_pemilihan_id == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f') && bt.status_id == '9e18ab27-4557-41eb-b3c1-430c67377830')) { %>
+                                                <button class="btn btn-success" <%= pengadaan.tipe_pemilihan_id == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f' ? "type=button data-bs-toggle=modal data-bs-target=#setPemenang-modal-"+i : "type='submit'" %> >Set Pemenang</button>
+                                            <% } %>
                                         </form>
                                     <% } %>
                                     <% if (pengadaan.tipe_pemilihan_id == '8ef85b64-6d65-4b87-b5ee-5f06016b135c') { %>

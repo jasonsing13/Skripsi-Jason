@@ -12,9 +12,6 @@
     <%- include('partials/sidebar.ejs') %>
     <div class="container mt-4">
         <h1>Dokumen Purchase Order</h1>
-        <% if(pengadaan.tipe_pemilihan_id == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f' && pengadaanUser.status_id == '760ad69f-7739-41e1-baf9-7a68665b21e8'){ %>
-            <button class="btn btn-success float-end" onclick="location.href='/form-tender/<%= pengadaan_id %>'">Form Tender</button>        
-        <% } %>
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link" href="/informasi-pengadaan-approved?id=<%= pengadaan_id %>">Informasi Pengadaan</a>

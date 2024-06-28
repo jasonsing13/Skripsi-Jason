@@ -7,9 +7,11 @@ SELECT
     p.tanggal_permintaan::DATE AS tanggal_permintaan,
     p.tanggal_pemilihan::DATE AS tanggal_pemilihan,
     p.tanggal_pemilihan_selesai::DATE AS tanggal_pemilihan_selesai,
+    p.tipe_pemilihan_id,
     jenis_pengadaan.nama_jenis_pengadaan,
     nama_tipe_pemilihan,
     COALESCE(status.nama_status, 'Diterima') AS nama_status,
+    status.status_id,
     nama_jenis_vendor
 FROM
     pengadaan p
@@ -32,7 +34,8 @@ WHERE
 GROUP BY p.pengadaan_id, jenis_pengadaan.nama_jenis_pengadaan,
 nama_tipe_pemilihan,
 status.nama_status,
-nama_jenis_vendor
+nama_jenis_vendor,
+status.status_id
 `;
 
 const getDaftarPengadaanAdmin = `
