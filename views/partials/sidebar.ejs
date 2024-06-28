@@ -14,11 +14,15 @@
                 <ul class="dropdown-menu">
                     <li class="dropdown-item-text small">Notification</li>
                     <li><hr class="dropdown-divider"></li>
-                    <li class="dropdown-item-text small">Not 1</li>
-                    <li class="dropdown-item-text small">Not 2</li>
-                    <li class="dropdown-item-text small">Not 3</li>
-                    <li class="dropdown-item-text small">Not 4</li>
-                    <li class="dropdown-item-text small">Not 5</li>
+                    <% 
+                    console.table(parent.notif)
+                    if (parent.notif.length > 0) { %>
+                        <% parent.notif.forEach(n => { %>
+                            <li class="dropdown-item-text small"><%= n.isi %></li>
+                        <% }) %>
+                    <% }else{ %>
+                        <li class="dropdown-item-text small">Tidak Ada</li>
+                    <% } %>
                 </ul>
             </div>
         </div>

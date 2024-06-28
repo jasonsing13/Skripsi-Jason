@@ -57,6 +57,7 @@ var template_vsController = require('../src/template_vs/controller');
 var detail_template_vsController = require('../src/detail_template_vs/controller');
 //var tipe_pemilihanController = require('../src/tipe_pemilihan/controller');
 var userController = require('../src/user/controller');
+var notifController = require('../src/notif/controller');
 var pengadaanController = require('../src/pengadaan/controller');
 var vendor_scoreController = require('../src/vendor_score/controller');
 var vendorController = require('../src/vendor/controller');
@@ -136,12 +137,14 @@ router.post('/login', async (req, res) => {
     const result = await vendorController.getEmail(email_perusahaan);
     const resultAdm = await userController.getUserByEmail(email_perusahaan);
     
-
     if (result.length > 0) {
       const passwordDb = result[0].password;
       if (passwordDb.trim() === password.trim()) {
         const token = generateAccessToken({ email: result[0].email });
         result[0]['isAdmin'] = false;
+
+        result[0]['notif'] = await notifController.getNotif(result[0].id);
+
         req.session.data = {parent: result[0]};
         res.redirect(result[0]['status_verifikasi_id'] == "bec6ed04-e967-4ce8-8865-e6285690174e" ? '/dashboard-vendor' : '/approved-vendor-profile');
         // Send data to route 2 via POST request
@@ -153,6 +156,9 @@ router.post('/login', async (req, res) => {
       if (passwordDb.trim() === password.trim()) { //Besok cari cara nge akses token di sidebar dna di file" lainnya
         const token = generateAccessToken({ email: resultAdm[0].email });
         resultAdm[0]['isAdmin'] = true;
+
+        resultAdm[0]['notif'] = await notifController.getNotif(resultAdm[0].id);
+
         req.session.data = {parent: resultAdm[0]};
 
         res.redirect('/dashboard-admin');
