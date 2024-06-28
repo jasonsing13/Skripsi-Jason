@@ -14,6 +14,19 @@ async function getItem(prod) {
     }
 }
 
+async function getItemAll() {
+    const client = await pool.pool.connect();
+    try {
+        const result = await client.query(queries.getItemAll); // Adjust the SQL query based on your actual table and data structure
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
 const getItemById = (req,res)=>{
     const id = req.params.id;
     pool.query(queries.getItemById,[id], (error, results)=>{
@@ -23,13 +36,12 @@ const getItemById = (req,res)=>{
 };
 
 const addItem = (req,res)=>{
-    const {item_id, nama_item, jumlah_item, harga_item, url_foto_item } = req.body;
-    pool.query(
+    const {nama_item, harga_item} = req.body;
+    pool.pool.query(
         queries.addItem,
-        [item_id, nama_item, jumlah_item, harga_item, url_foto_item],
+        [nama_item, harga_item],
         (error, results) => {
             if (error) throw error;
-            res.status(201).send("user created success")
         }
     );
 };
@@ -72,6 +84,7 @@ const updateItem = (req, res) => {
 module.exports = {
     getItem,
     getItemById,
+    getItemAll,
     addItem,
     removeItem,
     updateItem,

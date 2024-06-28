@@ -1158,6 +1158,27 @@ router.post('/add-admin', async (req, res) => {
   }
 });
 
+router.get('/list-barang', async (req, res) => {
+  try {
+    const data = req.session.data;
+    const item = await itemController.getItemAll(); // Fetch vendors data using a function from db.js
+    res.render('list-barang', { item, parent: data.parent, page: 'list-barang' });
+  } catch (error) {
+      console.error('Error fetching vendors:', error);
+      res.status(500).send('Error fetching vendor data');
+  }
+});
+
+router.post('/add-barang', async (req, res) => {
+  try {
+    await itemController.addItem(req, res);
+    res.redirect('/list-barang');
+  } catch (error) {
+      console.error('Error fetching vendors:', error);
+      res.status(500).send('Error fetching vendor data');
+  }
+});
+
 router.post('/add-po', async (req, res) => {
   const user_id = req.session.data.parent.id 
   const {pengadaan_id, tanggal_pengiriman} = req.body

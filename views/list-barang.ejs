@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>List Barang</title>
+    <%- include('partials/head.ejs') %>
+</head>
+<body>
+    <%- include('partials/sidebar.ejs') %>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <button class="btn btn-success float-end justify-content-center" data-bs-toggle="modal" data-bs-target="#modalAdd">Tambah</button>
+                <h1>List Barang</h1>
+                <p>Informasi daftar barang</p>
+            </div>
+            <div class="card-body">
+                <table class="table dataTables">
+                    <thead>
+                        <tr>
+                            <th>Kode</th>
+                            <th>Nama</th>
+                            <th>Harga</th>
+                            <!-- <th>Aksi</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% item.forEach(function(it, i) { %>
+                            <tr>
+                                <td><%= it.item_id %></td>
+                                <td><%= it.nama_item || "-" %></td>
+                                <td class="currency"><%= it.harga_item || 0 %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalAdd" class="modal fade modal-lg" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/add-barang" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tambah Barang</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="nama_item">Nama Barang</label>
+                                    <input id="nama_item" class="form-control" type="text" name="nama_item" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="harga_item">Harga</label>
+                                    <input id="harga_item" class="form-control currency" type="text" name="harga_item">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Buat</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<%- include('partials/footer.ejs') %>
+</html>
