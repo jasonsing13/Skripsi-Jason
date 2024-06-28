@@ -1449,9 +1449,9 @@ router.get('/informasi-pengadaan-approved', async function(req, res) {
   const data = req.session.data;
   const pengadaan_id = req.query.id;
   const result = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
-
+  const po = await pengadaanController.getInformasiPO(pengadaan_id);
   const pengadaanUser = await bidding_tenderController.getBidding_TenderVendorStatus(pengadaan_id, data.parent.id)
-  res.render('informasi-pengadaan-approved', { pengadaanUser: pengadaanUser[0], pengadaan_id, pengadaan: result, parent: data.parent, page: 'pengadaan' });
+  res.render('informasi-pengadaan-approved', { pengadaanUser: pengadaanUser[0], po, pengadaan_id, pengadaan: result, parent: data.parent, page: 'pengadaan' });
 });
 
 router.get('/item-pengadaan-approved', async function(req, res) {
@@ -1542,11 +1542,11 @@ router.get('/download-po/:pid/:id', async function(req, res){
   </html
   
 `;
-  const response = await axios.get('http://localhost:3000/informasi-purchase-order-approved');
-  console.log(response);
-  const htmlContent = response.data;
+  // const response = await axios.get('http://localhost:3000/informasi-purchase-order-approved');
+  // console.log(response);
+  // const htmlContent = response.data;
 
-  await pdf.create(htmlContent, { format: 'Letter' }).toFile('./uploads/po-'+po_id+'.pdf', async (err, resa) => {
+  await pdf.create(pageData, { format: 'Letter' }).toFile('./uploads/po-'+po_id+'.pdf', async (err, resa) => {
     if (err) return console.log(err);
       await res.download('./uploads/po-'+po_id+'.pdf', 'po-'+po_id+'.pdf');
   });
