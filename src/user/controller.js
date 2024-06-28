@@ -38,13 +38,14 @@ async function getUserByEmail(email_perusahaan) {
 const addUser = async (req,res)=>{
     const created_by = req.session.data.parent.id;
     const { username, password, email, first_name, last_name, phone_number, role_id } = req.body;
-    await db.pool.query(
+    const result = await db.pool.query(
         queries.addUser,
         [username, password, email, first_name, last_name, phone_number, created_by, role_id],
         (error, results) => {
             if (error) throw error;
         }
     );
+    return result.rows[0].id;
 };
 
 // const removeUser = (req,res)=>{

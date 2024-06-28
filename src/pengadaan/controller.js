@@ -3,6 +3,7 @@ const db = require('../../database/db');
 const queries = require('../pengadaan/queries');
 const queriesDBT = require('../detail_bidding_tender/queries');
 const queriesBT = require('../bidding_tender/queries');
+const contNotif = require('../notif/controller');
 const { v4: uuidv4 } = require('uuid');
 
 async function getDaftarPengadaan(vendor_id) {
@@ -359,6 +360,9 @@ const addPengadaan = async (pengadaan, user_id) => {
             user_id,
             totalHarga
         ]);
+
+        await contNotif.addNotif(true, `Pengadaan ${nama_pengadaan} berhasil dibuat!`);
+
         client.release();
         return pengadaan_id;
     } catch (error) {
@@ -417,6 +421,8 @@ const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
     const { tanggal_pemilihan, tanggal_pemilihan_selesai, pic, pengadaan_id, harga } = reqa;
     var queryParams = [];
     try {
+
+        // PENUNJUKAN LANGSUNG
         if(vendor_id != null){
             queryParams = [tanggal_pemilihan, tanggal_pemilihan_selesai, pic, vendor_id, pengadaan_id];
             await db.pool.query( queries.validasiPengadaanLangsung, queryParams, (error, result) => {
@@ -446,7 +452,11 @@ const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
             await db.pool.query( queries.setPemenang2, [dbt_id], (error, result) => {
                 if (error) throw error;
             });
-        }else if(link_zoom != null){
+
+            await contNotif.addNotif(vendor_id, `Selamat! Anda telah terpilih sebagai pemenang penunjukan langsung untuk pengadaan ${nama_pengadaan}. Silakan masuk ke Portal Vendor untuk detail lebih lanjut.`);
+        }
+        // TENDER
+        else if(link_zoom != null){
             queryParams = [tanggal_pemilihan, tanggal_pemilihan_selesai, pic, pengadaan_id];
             await db.pool.query( queries.validasiPengadaan, queryParams, (error, result) => {
                 if (error) throw error;
@@ -460,6 +470,11 @@ const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
                 if (error) throw error;
             });
         }
+
+        const p_res = await getPengadaanById(pengadaan_id);
+        const nama_pengadaan = p_res.nama_pengadaan;
+
+        await contNotif.addNotif(true, `Pengadaan ${nama_pengadaan} berhasil divalidasi!`);
     } catch (error) {
         console.error('Error executing query', error.stack);
         throw error;
@@ -476,6 +491,11 @@ async function setPemenang (pengadaan_id, vendor_id, dbt_id, bt_id, harga, duras
         }
         await client.query(queries.setPemenang2, [dbt_id]); 
         await client.query(queries.setDitolak, [bt_id, dbt_id]); 
+
+        const r_id = await client.query(queries.getPengadaanById(pengadaan_id));
+        const nama_pengadaan = r_id.rows[0].nama_pengadaan;
+
+        await contNotif.addNotif(vendor_id, `Selamat! Anda telah terpilih sebagai pemenang ${harga ? 'tender' : 'bidding'} untuk pengadaan ${nama_pengadaan}. Silakan masuk ke Portal Vendor untuk detail lebih lanjut.`);
     } catch (error) {
         console.error('Error executing query', error.stack);
         throw error;

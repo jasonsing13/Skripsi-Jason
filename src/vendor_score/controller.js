@@ -1,5 +1,7 @@
 const pool = require('../../database/db');
 const queries = require('../vendor_score/queries');
+const queriesV = require('../pengadaan/queries');
+const contNotif = require('../notif/controller')
 
 const getVendor_Score = async (pengadaan_id)=>{
     const client = await pool.pool.connect();
@@ -84,7 +86,6 @@ const updateVendor_Score = async (
                 desc_teknikal]); // Adjust the SQL query based on your actual table and data structure
             return result.rows[0];
         }else if(bobot_komersil){
-            console.log("COBA")
             const result = await client.query(queries.updateVendor_ScoreKomersil, [pengadaan_id, vendor_id,
                 final_score, 
                 bobot_komersil,
@@ -99,6 +100,14 @@ const updateVendor_Score = async (
         } else if(approve_presdir){
             await client.query(queries.updateVendor_ScoreP, [pengadaan_id, vendor_id,
                 approve_presdir]); // Adjust the SQL query based on your actual table and data structure
+        }
+
+        const resultVS = await client.query(queries.getVendor_ScoreById, [pengadaan_id, vendor_id]);
+
+        if(resultVS.approve_department && resultVS.approve_division && resultVS.approve_presdir){
+            const r_id = await client.query(queriesV.getPengadaanById(pengadaan_id));
+            const nama_pengadaan = r_id.rows[0].nama_pengadaan;
+            await contNotif.addNotif(vendor_id, `Selamat! Anda telah terpilih sebagai pemenang vendor scoring untuk pengadaan ${nama_pengadaan}. Silakan masuk ke Portal Vendor untuk detail lebih lanjut.`);
         }
     } catch (error) {
         console.error('Error executing query', error.stack);

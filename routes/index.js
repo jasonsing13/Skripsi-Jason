@@ -76,7 +76,7 @@ const { option_Select_Status} = require('../src/pengadaan/queries');
 // Daftar rute yang tidak perlu dicek sesinya
 const noSessionCheckRoutes = ['/', '/login', '/registration', '/kabupaten-kota'];
 
-function checkSession(req, res, next) {
+async function checkSession (req, res, next) {
   // Jika rute saat ini ada di daftar noSessionCheckRoutes, lanjutkan ke rute berikutnya
   if (noSessionCheckRoutes.includes(req.path)) {
     return next();
@@ -84,6 +84,22 @@ function checkSession(req, res, next) {
 
   // Cek sesi seperti biasa
   if (req.session && req.session.data) {
+    var result = [];
+    var temp = true;
+    if(req.session.data.parent.isAdmin){
+      result = await userController.getUserByEmail(req.session.data.parent.email);
+      temp = true;
+    }else{
+      result = await vendorController.getEmail(req.session.data.parent.email_perusahaan);
+      temp = false;
+    }
+    req.session.data.parent = result[0];
+    if(temp){
+      req.session.data.parent.isAdmin = true;
+    }else{
+      req.session.data.parent.isAdmin = false;
+    }
+    req.session.data.parent.notif = await notifController.getNotif(result[0].id);
     next();
   } else {
     res.redirect('/');
@@ -250,7 +266,10 @@ const idMiddleware = (req, res, next) => {
 
 router.post('/registration', async function(req, res) {
   try {
-      await vendorController.addVendor(req, res);
+      const res_vendor = await vendorController.addVendor(req, res);
+      const vendor_id = res_vendor.rows[0].id;
+      
+      await notifController.addNotif(vendor_id, `Akun Anda telah dibuat di Portal Vendor. Silahkan mengunggah dokumen yang diperlukan.`);
       res.redirect(`/login`);
   } catch (error) {
       console.error('Error saving vendor information:', error);
@@ -880,6 +899,11 @@ router.post('/add-bidding-tender', async (req, res) => {
       // Assuming you have a function to insert data into the database
       if(type != '8ef85b64-6d65-4b87-b5ee-5f06016b135c'){
         await detail_bidding_tenderController.addDetail_Bidding_Tender(bt_id, vendor_id);
+
+        const p_res = await pengadaanController.getPengadaanById(pengadaan_id);
+        const nama_pengadaan = p_res.nama_pengadaan;
+
+        await notifController.addNotif(vendor_id, `Anda diundang untuk mengikuti ${type == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f' ? 'tender' : 'bidding'} untuk pengadaan ${nama_pengadaan}`);
       }else{
         await vendor_scoreController.addVendor_Score(pengadaan_id, vendor_id);
       }
@@ -891,11 +915,13 @@ router.post('/add-bidding-tender', async (req, res) => {
 });
 
 router.post('/form-bidding', async (req, res) => {
-  console.log(req.body);
   const { durasi_pekerjaan, pengajuan_harga, bt_id, vendor_id } = req.body;
+  const data = req.session.data;
   try {
       // Assuming you have a function to insert data into the database
       await detail_bidding_tenderController.updateDetail_Bidding_Tender(durasi_pekerjaan, pengajuan_harga, bt_id, vendor_id);
+
+      await notifController.addNotif(true, `Permintaan persetujuan pengadaan baru telah diajukan oleh ${data.parent.nama_vendor}. Silakan masuk ke sistem untuk memberikan persetujuan.`);
       res.redirect('/daftar-pengadaan'); // Redirect to the list page after successful insertion
   } catch (error) {
       console.error('Failed to add new detail bidding tender:', error);
@@ -930,6 +956,8 @@ router.post('/form-tender', async function(req, res) {
           parent: data.parent,  // Assuming vendor_id is obtained correctly
           bt_id: bt_id           // Assuming bt_id is obtained correctly
       });
+
+      await notifController.addNotif(true, `Permintaan persetujuan pengadaan baru telah diajukan oleh ${data.parent.nama_vendor}. Silakan masuk ke sistem untuk memberikan persetujuan.`);
 
       res.redirect('/daftar-pengadaan'); // Redirect or send a success response
   } catch (error) {
@@ -1156,7 +1184,11 @@ router.get('/list-admin', async (req, res) => {
 
 router.post('/add-admin', async (req, res) => {
   try {
-    await userController.addUser(req, res);
+    const id = await userController.addUser(req, res);
+
+    const {first_name, last_name} = req.body;
+    await notifController.addNotif(id, `Selamat datang ${first_name} ${last_name}!. Silakan mengakses fitur-fitur yang tersedia di aplikasi Portal Vendor.`);
+
     res.redirect('/list-admin');
   } catch (error) {
       console.error('Error fetching vendors:', error);
@@ -1169,6 +1201,17 @@ router.get('/list-barang', async (req, res) => {
     const data = req.session.data;
     const item = await itemController.getItemAll(); // Fetch vendors data using a function from db.js
     res.render('list-barang', { item, parent: data.parent, page: 'list-barang' });
+  } catch (error) {
+      console.error('Error fetching vendors:', error);
+      res.status(500).send('Error fetching vendor data');
+  }
+});
+
+router.get('/list-notif', async (req, res) => {
+  try {
+    const data = req.session.data;
+    const item = await notifController.getNotifAll(data.parent.id); // Fetch vendors data using a function from db.js
+    res.render('list-notif', { item, parent: data.parent, page: '' });
   } catch (error) {
       console.error('Error fetching vendors:', error);
       res.status(500).send('Error fetching vendor data');
@@ -1190,6 +1233,12 @@ router.post('/add-po', async (req, res) => {
   const {pengadaan_id, tanggal_pengiriman} = req.body
   try {
     await purchase_orderController.addPurchase_Order(pengadaan_id, tanggal_pengiriman, user_id);
+
+    const r_id = await pengadaanController.getPengadaanById(pengadaan_id)
+    const nama_pengadaan = r_id.nama_pengadaan;
+    const vendor_id = r_id.vendor_pemenang;
+    await notifController.addNotif(vendor_id, `PO untuk pengadaan ${nama_pengadaan} telah tersedia. Silakan masuk ke Portal Vendor untuk melihat dan mengunduh dokumen PO.`);
+    await notifController.addNotif(vendor_id, `Silahkan unggah dokumen untuk pengadaan ${nama_pengadaan}.`);
     res.redirect('/informasi-purchase-order-previous?id='+pengadaan_id);
   } catch (error) {
       console.error('Error fetching vendors:', error);
@@ -1201,6 +1250,9 @@ router.post('/approval-vendor-admin', async (req, res) => {
   const { id } = req.body;
   try {
       await vendorController.updateStatus_Vendor(id, 'bec6ed04-e967-4ce8-8865-e6285690174e'); // Assuming db.updateVendorStatus updates the status
+
+      await notifController.addNotif(id, `Akun Anda sudah terverifikasi. Silakan mengakses fitur-fitur yang tersedia di aplikasi Portal Vendor.`);
+
       res.redirect('/list-vendor-admin');
   } catch (error) {
       console.error('Failed to update vendor status:', error);
@@ -1541,6 +1593,10 @@ upload.fields([{ name: 'invoice' }, { name: 'surat_jalan' }]), async (req, res) 
 
     // Assuming you have a function to insert data into the database
     await goods_receivedController.addGoods_Received(url_invoice, url_surat_jalan, pengadaan_id, id);
+
+    const r_id = await pengadaanController.getPengadaanById(pengadaan_id);
+    const nama_pengadaan = r_id.nama_pengadaan;
+    await notifController.addNotif(true, `Waktunya untuk melakukan evaluasi vendor untuk pengadaan ${nama_pengadaan}. Silakan masuk ke sistem untuk mengunggah evaluasi.`);
     res.redirect('/daftar-pengadaan'); // Redirect to the list page after successful insertion
   } catch (error) {
     console.error('Failed to add goods received:', error);

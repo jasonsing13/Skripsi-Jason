@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>List Notification</title>
+    <%- include('partials/head.ejs') %>
+</head>
+<body>
+    <%- include('partials/sidebar.ejs') %>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h1>List Notification</h1>
+                <p>Informasi daftar notifikasi</p>
+            </div>
+            <div class="card-body">
+                <table class="table dataTables">
+                    <thead>
+                        <tr>
+                            <th>Kode</th>
+                            <th>Isi</th>
+                            <th>Create Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% item.forEach(function(it, i) { %>
+                            <tr>
+                                <td><%= it.notif_id %></td>
+                                <td><%= it.isi || "-" %></td>
+                                <td><%= moment(it.cdate).calendar() %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+<%- include('partials/footer.ejs') %>
+</html>

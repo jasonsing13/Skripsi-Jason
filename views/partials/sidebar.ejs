@@ -15,11 +15,17 @@
                     <li class="dropdown-item-text small">Notification</li>
                     <li><hr class="dropdown-divider"></li>
                     <% 
-                    console.table(parent.notif)
                     if (parent.notif.length > 0) { %>
                         <% parent.notif.forEach(n => { %>
-                            <li class="dropdown-item-text small"><%= n.isi %></li>
+                            <li class="dropdown-item-text small">
+                                <p class="m-0"><%= n.isi %></p>
+                                <small><%= moment(n.cdate).calendar() %></small>
+                            </li>
                         <% }) %>
+                        <li><hr class="dropdown-divider"></li>
+                        <a href="/list-notif" class="dropdown-item small">
+                            <p class="m-0">Lihat Semua</p>
+                        </a>
                     <% }else{ %>
                         <li class="dropdown-item-text small">Tidak Ada</li>
                     <% } %>

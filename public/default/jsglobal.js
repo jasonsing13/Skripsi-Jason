@@ -1,5 +1,7 @@
 $(document).ready(function () {
-    $(".dataTables").dataTable();
+    $(".dataTables").dataTable({
+        "order": []
+    });
 });
 
 // AUTONUMERIC
