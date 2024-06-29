@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon --watch .env --watch ./src/ --watch ./routes ./bin/www"
   },
   "dependencies": {
     "autonumeric": "^4.10.5",

@@ -86,7 +86,7 @@
     <div id="modalAdd" class="modal fade modal-lg" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="/add-po" method="post">
+                <form action="/add-po" method="post" enctype="multipart/form-data">
                     <div class="modal-header">
                         <h5 class="modal-title">Tambah PO</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -97,6 +97,12 @@
                                 <div class="form-group">
                                     <label for="tanggal_pengiriman">Tanggal Pengiriman</label>
                                     <input id="tanggal_pengiriman" class="form-control" type="date" name="tanggal_pengiriman" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="url_po">Dokumen PO</label>
+                                    <input type="file" class="form-control" id="url_po" name="url_po" required>
                                 </div>
                             </div>
                             <div class="col-12">

@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 
 const fileFilter = (req, file, cb) => {
   // Validate allowed file types
-  if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+  if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg' || file.mimetype === 'application/pdf') {
     cb(null, true);
   } else {
     cb(new Error('Only .png, .jpg, and .jpeg format allowed!'));
@@ -77,6 +77,28 @@ const { option_Select_Status} = require('../src/pengadaan/queries');
 const noSessionCheckRoutes = ['/', '/login', '/registration', '/kabupaten-kota'];
 
 async function checkSession (req, res, next) {
+  // DEV
+  if(process.env.ISDEV == "true"){
+
+    // ADMIN
+    if(process.env.ISADMIN == "true"){
+      var result = await userController.getUserByEmail('admin@example.com');
+      result[0]['isAdmin'] = true
+      req.session.data = {
+        parent : result[0] 
+      };
+    }else{
+      // Vendor
+      var result = await vendorController.getEmail('koci@gmail.com');
+      result[0]['isAdmin'] = false
+      req.session.data = {
+        parent : result[0]
+      };
+    }
+    req.session.data.parent.notif = await notifController.getNotif(result[0].id);
+  }
+  
+
   // Jika rute saat ini ada di daftar noSessionCheckRoutes, lanjutkan ke rute berikutnya
   if (noSessionCheckRoutes.includes(req.path)) {
     return next();
@@ -1228,17 +1250,19 @@ router.post('/add-barang', async (req, res) => {
   }
 });
 
-router.post('/add-po', async (req, res) => {
+router.post('/add-po', upload.fields([{ name: 'url_po' }]), async (req, res) => {
   const user_id = req.session.data.parent.id 
+  const url_po = req.files['url_po'][0].path;
   const {pengadaan_id, tanggal_pengiriman} = req.body
   try {
-    await purchase_orderController.addPurchase_Order(pengadaan_id, tanggal_pengiriman, user_id);
+    await purchase_orderController.addPurchase_Order(pengadaan_id, tanggal_pengiriman, url_po, user_id);
 
     const r_id = await pengadaanController.getPengadaanById(pengadaan_id)
     const nama_pengadaan = r_id.nama_pengadaan;
     const vendor_id = r_id.vendor_pemenang;
     await notifController.addNotif(vendor_id, `PO untuk pengadaan ${nama_pengadaan} telah tersedia. Silakan masuk ke Portal Vendor untuk melihat dan mengunduh dokumen PO.`);
     await notifController.addNotif(vendor_id, `Silahkan unggah dokumen untuk pengadaan ${nama_pengadaan}.`);
+    
     res.redirect('/informasi-purchase-order-previous?id='+pengadaan_id);
   } catch (error) {
       console.error('Error fetching vendors:', error);
@@ -1488,68 +1512,11 @@ router.get('/informasi-purchase-order-previous', async function(req, res) {
 router.get('/download-po/:pid/:id', async function(req, res){
   const po_id = req.params.id;
   const pid = req.params.pid;
-  const po = await pengadaanController.getInformasiPO(pid);
-  const pageData = `
-  <html>
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  const po = await purchase_orderController.getPurchase_OrderById(po_id);
+  console.log(po)
 
-    </head>
-    <body>
-    <div class="container mt-4">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="card-title">Informasi Purchase Order</h5>
-          <p class="card-text"><strong>Delivery Date:</strong> ${po[0].tanggal_pengiriman}</p>
-          <p class="card-text"><strong>Purchase ID:</strong> ${po[0].po_id}</p>
-        </div>
-        <div class="card-body">
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">NO. ITEM</th>
-                <th scope="col">NAMA BARANG</th>
-                <th scope="col">QUANTITY</th>
-                <th scope="col">HARGA ITEM</th>
-                <th scope="col">NET AMOUNT</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${po.map((item, i) => `
-                <tr>
-                  <td>${i + 1}</td>
-                  <td>${item.nama_item}</td>
-                  <td class="qty">${item.quantity}</td>
-                  <td class="currency">${item.harga_item}</td>
-                  <td class="currency">${item.harga_total}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/autonumeric@4/dist/autoNumeric.min.js"></script>
-
-    <script src="/default/jsglobal.js"></script>
-    </body>
-  </html
+  await res.download(po.url_po, 'po-'+po_id+'.pdf');
   
-`;
-  // const response = await axios.get('http://localhost:3000/informasi-purchase-order-approved');
-  // console.log(response);
-  // const htmlContent = response.data;
-
-  await pdf.create(pageData, { format: 'Letter' }).toFile('./uploads/po-'+po_id+'.pdf', async (err, resa) => {
-    if (err) return console.log(err);
-      await res.download('./uploads/po-'+po_id+'.pdf', 'po-'+po_id+'.pdf');
-  });
 
 })
 

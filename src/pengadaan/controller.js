@@ -492,7 +492,7 @@ async function setPemenang (pengadaan_id, vendor_id, dbt_id, bt_id, harga, duras
         await client.query(queries.setPemenang2, [dbt_id]); 
         await client.query(queries.setDitolak, [bt_id, dbt_id]); 
 
-        const r_id = await client.query(queries.getPengadaanById(pengadaan_id));
+        const r_id = await client.query(queries.getPengadaanById, [pengadaan_id]);
         const nama_pengadaan = r_id.rows[0].nama_pengadaan;
 
         await contNotif.addNotif(vendor_id, `Selamat! Anda telah terpilih sebagai pemenang ${harga ? 'tender' : 'bidding'} untuk pengadaan ${nama_pengadaan}. Silakan masuk ke Portal Vendor untuk detail lebih lanjut.`);

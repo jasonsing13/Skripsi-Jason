@@ -61,10 +61,11 @@ WHERE bt_id = $1`;
 
 const getBidding_TenderById = `select * from public.bidding_tender where bt_id = $1`;
 const getBidding_TenderDetailById = `select bidding_tender.* ,jenis_pengadaan.nama_jenis_pengadaan, pengadaan.harga AS harga_pengadaan, 
-pengadaan.nama_pengadaan, item.nama_item, item.harga_item, item.jumlah_item, jenis_pengadaan.nama_jenis_pengadaan, list_item.*
+pengadaan.nama_pengadaan, item.nama_item, item.harga_item, item.jumlah_item, jenis_pengadaan.nama_jenis_pengadaan, list_item.*, jv.nama_jenis_vendor
 FROM bidding_tender
 LEFT JOIN pengadaan ON bidding_tender.pengadaan_id = pengadaan.pengadaan_id
 LEFT JOIN jenis_pengadaan ON jenis_pengadaan.jenis_pengadaan_id = pengadaan.jenis_pengadaan_id
+LEFT JOIN jenis_vendor jv ON jv.jenis_vendor_id = pengadaan.jenis_vendor_id
 LEFT JOIN list_item ON list_item.pengadaan_id = pengadaan.pengadaan_id
 LEFT JOIN item ON list_item.item_id = item.item_id
 WHERE pengadaan.pengadaan_id = $1

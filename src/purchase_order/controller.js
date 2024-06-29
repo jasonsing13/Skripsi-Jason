@@ -8,18 +8,17 @@ const getPurchase_Order = (req,res)=>{
     })
 };
 
-const getPurchase_OrderById = (po_id)=>{
+const getPurchase_OrderById = async (po_id)=>{
     
-    pool.query(queries.getPurchase_OrderById,[po_id], (error, results)=>{
-        if(error) throw error;
-        res.status(200).json(results.rows);
-    })
+    const res = await pool.pool.query(queries.getPurchase_OrderById,[po_id])
+
+    return res.rows[0]
 };
 
-const addPurchase_Order = async (pengadaan_id, tanggal_pengiriman, user_id) => {
+const addPurchase_Order = async (pengadaan_id, tanggal_pengiriman, url_po, user_id) => {
     await pool.pool.query(
         queries.addPurchase_Order,
-        [pengadaan_id, tanggal_pengiriman, user_id],
+        [pengadaan_id, tanggal_pengiriman, url_po, user_id],
         (error, results) => {
             if (error) throw error;
         }

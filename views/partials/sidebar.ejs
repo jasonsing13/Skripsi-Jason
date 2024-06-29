@@ -18,7 +18,9 @@
                     if (parent.notif.length > 0) { %>
                         <% parent.notif.forEach(n => { %>
                             <li class="dropdown-item-text small">
-                                <p class="m-0"><%= n.isi %></p>
+                                <span class="d-inline-block text-truncate" title="<%= n.isi %>" style="max-width: 300px;">
+                                    <%= n.isi %>
+                                </span>
                                 <small><%= moment(n.cdate).calendar() %></small>
                             </li>
                         <% }) %>
