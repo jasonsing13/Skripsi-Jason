@@ -24,7 +24,17 @@ public.bank b ON b.bank_id = r.bank_id
 LEFT JOIN
   public.kabupaten_kota kk ON i.kk_id = kk.kk_id
 LEFT JOIN
-  public.provinsi p ON kk.provinsi_id = p.provinsi_id`;
+  public.provinsi p ON kk.provinsi_id = p.provinsi_id
+GROUP BY i.id,r.rekening_id,
+r.nama_pemilik_rekening,
+r.no_rekening,
+r.bank_id,
+s.nama_status, 
+s.status_id, 
+jp.nama_kategori_vendor, 
+jv.nama_jenis_vendor,
+p.nama_provinsi,
+kk.nama_kk, b.bank_id`;
 
 const getVendor = `SELECT 
 i.*,

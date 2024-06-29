@@ -26,7 +26,6 @@ const getDetail_Template_VsByName = async (input)=>{
     const client = await pool.pool.connect();
     try {
         const result = await client.query(queries.getDetail_Template_VsByName, [input]); // Adjust the SQL query based on your actual table and data structure
-        console.log(result)
         return result.rows[0];
     } catch (error) {
         console.error('Error executing query', error.stack);

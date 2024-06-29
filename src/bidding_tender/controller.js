@@ -93,7 +93,6 @@ async function getBidding_TenderDetailById(id) {
     const client = await db.pool.connect();
     try {
         const result = await client.query(queries.getBidding_TenderDetailById, [id]);
-        console.log(result.rows)
         return result.rows;
     } catch (error) {
         console.error('Error executing query', error); // Log error yang lebih detail

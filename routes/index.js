@@ -288,7 +288,6 @@ const idMiddleware = (req, res, next) => {
 router.post('/registration', async function(req, res) {
   try {
       const res_vendor = await vendorController.addVendor(req, res);
-      console.log(res_vendor)
       const vendor_id = res_vendor.rows[0].id;
       
       await notifController.addNotif(vendor_id, `Akun Anda telah dibuat di Portal Vendor. Silahkan mengunggah dokumen yang diperlukan.`);
@@ -1062,7 +1061,6 @@ router.post('/form-vendor-scoring', async (req, res) => {
         nama_template_val.forEach(async (e, i) => {
           const nama = await template_vsController.getTemplate_VsByName(e)
           var template_id_new = '';
-          console.log(nama)
           if(!nama){
             template_id_new = await template_vsController.addTemplate_Vs(e, deskripsi_template_val[i])
             const vs_kriteria_id = await kriteriaController.addKriteria(kriteria_val[i], subKriteria_val[i])
@@ -1175,7 +1173,6 @@ router.get('/list-vendor-admin', async (req, res) => {
 router.get('/get-eval', async (req, res) => {
   try {
     const {evaluasi_vendor} = req.query;
-    console.log(evaluasi_vendor)
     res.download(evaluasi_vendor);
   } catch (error) {
       console.error('Error fetching vendors:', error);
@@ -1513,7 +1510,6 @@ router.get('/download-po/:pid/:id', async function(req, res){
   const po_id = req.params.id;
   const pid = req.params.pid;
   const po = await purchase_orderController.getPurchase_OrderById(po_id);
-  console.log(po)
 
   await res.download(po.url_po, 'po-'+po_id+'.pdf');
   
@@ -1577,7 +1573,6 @@ router.get('/goods-received-admin', async (req, res) => {
   const pengadaan_id = req.query.id;
   const {vendor_pemenang} = await pengadaanController.getVendorPemenang(pengadaan_id)
   const result = await goods_receivedController.getGoods_ReceivedByPengadaanId(pengadaan_id, vendor_pemenang);
-  console.log(result)
   res.render('goods-received-admin', { parent: data.parent, result, page: 'pengadaan', pengadaan_id });
 });
 

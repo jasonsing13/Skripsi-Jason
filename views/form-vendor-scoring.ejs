@@ -91,7 +91,6 @@
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-8">
-                                                        <% console.table(detailVS[sd.template_vs_id]) %>
                                                         <input class="form-control kriteria" id="teknikal-kriteria-<%= i+1 %>" name="kriteria[1][]" type="text" <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174001' || condition ? 'disabled' : 'readonly' %> value="<%= detailVS[sd.template_vs_id].nama_kriteria %>">
                                                     </div>
                                                     <div class="col">
@@ -288,7 +287,6 @@
             var counter = $(elm)[0].id.split('-')[2];
             var val1_id = $('#'+tipe+"-"+counter).find('.kriteria')[0].id;
             var val2_id = $('#'+tipe+"-"+counter).find('.subKriteria')[0].id;
-            console.log(val1_id)
             $.ajax({
                 type: "post",
                 url: "/api/getDetailVsTemplate",
