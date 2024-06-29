@@ -32,16 +32,20 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row d-flex flex-wrap">
-                        <div class="col-12">
+                        <div class="col-6">
                             <div class="form-group">
-                                <label for="invoice" class="form-label">Upload Invoice</label>
-                                <input type="file" class="form-control" id="invoice" name="invoice" disabled>
+                                <label for="invoice" class="form-label">Upload Invoice (PDF)</label>
+                                <div class="file-loading">
+                                    <input id="invoice" name="invoice" type="file" accept="application/pdf">
+                                </div>
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-6">
                             <div class="form-group">
-                                <label for="surat_jalan" class="form-label">Upload Surat Jalan</label>
-                                <input type="file" class="form-control" id="surat_jalan" name="surat_jalan" disabled>
+                                <label for="surat_jalan" class="form-label">Upload Surat Jalan (PDF)</label>
+                                <div class="file-loading">
+                                    <input id="surat_jalan" name="surat_jalan" type="file" accept="application/pdf">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -60,13 +64,13 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="invoice" class="form-label">Upload Invoice</label>
-                                    <input type="file" class="form-control" id="invoice" name="invoice">
+                                    <input type="file" class="form-control" id="invoice" accept="application/pdf" name="invoice">
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="surat_jalan" class="form-label">Upload Surat Jalan</label>
-                                    <input type="file" class="form-control" id="surat_jalan" name="surat_jalan">
+                                    <input type="file" class="form-control" id="surat_jalan" accept="application/pdf" name="surat_jalan">
                                 </div>
                             </div>
                         </div>
@@ -79,4 +83,106 @@
         <% } %>
     </div>
 <%- include('partials/footer.ejs') %>
+
+<script>
+    $("#surat_jalan").fileinput({
+        showClose: false,
+        showBrowse: false,
+        showCancel: false,
+        showRemove: false,
+        showUpload: false,
+        sortable: false,
+        showCaption: false,
+        <%
+        if(result){
+        %>
+        initialPreview: [
+            // URL gambar yang ingin ditampilkan
+            '<%= result.url_surat_jalan.replace(/\s+/g, '').replace(/\\/g, '/') %>',
+            
+            // ... URL gambar lainnya ...
+        ],
+        initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+        initialPreviewFileType: 'pdf', // image is the default and can be overridden in config below
+        <%
+        }
+        %>
+        initialPreviewConfig: [
+            {
+                // Menyembunyikan tombol remove
+                showRemove: false,
+                // Menyembunyikan tombol upload
+                showUpload: false,
+                // Menyembunyikan tombol zoom
+                showZoom: true,
+                showRotate: false,
+                // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                showDownload: false,
+                showDrag: false,
+            }
+        ],
+        fileActionSettings: {
+            // Menyembunyikan tombol remove
+            showRemove: false,
+            // Menyembunyikan tombol upload
+            showUpload: false,
+            // Menyembunyikan tombol zoom
+            showZoom: true,
+            showRotate: false,
+            // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+            showDownload: false,
+            // ... other file action settings ...
+        },
+    });
+    
+    $("#invoice").fileinput({
+        showClose: false,
+        showBrowse: false,
+        showCancel: false,
+        showRemove: false,
+        showUpload: false,
+        sortable: false,
+        showCaption: false,
+        <%
+        if(result){
+        %>
+        initialPreview: [
+            // URL gambar yang ingin ditampilkan
+            '<%= result.url_invoice.replace(/\s+/g, '').replace(/\\/g, '/') %>',
+            
+            // ... URL gambar lainnya ...
+        ],
+        initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+        initialPreviewFileType: 'pdf', // image is the default and can be overridden in config below
+        <%
+        }
+        %>
+        initialPreviewConfig: [
+            {
+                // Menyembunyikan tombol remove
+                showRemove: false,
+                // Menyembunyikan tombol upload
+                showUpload: false,
+                // Menyembunyikan tombol zoom
+                showZoom: true,
+                showRotate: false,
+                // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                showDownload: false,
+                showDrag: false,
+            }
+        ],
+        fileActionSettings: {
+            // Menyembunyikan tombol remove
+            showRemove: false,
+            // Menyembunyikan tombol upload
+            showUpload: false,
+            // Menyembunyikan tombol zoom
+            showZoom: true,
+            showRotate: false,
+            // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+            showDownload: false,
+            // ... other file action settings ...
+        },
+    })
+</script>
 </html>

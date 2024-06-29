@@ -418,13 +418,13 @@ const removePengadaan = (req,res)=>{
 };
 
 const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
-    const { tanggal_pemilihan, tanggal_pemilihan_selesai, pic, pengadaan_id, harga } = reqa;
+    const { tanggal_pemilihan, tanggal_pemilihan_selesai, pic, pengadaan_id, harga, aanwijzing } = reqa;
     var queryParams = [];
     try {
 
         // PENUNJUKAN LANGSUNG
         if(vendor_id != null){
-            queryParams = [tanggal_pemilihan, tanggal_pemilihan_selesai, pic, vendor_id, pengadaan_id];
+            queryParams = [tanggal_pemilihan, tanggal_pemilihan_selesai, pic, aanwijzing, vendor_id, pengadaan_id];
             await db.pool.query( queries.validasiPengadaanLangsung, queryParams, (error, result) => {
                 if (error) throw error;
             });
@@ -457,7 +457,7 @@ const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
         }
         // TENDER
         else if(link_zoom != null){
-            queryParams = [tanggal_pemilihan, tanggal_pemilihan_selesai, pic, pengadaan_id];
+            queryParams = [tanggal_pemilihan, tanggal_pemilihan_selesai, pic, aanwijzing, pengadaan_id];
             await db.pool.query( queries.validasiPengadaan, queryParams, (error, result) => {
                 if (error) throw error;
             });
@@ -465,7 +465,7 @@ const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
                 if (error) throw error;
             });
         }else{
-            queryParams = [tanggal_pemilihan, tanggal_pemilihan_selesai, pic, pengadaan_id];
+            queryParams = [tanggal_pemilihan, tanggal_pemilihan_selesai, pic, aanwijzing, pengadaan_id];
             await db.pool.query( queries.validasiPengadaan, queryParams, (error, result) => {
                 if (error) throw error;
             });
@@ -504,6 +504,20 @@ async function setPemenang (pengadaan_id, vendor_id, dbt_id, bt_id, harga, duras
     }
 };
 
+async function tutup (pengadaan_id) {
+    const client = await db.pool.connect();
+    try {
+        
+        await client.query(queries.tutup, [pengadaan_id]); 
+
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+};
+
 module.exports = {
     getTerbaik,
     getDaftarPengadaan,
@@ -516,6 +530,7 @@ module.exports = {
     getItemPengadaan,
     getInformasiPO,
     getDokumenPO,
+    tutup,
     option_PIC,
     option_Select_Status,
     option_Select_Status_Admin,

@@ -32,7 +32,7 @@ const getGoods_ReceivedById = (req,res)=>{
 const getGoods_ReceivedByPengadaanId = async (pengadaan_id, vendor_id)=>{
     try {
         const result = await pool.pool.query(await queries.getGoods_ReceivedByPenagdaanId,[pengadaan_id, vendor_id])
-        return result.rows[0];
+        return result.rows;
     } catch (error) {
         console.error('Error executing query', error.stack);
         throw error;

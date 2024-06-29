@@ -1258,7 +1258,7 @@ router.post('/add-po', upload.fields([{ name: 'url_po' }]), async (req, res) => 
     const nama_pengadaan = r_id.nama_pengadaan;
     const vendor_id = r_id.vendor_pemenang;
     await notifController.addNotif(vendor_id, `PO untuk pengadaan ${nama_pengadaan} telah tersedia. Silakan masuk ke Portal Vendor untuk melihat dan mengunduh dokumen PO.`);
-    await notifController.addNotif(vendor_id, `Silahkan unggah dokumen untuk pengadaan ${nama_pengadaan}.`);
+    await notifController.addNotif(vendor_id, `Silahkan unggah surat jalan beserta invoice untuk pengadaan ${nama_pengadaan}.`);
     
     res.redirect('/informasi-purchase-order-previous?id='+pengadaan_id);
   } catch (error) {
@@ -1512,6 +1512,7 @@ router.get('/download-po/:pid/:id', async function(req, res){
   const po = await purchase_orderController.getPurchase_OrderById(po_id);
 
   await res.download(po.url_po);
+  // await res.download(po.url_po, 'po-'+po_id+'.pdf');
   
 
 })
@@ -1572,8 +1573,9 @@ router.get('/goods-received-admin', async (req, res) => {
   const data = req.session.data;
   const pengadaan_id = req.query.id;
   const {vendor_pemenang} = await pengadaanController.getVendorPemenang(pengadaan_id)
+  const items = await pengadaanController.getItemPengadaan(pengadaan_id)
   const result = await goods_receivedController.getGoods_ReceivedByPengadaanId(pengadaan_id, vendor_pemenang);
-  res.render('goods-received-admin', { parent: data.parent, result, page: 'pengadaan', pengadaan_id });
+  res.render('goods-received-admin', { parent: data.parent, items, result, page: 'pengadaan', pengadaan_id });
 });
 
 router.post('/goods-received-admin', 
@@ -1586,9 +1588,16 @@ upload.fields([{ name: 'bukti_evaluasi' }, { name: 'bukti_foto' }]), async (req,
     const result = await pengadaanController.getVendorPemenang(pengadaan_id)
     const gr = await goods_receivedController.getGoods_ReceivedByPengadaanId(pengadaan_id, result.vendor_pemenang);
     // Assuming you have a function to insert data into the database
-    await goods_receivedController.addGoods_ReceivedItem(jumlah_barang, kondisi_barang, bukti_foto, tanggal_terima, deskripsi_barang, gr.received_id);
+    await goods_receivedController.addGoods_ReceivedItem(jumlah_barang, kondisi_barang, bukti_foto, tanggal_terima, deskripsi_barang, gr[0].received_id);
 
     await pengadaanController.update_evaluasi(pengadaan_id, bukti_evaluasi);
+
+    // TUTUP PENGADAAN
+    const r_id = await pengadaanController.getPengadaanById(pengadaan_id)
+    const nama_pengadaan = r_id.nama_pengadaan;
+    await pengadaanController.tutup(pengadaan_id);
+    await notifController.addNotif(vendor_id, `Pengadaan ${nama_pengadaan} telah ditutup.`);
+    await notifController.addNotif(true, `Pengadaan ${nama_pengadaan} telah ditutup.`);
 
     res.redirect('/goods-received-admin?id='+pengadaan_id); // Redirect to the list page after successful insertion
   } catch (error) {

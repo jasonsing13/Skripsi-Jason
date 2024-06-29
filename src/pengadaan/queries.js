@@ -36,6 +36,7 @@ nama_tipe_pemilihan,
 status.nama_status,
 nama_jenis_vendor,
 status.status_id
+ORDER BY p.create_date DESC
 `;
 
 const getDaftarPengadaanAdmin = `
@@ -70,6 +71,7 @@ nama_tipe_pemilihan,
 status.nama_status,
 pengadaan.status_id,
 nama_jenis_vendor
+ORDER BY pengadaan.create_date DESC
 `;
 
 const option_Select_Status = `
@@ -408,8 +410,17 @@ SET
 tanggal_pemilihan = $1, 
 tanggal_pemilihan_selesai = $2, 
 pic = $3,
+aanwijzing = $4,
 status_id = '0b3e77e5-140b-4662-9563-dde365358ddc'
-WHERE pengadaan_id = $4
+WHERE pengadaan_id = $5
+;`
+;
+
+const tutup = ` 
+UPDATE public.pengadaan
+SET 
+status_id = '3b9a7057-fc96-4894-88b6-24f2f4211110'
+WHERE pengadaan_id = $1
 ;`
 ;
 
@@ -427,9 +438,10 @@ SET
 tanggal_pemilihan = $1, 
 tanggal_pemilihan_selesai = $2, 
 pic = $3,
-vendor_pemenang = $4,
+aanwijzing = $4,
+vendor_pemenang = $5,
 status_id = '0b3e77e5-140b-4662-9563-dde365358ddc'
-WHERE pengadaan_id = $5
+WHERE pengadaan_id = $6
 ;`
 ;
 
@@ -508,6 +520,7 @@ module.exports = {
     setPemenang2,
     setPemenangTender,
     getVendorPemenang,
-    validasiPengadaanTender
+    validasiPengadaanTender,
+    tutup
 };
 

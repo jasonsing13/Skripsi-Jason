@@ -83,23 +83,7 @@
                             <h5>Persyaratan Aanwijzing</h5>
                         </div>
                         <div class="card-body">
-                            <p><%- currdate %></p>
-                            <p>Scope pekerjaan dari tender yang diadakan adalah sebagai berikut:</p>
-                            <ul>
-                                <li>Termin pembayaran lebih dari 3 kali</li>
-                                <li>Proyek memiliki scope pekerjaan renovasi gudang 2 lantai</li>
-                            </ul>
-                            <p>Pihak vendor dianggap telah memahami spesifikasi pekerjaan, volume pekerjaan maupun
-                                kelengkapan
-                                lainnya sesuai kebutuhan dan keinginan yang diharapkan pihak PT. Mitra Pinasthika Mulia.
-                                Dengan
-                                demikian, jika salah satu vendor yang hadir saat ini terpilih sebagai pemenang tender,
-                                maka
-                                segala resiko yang timbul akibat kekurangan volume dan sebagainya, telah menjadi
-                                tanggung jawab
-                                dari pihak vendor pemenang tender pekerjaan ini. Demikian Berita Acara ini dibuat dan
-                                disetujui
-                                oleh perwakilan dari pihak perwakilan vendor.</p>
+                            <textarea class="form-control" rows="20" disabled><%= dataBidding[0]['aanwijzing'] ?? "-" %></textarea>
                         </div>
                     </div>
                 </div>
