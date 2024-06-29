@@ -1575,31 +1575,66 @@ router.get('/goods-received-admin', async (req, res) => {
   const {vendor_pemenang} = await pengadaanController.getVendorPemenang(pengadaan_id)
   const items = await pengadaanController.getItemPengadaan(pengadaan_id)
   const result = await goods_receivedController.getGoods_ReceivedByPengadaanId(pengadaan_id, vendor_pemenang);
-  res.render('goods-received-admin', { parent: data.parent, items, result, page: 'pengadaan', pengadaan_id });
+  const bukti = [];
+  for (const e of result) {
+    bukti[e.item_gr_id] = await goods_receivedController.getbuktiGRByIdGR(e.item_gr_id);
+  }
+  res.render('goods-received-admin', { parent: data.parent, items, result, bukti, page: 'pengadaan', pengadaan_id });
 });
 
-router.post('/goods-received-admin', 
-upload.fields([{ name: 'bukti_evaluasi' }, { name: 'bukti_foto' }]), async (req, res) => {
+router.post('/goods-received-admin', upload.any(), async (req, res) => {
   try {
-    // Extract file paths from the uploaded files
-    const bukti_evaluasi = req.files['bukti_evaluasi'][0].path;
-    const bukti_foto = req.files['bukti_foto'][0].path;
-    const {pengadaan_id, jumlah_barang, kondisi_barang, tanggal_terima, deskripsi_barang} = req.body;
-    const result = await pengadaanController.getVendorPemenang(pengadaan_id)
-    const gr = await goods_receivedController.getGoods_ReceivedByPengadaanId(pengadaan_id, result.vendor_pemenang);
-    // Assuming you have a function to insert data into the database
-    await goods_receivedController.addGoods_ReceivedItem(jumlah_barang, kondisi_barang, bukti_foto, tanggal_terima, deskripsi_barang, gr[0].received_id);
+    const { pengadaan_id } = req.body;
+    const item_ids = req.body['item_id'];
+    const jumlah_barang = req.body['jumlah_barang'];
+    const kondisi_barang = req.body['kondisi_barang'];
+    const tanggal_terima = req.body['tanggal_terima'];
+    const deskripsi_barang = req.body['deskripsi_barang'];
 
+    // Find the evaluation proof file
+    const bukti_evaluasi = req.files.find(file => file.fieldname === 'bukti_evaluasi').path;
+
+    // Get vendor and goods received info
+    const result = await pengadaanController.getVendorPemenang(pengadaan_id);
+    const gr = await goods_receivedController.getGoods_ReceivedByPengadaanId(pengadaan_id, result.vendor_pemenang);
+
+
+    // Iterate through item IDs
+    for (let i = 0; i < item_ids.length; i++) {
+      const item_id = item_ids[i];
+
+      // Add goods received item
+      const resGR = await goods_receivedController.addGoods_ReceivedItem(
+        item_id,
+        jumlah_barang[item_id],
+        kondisi_barang[item_id],
+        tanggal_terima[item_id],
+        deskripsi_barang[item_id],
+        gr[0].received_id
+      );
+
+      const item_gr_id = resGR.rows[0].item_gr_id;
+
+      // Add bukti_foto for each item
+      req.files
+        .filter(file => file.fieldname === `bukti_foto[${item_id}]`)
+        .forEach(async bukti_foto => {
+          await goods_receivedController.addGoods_ReceivedBukti(item_gr_id, bukti_foto.path);
+        });
+    }
+
+    // Update evaluasi
     await pengadaanController.update_evaluasi(pengadaan_id, bukti_evaluasi);
 
-    // TUTUP PENGADAAN
-    const r_id = await pengadaanController.getPengadaanById(pengadaan_id)
+    // Close pengadaan
+    const r_id = await pengadaanController.getPengadaanById(pengadaan_id);
     const nama_pengadaan = r_id.nama_pengadaan;
     await pengadaanController.tutup(pengadaan_id);
-    await notifController.addNotif(vendor_id, `Pengadaan ${nama_pengadaan} telah ditutup.`);
+    await notifController.addNotif(result.vendor_pemenang, `Pengadaan ${nama_pengadaan} telah ditutup.`);
     await notifController.addNotif(true, `Pengadaan ${nama_pengadaan} telah ditutup.`);
 
-    res.redirect('/goods-received-admin?id='+pengadaan_id); // Redirect to the list page after successful insertion
+    // Redirect after successful insertion
+    res.redirect('/goods-received-admin?id=' + pengadaan_id);
   } catch (error) {
     console.error('Failed to add goods received:', error);
     res.status(500).send('Error adding goods received');

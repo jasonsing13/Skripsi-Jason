@@ -22,7 +22,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="/item-pengadaan-previous/<%= pengadaan_id %>">Item Pengadaan</a>
             </li>
-            <% if(pengadaan.status_id == '0b3e77e5-140b-4662-9563-dde365358ddc' && pengadaan.status_id != '3b9a7057-fc96-4894-88b6-24f2f4211110'){ %>
+            <% if(pengadaan.status_id == '0b3e77e5-140b-4662-9563-dde365358ddc' || pengadaan.status_id == '3b9a7057-fc96-4894-88b6-24f2f4211110'){ %>
             <li class="nav-item">
                 <a class="nav-link " href="/vendor-pengadaan-previous/<%= pengadaan_id %>">List Vendor</a>
             </li>

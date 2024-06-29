@@ -28,7 +28,7 @@
                 <a class="nav-link active" href="/goods-received-vendor?id=<%= pengadaan_id %>">Goods Received</a>
             </li>
         </ul>
-        <% if (result) { %>
+        <% if (result.length != 0) { %>
             <div class="card">
                 <div class="card-body">
                     <div class="row d-flex flex-wrap">
@@ -84,6 +84,7 @@
     </div>
 <%- include('partials/footer.ejs') %>
 
+<% if (result.length != 0) { %>
 <script>
     $("#surat_jalan").fileinput({
         showClose: false,
@@ -94,11 +95,11 @@
         sortable: false,
         showCaption: false,
         <%
-        if(result){
+        if(result[0].url_surat_jalan){
         %>
         initialPreview: [
             // URL gambar yang ingin ditampilkan
-            '<%= result.url_surat_jalan.replace(/\s+/g, '').replace(/\\/g, '/') %>',
+            '<%= result[0].url_surat_jalan.replace(/\s+/g, '').replace(/\\/g, '/') %>',
             
             // ... URL gambar lainnya ...
         ],
@@ -144,11 +145,11 @@
         sortable: false,
         showCaption: false,
         <%
-        if(result){
+        if(result[0].url_invoice){
         %>
         initialPreview: [
             // URL gambar yang ingin ditampilkan
-            '<%= result.url_invoice.replace(/\s+/g, '').replace(/\\/g, '/') %>',
+            '<%= result[0].url_invoice.replace(/\s+/g, '').replace(/\\/g, '/') %>',
             
             // ... URL gambar lainnya ...
         ],
@@ -185,4 +186,5 @@
         },
     })
 </script>
+<% } %>
 </html>

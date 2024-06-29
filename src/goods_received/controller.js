@@ -39,16 +39,32 @@ const getGoods_ReceivedByPengadaanId = async (pengadaan_id, vendor_id)=>{
     } 
 };
 
+const getbuktiGRByIdGR = async (item_gr_id)=>{
+    try {
+        const result = await pool.pool.query(await queries.getbuktiGRByIdGR,[item_gr_id])
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } 
+};
+
 const addGoods_Received = async (url_invoice, url_surat_jalan, pengadaan_id, create_by)=>{
     pool.pool.query(
         await queries.addGoods_Received,
         [pengadaan_id, url_invoice, url_surat_jalan, create_by]);
 };
 
-const addGoods_ReceivedItem = async (jumlah_barang, kondisi_barang, bukti_foto, tanggal_terima, deskripsi_barang, received_id)=>{
-    pool.pool.query(
+const addGoods_ReceivedItem = async (item_id, jumlah_barang, kondisi_barang, tanggal_terima, deskripsi_barang, received_id)=>{
+    return pool.pool.query(
         await queries.addGoods_ReceivedItem,
-        [jumlah_barang, kondisi_barang, bukti_foto, tanggal_terima, deskripsi_barang, received_id]);
+        [item_id, jumlah_barang, kondisi_barang, tanggal_terima, deskripsi_barang, received_id]);
+};
+
+const addGoods_ReceivedBukti= async (item_gr_id, bukti_foto)=>{
+    pool.pool.query(
+        await queries.addGoods_ReceivedBukti,
+        [item_gr_id, bukti_foto]);
 };
 
 const removeGoods_Received = (req,res)=>{
@@ -103,8 +119,10 @@ module.exports = {
     getGoods_ReceivedById,
     addGoods_Received,
     addGoods_ReceivedItem,
+    addGoods_ReceivedBukti,
     removeGoods_Received,
     updateGoods_Received,
-    getGoods_ReceivedByPengadaanId
+    getGoods_ReceivedByPengadaanId,
+    getbuktiGRByIdGR
 };
 

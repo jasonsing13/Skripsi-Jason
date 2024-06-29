@@ -1,6 +1,7 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+const ejsHelpers = require('./public/ejs-helper');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const dotenv = require('dotenv');
@@ -17,6 +18,8 @@ const indexRouter = require('./routes/index');
 const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
+
+app.locals.helpers = ejsHelpers;
 app.set('view engine', 'ejs');
 app.set('src', path.join(__dirname, 'src'));
 
@@ -37,6 +40,8 @@ app.use('/users', usersRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+
 
 // error handler
 app.use(function(err, req, res, next) {

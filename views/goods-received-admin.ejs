@@ -45,9 +45,10 @@
                                 <button type="button" class="btn float-end btn-success mx-2" data-bs-toggle="modal" data-bs-target="#surat_jalan">Lihat Surat Jalan</button>
                             </div>
                         </div>
-                        <% items.forEach((it, i) => { %>
-                            <% if (result) { %>
-                                <div class="card">
+                        <% if (result[0]) { %>
+                            <% items.forEach((it, i) => { %>
+                                <input type="hidden" name="item_id[]" value="<%= it.item_id %>">
+                                <div class="card mb-3">
                                     <div class="card-header">
                                         <h6 class="card-title"><%= it.nama_item %></h6>
                                     </div>
@@ -56,52 +57,32 @@
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label class="form-label" for="tanggal-terima">TANGGAL TERIMA*</label>
-                                                    <input class="form-control" type="date" id="tanggal-terima" name="tanggal_terima[]" <% result.map(function(val){
-                                                        if(val.item_id == it.item_id && val.tanggal_terimas){
-                                                            return `value=${moment(val.tanggal_terimas).format('YYYY-MM-DD')} disabled`
-                                                        }
-                                                    }) %> required>
+                                                    <input class="form-control" type="date" id="tanggal-terima" name="tanggal_terima[<%= it.item_id %>]" <%= helpers.findValue(result, it.item_id, 'tanggal_terimas') ? `value=${helpers.formatDate(helpers.findValue(result, it.item_id, 'tanggal_terimas'))} disabled` : '' %> required>
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label class="form-label" for="jumlah-barang">JUMLAH BARANG*</label>
-                                                    <input class="form-control qty" type="text" id="jumlah-barang" name="jumlah_barang[]" <% result.map(function(val){
-                                                        if(val.item_id == it.item_id && val.jumlah_barang){
-                                                            return `value=${val.jumlah_barang} disabled`
-                                                        }
-                                                    }) %> required>
+                                                    <input class="form-control qty" type="text" id="jumlah-barang" name="jumlah_barang[<%= it.item_id %>]" <%= helpers.findValue(result, it.item_id, 'jumlah_barang') ? `value=${helpers.findValue(result, it.item_id, 'jumlah_barang')} disabled` : '' %> required>
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label class="form-label" for="deskripsi-barang">DESKRIPSI BARANG*</label>
-                                                    <textarea id="my-textarea" class="form-control" name="deskripsi_barang[]" rows="3" required <% result.map(function(val){
-                                                        if(val.item_id == it.item_id && val.deskripsi_barang){
-                                                            return `disabled`
-                                                        }
-                                                    }) %>><% result.map(function(val){
-                                                        if(val.item_id == it.item_id && val.deskripsi_barang){
-                                                            return val.deskripsi_barang
-                                                        }
-                                                    }) %></textarea>
+                                                    <textarea id="my-textarea" class="form-control" name="deskripsi_barang[<%= it.item_id %>]" rows="3" required  <%= helpers.findValue(result, it.item_id, 'deskripsi_barang') ? `disabled` : '' %>><%= helpers.findValue(result, it.item_id, 'deskripsi_barang') ? helpers.findValue(result, it.item_id, 'deskripsi_barang') : '' %></textarea>
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label class="form-label" for="kondisi-barang">KONDISI BARANG*</label>
-                                                    <input type="text" class="form-control" id="kondisi-barang" name="kondisi_barang[]" <% result.map(function(val){
-                                                        if(val.item_id == it.item_id && val.kondisi_barang){
-                                                            return `value=${val.kondisi_barang} disabled`
-                                                        }
-                                                    }) %> required>
+                                                    <input type="text" class="form-control" id="kondisi-barang" name="kondisi_barang[<%= it.item_id %>]"  <%= helpers.findValue(result, it.item_id, 'kondisi_barang') ? `value=${helpers.findValue(result, it.item_id, 'kondisi_barang')} disabled` : '' %> required>
                                                 </div>
                                             </div>
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <label class="form-label" for="bukti_foto">UPLOAD BUKTI FOTO*</label>
                                                     <div class="file-loading">
-                                                        <input id="bukti_foto" name="bukti_foto[]" type="file" accept="image/*" multiple>
+                                                        <input id="bukti_foto-<%= i %>" name="bukti_foto[<%= it.item_id %>]" type="file" accept="image/*" multiple>
                                                     </div>
                                                 </div>
                                             </div>
@@ -109,23 +90,25 @@
                                     </div>
                                 </div>
                              
-                            <% } %>
-                        <% }) %>
+                            <% }) %>
+                        <% } %>
                     </div>
                     <div class="card-footer">
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
+                                    <% if (result[0]) { %>
                                     <% if (result[0].evaluasi_vendor) { %>
                                         <p>Sudah Upload</p>
                                     <% }else{ %>
                                         <label class="form-label" for="upload-evaluasi">UPLOAD FILE HASIL EVALUASI VENDOR* (PDF)</label>
                                         <input class="form-control" type="file" id="upload-evaluasi" name="bukti_evaluasi" accept="application/pdf" required>
                                     <% } %>
+                                    <% } %>
                                 </div>
                             </div>
                             <div class="col-6">
-                                <% if (result) { %>
+                                <% if (result[0]) { %>
                                     <% if (!result[0].evaluasi_vendor) { %>
                                     <button type="submit" class="btn btn-primary float-end">Submit Bukti</button>
                                     <% } %>
@@ -146,7 +129,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <% if (result) { %>
+                    <% if (result[0]) { %>
                         <div class="file-loading">
                             <input id="invoice_url" name="invoice_url" type="file" accept="image/*">
                         </div>
@@ -166,7 +149,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <% if (result) { %>
+                    <% if (result[0]) { %>
                     <div class="file-loading">
                         <input id="surat_jalan_url" name="surat_jalan_url" type="file" accept="image/*">
                     </div>
@@ -181,10 +164,12 @@
 
 <script>
     // $(document).ready(function () {
-        $("#bukti_foto").fileinput({
-            <% if (result[0].evaluasi_vendor) { %>
+    <% items.forEach((it, i) => { %>
+        $("#bukti_foto-<%= i %>").fileinput({
+            <% if (result[0] && result[0].evaluasi_vendor) { %>
                 showBrowse: false,
                 showClose: false,
+                showRemove: false,
             <% } %>
             showCancel: false,
             showUpload: false,
@@ -196,7 +181,16 @@
             %>
             initialPreview: [
                 // URL gambar yang ingin ditampilkan
-                '<%= result[0].url_surat_jalan.replace(/\s+/g, '').replace(/\\/g, '/') %>',
+                <% result.forEach(r => { 
+                    if(r.item_id == it.item_id){ 
+                        bukti[r.item_gr_id].forEach(b => {
+                %>
+                        "<%= `${b.bukti_foto.replace(/\s+/g, '').replace(/\\/g, '/')}` %>",
+                <% 
+                        })
+                    }
+                }) 
+                %>
                 
                 // ... URL gambar lainnya ...
             ],
@@ -206,9 +200,13 @@
             }
             %>
             initialPreviewConfig: [
+            <% result.forEach(r => { 
+                    if(r.item_id == it.item_id){ 
+                        bukti[r.item_gr_id].forEach(b => {
+                %>
                 {
                     // Menyembunyikan tombol remove
-                    <% if (result[0].evaluasi_vendor) { %>
+                    <% if (result[0] && result[0].evaluasi_vendor) { %>
                         showRemove: false,
                     <% } %>
                     // Menyembunyikan tombol upload
@@ -219,11 +217,17 @@
                     // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
                     showDownload: false,
                     showDrag: false,
-                }
+                },
+                <% 
+                        })
+                    }
+                }) 
+                %>
+                
             ],
             fileActionSettings: {
                 // Menyembunyikan tombol remove
-                <% if (result[0].evaluasi_vendor) { %>
+                <% if (!result[0] && result[0].evaluasi_vendor) { %>
                     showRemove: false,
                 <% } %>
                 // Menyembunyikan tombol upload
@@ -236,6 +240,8 @@
                 // ... other file action settings ...
             },
         });
+    <% }) %>
+
 
         $("#surat_jalan_url").fileinput({
             showClose: false,
@@ -246,7 +252,7 @@
             sortable: false,
             showCaption: false,
             <%
-            if(result){
+            if(result[0]){
             %>
             initialPreview: [
                 // URL gambar yang ingin ditampilkan
@@ -296,7 +302,7 @@
             sortable: false,
             showCaption: false,
             <%
-            if(result){
+            if(result[0]){
             %>
             initialPreview: [
                 // URL gambar yang ingin ditampilkan
