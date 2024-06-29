@@ -40,11 +40,7 @@ const addUser = async (req,res)=>{
     const { username, password, email, first_name, last_name, phone_number, role_id } = req.body;
     const result = await db.pool.query(
         queries.addUser,
-        [username, password, email, first_name, last_name, phone_number, created_by, role_id],
-        (error, results) => {
-            if (error) throw error;
-        }
-    );
+        [username, password, email, first_name, last_name, phone_number, created_by, role_id]);
     return result.rows[0].id;
 };
 

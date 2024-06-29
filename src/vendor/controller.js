@@ -224,65 +224,61 @@ const addVendor = async (req, res) => {
         nama_bank
     } = req.body;
 
-    await db.pool.query(
+    const results = await db.pool.query(
         queries.getRekening_Vendor,
         [  
             nama_pemilik_rekening,
             no_rekening,
             nama_bank
         ]
-    ).then(async results => {
-        var bank_id = '';
-        var rekening_id = '';
-        if (results.rows.length > 0) {
-            bank_id = results.rows[0].bank_id;
-            rekening_id = results.rows[0].rekening_id;
-        } else {
-            bank_id = await db.pool.query(
-                queries.addBank_Vendor,
-                [nama_bank]
-            );
-            bank_id = bank_id.rows[0].bank_id
+    )
+    var bank_id = '';
+    var rekening_id = '';
+    if (results.rows.length > 0) {
+        bank_id = results.rows[0].bank_id;
+        rekening_id = results.rows[0].rekening_id;
+    } else {
+        bank_id = await db.pool.query(
+            queries.addBank_Vendor,
+            [nama_bank]
+        );
+        bank_id = bank_id.rows[0].bank_id
 
-            rekening_id = await db.pool.query(
-                queries.addRekening_Vendor,
-                [
-                    nama_pemilik_rekening,
-                    no_rekening,
-                    bank_id
-                ]
-            );
-            rekening_id = rekening_id.rows[0].rekening_id
-        }
-
-        return await db.pool.query(
-            queries.addVendor,
-            [  
-                nama_vendor,
-                email_perusahaan,
-                username,
-                password,
-                jenis_vendor_id,
-                kategori_vendor_id,
-                status_kantor,
-                alamat_perusahaan,
-                nama_direktur,
-                no_telp,
-                negara,
-                provinsi_id,
-                kk_id,
-                no_npwp,
-                status_pkp,
-                nppkp,
-                no_nibrba,
-                no_ktp_direktur,
-                rekening_id
+        rekening_id = await db.pool.query(
+            queries.addRekening_Vendor,
+            [
+                nama_pemilik_rekening,
+                no_rekening,
+                bank_id
             ]
-        )
-    }).catch(error => {
-        console.error('Error executing query', error.stack);
-        throw error;
-    });
+        );
+        rekening_id = rekening_id.rows[0].rekening_id
+    }
+
+    return await db.pool.query(
+        queries.addVendor,
+        [  
+            nama_vendor,
+            email_perusahaan,
+            username,
+            password,
+            jenis_vendor_id,
+            kategori_vendor_id,
+            status_kantor,
+            alamat_perusahaan,
+            nama_direktur,
+            no_telp,
+            negara,
+            provinsi_id,
+            kk_id,
+            no_npwp,
+            status_pkp,
+            nppkp,
+            no_nibrba,
+            no_ktp_direktur,
+            rekening_id
+        ]
+    )
 };
 
 // const addAccount = (req,res)=>{

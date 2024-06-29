@@ -174,7 +174,6 @@ router.post('/login', async (req, res) => {
   try {
     const result = await vendorController.getEmail(email_perusahaan);
     const resultAdm = await userController.getUserByEmail(email_perusahaan);
-    
     if (result.length > 0) {
       const passwordDb = result[0].password;
       if (passwordDb.trim() === password.trim()) {
@@ -289,6 +288,7 @@ const idMiddleware = (req, res, next) => {
 router.post('/registration', async function(req, res) {
   try {
       const res_vendor = await vendorController.addVendor(req, res);
+      console.log(res_vendor)
       const vendor_id = res_vendor.rows[0].id;
       
       await notifController.addNotif(vendor_id, `Akun Anda telah dibuat di Portal Vendor. Silahkan mengunggah dokumen yang diperlukan.`);
