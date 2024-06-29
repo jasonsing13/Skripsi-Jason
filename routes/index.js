@@ -1511,7 +1511,7 @@ router.get('/download-po/:pid/:id', async function(req, res){
   const pid = req.params.pid;
   const po = await purchase_orderController.getPurchase_OrderById(po_id);
 
-  await res.download(po.url_po, 'po-'+po_id+'.pdf');
+  await res.download(po.url_po);
   
 
 })
