@@ -227,7 +227,7 @@
             ],
             fileActionSettings: {
                 // Menyembunyikan tombol remove
-                <% if (!result[0] && result[0].evaluasi_vendor) { %>
+                <% if (result[0] && result[0].evaluasi_vendor) { %>
                     showRemove: false,
                 <% } %>
                 // Menyembunyikan tombol upload
