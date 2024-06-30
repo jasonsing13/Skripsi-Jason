@@ -103,7 +103,7 @@ const updateVendor_Score = async (
         }
 
         const resultVS = await client.query(queries.getVendor_ScoreById, [pengadaan_id, vendor_id]);
-
+        console.log(resultVS);
         if(resultVS.approve_department && resultVS.approve_division && resultVS.approve_presdir){
             const r_id = await client.query(queriesV.getPengadaanById, [pengadaan_id]);
             const nama_pengadaan = r_id.rows[0].nama_pengadaan;
