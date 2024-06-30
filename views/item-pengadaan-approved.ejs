@@ -11,15 +11,17 @@
     <%- include('partials/sidebar.ejs') %>
     <div class="container mt-4">
         <h1>Item Pengadaan</h1>
-        <% if(pengadaan.tipe_pemilihan_id == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f' && pengadaanUser.status_id != '9e18ab27-4557-41eb-b3c1-430c67377830' && pengadaanUser.status_id != '760ad69f-7739-41e1-baf9-7a68665b21e8'){ %>
-            <div class="d-flex justify-content-end align-items-start mb-3">
-                <button class="btn btn-success float-end" onclick="location.href='/form-tender/<%= pengadaan_id %>'">Form Tender</button>        
-            </div>
-        <% } %>
-        <% if(pengadaanUser.status_id != '9e18ab27-4557-41eb-b3c1-430c67377830' && pengadaanUser.status_id != '760ad69f-7739-41e1-baf9-7a68665b21e8' && pengadaan.tipe_pemilihan_id == '4ff07c90-7efb-4a4a-8715-d53748a387d6'){ %>
-            <div class="d-flex justify-content-end align-items-start mb-3">
-                <button class="btn btn-success" onclick="location.href='/form-bidding/<%= pengadaan_id %>'">Form Bidding</button>        
-            </div>        
+        <% if (pengadaanUser) { %>
+            <% if(pengadaan.tipe_pemilihan_id == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f' && pengadaanUser.status_id != '9e18ab27-4557-41eb-b3c1-430c67377830' && pengadaanUser.status_id != '760ad69f-7739-41e1-baf9-7a68665b21e8'){ %>
+                <div class="d-flex justify-content-end align-items-start mb-3">
+                    <button class="btn btn-success float-end" onclick="location.href='/form-tender/<%= pengadaan_id %>'">Form Tender</button>        
+                </div>
+            <% } %>
+            <% if(pengadaanUser.status_id != '9e18ab27-4557-41eb-b3c1-430c67377830' && pengadaanUser.status_id != '760ad69f-7739-41e1-baf9-7a68665b21e8' && pengadaan.tipe_pemilihan_id == '4ff07c90-7efb-4a4a-8715-d53748a387d6'){ %>
+                <div class="d-flex justify-content-end align-items-start mb-3">
+                    <button class="btn btn-success" onclick="location.href='/form-bidding/<%= pengadaan_id %>'">Form Bidding</button>        
+                </div>        
+            <% } %> 
         <% } %>
         <ul class="nav nav-tabs">
             <li class="nav-item">

@@ -10,8 +10,8 @@
         <div class="card">
             <div class="card-header">
                 <button class="btn btn-success float-end justify-content-center" data-bs-toggle="modal" data-bs-target="#modalAdd">Tambah</button>
-                <h1>List Barang</h1>
-                <p>Informasi daftar barang</p>
+                <h1>List Barang & Jasa</h1>
+                <p>Informasi daftar barang & Jasa</p>
             </div>
             <div class="card-body">
                 <table class="table dataTables">
@@ -42,20 +42,20 @@
             <div class="modal-content">
                 <form action="/add-barang" method="post">
                     <div class="modal-header">
-                        <h5 class="modal-title">Tambah Barang</h5>
+                        <h5 class="modal-title">Tambah Barang/jasa</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="nama_item">Nama Barang</label>
+                                    <label for="nama_item">Nama Barang/Jasa</label>
                                     <input id="nama_item" class="form-control" type="text" name="nama_item" required>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="harga_item">Harga</label>
+                                    <label for="harga_item">Harga Barang/Jasa</label>
                                     <input id="harga_item" class="form-control currency" type="text" name="harga_item">
                                 </div>
                             </div>
