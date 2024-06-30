@@ -7,7 +7,7 @@
 <body>
     <%- include('partials/sidebar.ejs') %>
     <% 
-    const condition = vendorS.approve_division || vendorS.approve_department || vendorS.approve_presdir;
+    const condition = !!(vendorS.approve_division || vendorS.approve_department || vendorS.approve_presdir);
     %>
         <div class="container p-4">
             <h2>Vendor Scoring</h2>
@@ -131,7 +131,7 @@
                                         <h5>Kriteria Komersil</h5>
                                     </div>
                                     <div class="col">
-                                        <button type="button" onclick="tambahCard('komersil')" class="btn btn-<%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' ? 'disabled' : 'primary' %> float-end" <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' ? 'disabled' : '' %>>Tambah</button>
+                                        <button type="button" onclick="tambahCard('komersil')" class="btn btn-<%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' || condition ? 'disabled' : 'primary' %> float-end" <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' || condition ? 'disabled' : '' %>>Tambah</button>
                                     </div>
                                 </div>
                             </div>
@@ -140,7 +140,7 @@
                                     <div class="col">
                                         <div class="input-group mb-3">
                                             <span class="input-group-text">Bobot</span>
-                                            <input class="form-control qtyPercent bobot m-0" onchange="calculateScore(2)" placeholder="0-100%" type="text" id="komersil-bobot" name="bobot_komersial" required <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' ? 'disabled' : '' %> value="<%= vendorS.bobot_komersial %>">
+                                            <input class="form-control qtyPercent bobot m-0" onchange="calculateScore(2)" placeholder="0-100%" type="text" id="komersil-bobot" name="bobot_komersial" required <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' || condition ? 'disabled' : '' %> value="<%= vendorS.bobot_komersial %>">
                                         </div>
                                     </div>
                                 </div>
@@ -154,7 +154,7 @@
                                                     <div class="col-8">
                                                         <div class="form-group">
                                                             <label for="nama-kriteria">Nama Template</label>
-                                                            <input class="form-control template" onchange="getTemplate(this)" type="text" name="nama_template[2][]" id="komersil-template-<%= i+1 %>" list="dlTemplate" required <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' ? 'disabled' : '' %> value="<%= sd.nama_template %>"">
+                                                            <input class="form-control template" onchange="getTemplate(this)" type="text" name="nama_template[2][]" id="komersil-template-<%= i+1 %>" list="dlTemplate" required <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' || condition ? 'disabled' : '' %> value="<%= sd.nama_template %>"">
                                                             <input type="hidden" id="komersil-templateid-<%= i+1 %>" name="template_id[2][]" value="<%= sd.template_vs_id %>">
                                                         </div>
                                                     </div>
@@ -162,7 +162,7 @@
                                                         Score
                                                     </div>
                                                     <div class="col">
-                                                        <% if (parent.role_id == '123e4567-e89b-12d3-a456-426614174002') { %>
+                                                        <% if (parent.role_id == '123e4567-e89b-12d3-a456-426614174002' || condition) { %>
                                                             <button type="button" class="btn float-end p-0" onclick="delCard('komersil-<%= i+1 %>')"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"/></svg></button>
                                                         <% } %>
                                                     </div>
@@ -171,7 +171,7 @@
                                                     <div class="col">
                                                         <div class="form-group">
                                                             <label for="my-input">Description</label>
-                                                            <textarea class="form-control" name="deskripsi_template[2][]" id="komersil-desc-<%= i+1 %>" <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' ? 'disabled' : 'readonly' %>><%= sd.deskripsi_template %></textarea>
+                                                            <textarea class="form-control" name="deskripsi_template[2][]" id="komersil-desc-<%= i+1 %>" <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' || condition ? 'disabled' : 'readonly' %>><%= sd.deskripsi_template %></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -179,19 +179,19 @@
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-8">
-                                                        <input class="form-control kriteria" id="komersil-kriteria-<%= i+1 %>" name="kriteria[2][]" type="text" <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' ? 'disabled' : 'readonly' %> value="<%= detailVS[sd.template_vs_id].nama_kriteria %>">
+                                                        <input class="form-control kriteria" id="komersil-kriteria-<%= i+1 %>" name="kriteria[2][]" type="text" <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' || condition ? 'disabled' : 'readonly' %> value="<%= detailVS[sd.template_vs_id].nama_kriteria %>">
                                                     </div>
                                                     <div class="col">
-                                                        <input class="form-control qty komersil-bobot" onchange="calculateScore(2)" placeholder="1-5" name="score1[2][]" type="text" id="komersil-bobot-<%= i+1 %>" required <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' ? 'disabled' : '' %> value="<%= sd.score1 %>">
+                                                        <input class="form-control qty komersil-bobot" onchange="calculateScore(2)" placeholder="1-5" name="score1[2][]" type="text" id="komersil-bobot-<%= i+1 %>" required <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' || condition ? 'disabled' : '' %> value="<%= sd.score1 %>">
                                                     </div>
                                                 </div>
                     
                                                 <div class="row">
                                                     <div class="col-8">
-                                                        <input class="form-control subKriteria" name="subKriteria[2][]" id="komersil-subkriteria-<%= i+1 %>" type="text" <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' ? 'disabled' : 'readonly' %> value="<%= detailVS[sd.template_vs_id].nama_sub_kriteria %>">
+                                                        <input class="form-control subKriteria" name="subKriteria[2][]" id="komersil-subkriteria-<%= i+1 %>" type="text" <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' || condition ? 'disabled' : 'readonly' %> value="<%= detailVS[sd.template_vs_id].nama_sub_kriteria %>">
                                                     </div>
                                                     <div class="col">
-                                                        <input class="form-control qty komersil-bobot" onchange="calculateScore(2)" placeholder="1-5" name="score2[2][]" type="text" id="komersil-bobot2-<%= i+1 %>" required <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' ? 'disabled' : '' %> value="<%= sd.score2 %>">
+                                                        <input class="form-control qty komersil-bobot" onchange="calculateScore(2)" placeholder="1-5" name="score2[2][]" type="text" id="komersil-bobot2-<%= i+1 %>" required <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' || condition ? 'disabled' : '' %> value="<%= sd.score2 %>">
                                                     </div>
                                                 </div>
                                             </div>
@@ -224,7 +224,7 @@
                             </div>
                             <div class="col">
                                 <label>Admin Purchasing</label>
-                                <textarea class="form-control" name="desc_komersil" type="text" placeholder="Opini Admin Purchasing" <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' ? 'disabled' : '' %>><%= vendorS.desc_komersial %></textarea>
+                                <textarea class="form-control" name="desc_komersil" type="text" placeholder="Opini Admin Purchasing" <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' || condition ? 'disabled' : '' %>><%= vendorS.desc_komersial %></textarea>
                             </div>
                         </div>
                     </div>
@@ -241,7 +241,11 @@
                             <div class="col-2">
                                 <input style="background-color: #FCE2D3;" class="form-control qty" type="text" id="final-score" name="final_score" readonly value="<%= vendorS.final_score %>">
                             </div>
-                            <button type="submit" class="col-6 btn btn-orange"><%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' || parent.role_id != '123e4567-e89b-12d3-a456-426614174001' ? "Approve" : "Submit Scoring" %></button>
+                            <% if (vendorS.approve_division && vendorS.approve_department && vendorS.approve_presdir) { %>
+                             
+                            <% }else{ %>
+                                <button type="submit" class="col-6 btn btn-orange"><%= parent.role_id != '123e4567-e89b-12d3-a456-426614174002' && parent.role_id != '123e4567-e89b-12d3-a456-426614174001' ? "Approve" : "Submit Scoring" %></button>
+                            <% } %>
                         </div>
                     </div>
                 </div>

@@ -103,8 +103,10 @@ const updateVendor_Score = async (
         }
 
         const resultVS = await client.query(queries.getVendor_ScoreById, [pengadaan_id, vendor_id]);
+        const resVS = resultVS.rows[0];
+        if(resVS.approve_department && resVS.approve_division && resVS.approve_presdir){
+            await client.query(queriesV.setPemenang, [vendor_id, pengadaan_id])
 
-        if(resultVS.approve_department && resultVS.approve_division && resultVS.approve_presdir){
             const r_id = await client.query(queriesV.getPengadaanById, [pengadaan_id]);
             const nama_pengadaan = r_id.rows[0].nama_pengadaan;
             await contNotif.addNotif(vendor_id, `Selamat! Anda telah terpilih sebagai pemenang vendor scoring untuk pengadaan ${nama_pengadaan}. Silakan masuk ke Portal Vendor untuk detail lebih lanjut.`);
