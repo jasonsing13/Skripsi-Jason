@@ -219,7 +219,6 @@ INSERT INTO public.vendor(
   username,
   password,
   jenis_vendor_id,
-  option_bank,
   kategori_vendor_id,
   status_kantor,
   alamat_perusahaan,
@@ -393,7 +392,7 @@ module.exports = {
     option_Jenis_Vendor,
     option_Provinsi,
     option_Kabupaten_Kota,
-    option_bank,
+    option_Bank,
     getVendorById,
     addVendor,
     option_kategori_vendor,
@@ -415,6 +414,7 @@ module.exports = {
     update_url_profil_perusahaan,
     update_url_dokumen_ppkp,
     updateStatus_Vendor,
-    getListVendor
+    getListVendor,
+    option_bank
 };
 
