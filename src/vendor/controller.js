@@ -238,18 +238,18 @@ const addVendor = async (req, res) => {
         bank_id = results.rows[0].bank_id;
         rekening_id = results.rows[0].rekening_id;
     } else {
-        bank_id = await db.pool.query(
-            queries.addBank_Vendor,
-            [nama_bank]
-        );
-        bank_id = bank_id.rows[0].bank_id
+        // bank_id = await db.pool.query(
+        //     queries.addBank_Vendor,
+        //     [nama_bank]
+        // );
+        // bank_id = bank_id.rows[0].bank_id
 
         rekening_id = await db.pool.query(
             queries.addRekening_Vendor,
             [
                 nama_pemilik_rekening,
                 no_rekening,
-                bank_id
+                nama_bank
             ]
         );
         rekening_id = rekening_id.rows[0].rekening_id
