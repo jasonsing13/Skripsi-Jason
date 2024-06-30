@@ -314,6 +314,19 @@ async function option_Jenis_Vendor() {
     }
   }
 
+async function option_bank() {
+    const client = await db.pool.connect();
+    try {
+        const result = await client.query(queries.option_bank); // Adjust the SQL query based on your actual table and data structure
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        throw error;
+    } finally {
+        client.release();
+    }
+  }
+
   
 async function option_kategori_vendor() {
     const client = await db.pool.connect();
@@ -520,6 +533,7 @@ module.exports = {
     option_Bank,
     getVendorById,
     addVendor,
+    option_bank,
     option_kategori_vendor,
     removeVendor,
     addRekening_Vendor,

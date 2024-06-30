@@ -192,6 +192,10 @@ const option_Jenis_Vendor = `SELECT jenis_vendor_id, nama_jenis_vendor
 FROM public.jenis_vendor;
 `;
 
+const option_bank = `SELECT bank_id, nama_bank
+FROM public.bank;
+`;
+
 const option_kategori_vendor = `SELECT kategori_vendor_id, nama_kategori_vendor
 FROM public.kategori_vendor;
 `;
@@ -215,6 +219,7 @@ INSERT INTO public.vendor(
   username,
   password,
   jenis_vendor_id,
+  option_bank,
   kategori_vendor_id,
   status_kantor,
   alamat_perusahaan,
@@ -388,7 +393,7 @@ module.exports = {
     option_Jenis_Vendor,
     option_Provinsi,
     option_Kabupaten_Kota,
-    option_Bank,
+    option_bank,
     getVendorById,
     addVendor,
     option_kategori_vendor,

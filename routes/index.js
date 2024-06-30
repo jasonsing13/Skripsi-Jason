@@ -235,12 +235,14 @@ router.get('/registration', async function(req, res) {
   const option_Provinsi = await vendorController.option_Provinsi();
   const option_Kabupaten_Kota = await vendorController.option_Kabupaten_Kota();
   const option_kategori_vendor = await vendorController.option_kategori_vendor();
+  const option_bank = await vendorController.option_bank();
   res.render('registration', { // Remove the leading slash before "registration"
     title: 'Registrasi Vendor',
     option_Jenis_Vendor,
     option_Provinsi,
     option_Kabupaten_Kota,
-    option_kategori_vendor
+    option_kategori_vendor,
+    option_bank
   });
 });
 

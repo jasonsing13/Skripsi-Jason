@@ -155,7 +155,11 @@
                                 <!-- REKENING KE BANK -->
                                 <div class="form-group">
                                     <label for="namaBank">Nama Bank</label>
-                                    <input id="namaBank" class="form-control" type="text" name="nama_bank">
+                                    <select class="form-control" name="nama_bank" id="nama_bank">
+                                        <% option_bank.forEach(option => { %>
+                                            <option value="<%= option.bank_id %>"><%= option.nama_bank %></option>
+                                        <% }); %>
+                                    </select>
                                 </div>
                             </div>
                         </div>
