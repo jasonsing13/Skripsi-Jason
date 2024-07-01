@@ -59,6 +59,13 @@
                 <p class="card-text"><strong>Jenis Pengadaan: </strong><%= pengadaan.nama_jenis_pengadaan%></p>
                 <p class="card-text"><strong>Tanggal Mulai: </strong><%= pengadaan.tanggal_pemilihan %></p>
                 <p class="card-text"><strong>Tanggal Selesai: </strong><%= pengadaan.tanggal_pemilihan_selesai %></p>
+                
+                <% if(pengadaan.tipe_pemilihan_id == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f'){ %>
+                <div class="form-group">
+                    <label for="zoom">Link Meeting</label>
+                    <textarea class="form-control" id="zoom" disabled><%= pengadaan.link_zoom %></textarea>
+                </div>
+                <% } %>
             </div>
         </div>
     </div>
