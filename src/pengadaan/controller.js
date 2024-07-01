@@ -453,7 +453,7 @@ const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
                 if (error) throw error;
             });
 
-            const p_res = await pengadaanController.getPengadaanById(pengadaan_id);
+            const p_res = await getPengadaanById(pengadaan_id);
             const nama_pengadaan = p_res.nama_pengadaan;
             await contNotif.addNotif(vendor_id, `Selamat! Anda telah terpilih sebagai pemenang penunjukan langsung untuk pengadaan ${nama_pengadaan}. Silakan masuk ke Portal Vendor untuk detail lebih lanjut.`);
         }
