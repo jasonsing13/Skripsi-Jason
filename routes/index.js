@@ -207,8 +207,7 @@ router.post('/login', async (req, res) => {
       // return res.status(401).json({ error: 'Autentikasi gagal. Email atau kata sandi tidak valid.' });
     }
   } catch (error) {
-    console.error('Error during login:', error);
-    return res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
+    return res.redirect(`/login?status=-1`);
   }
 });
 
