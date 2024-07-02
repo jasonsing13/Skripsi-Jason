@@ -242,7 +242,6 @@
         });
     <% }) %>
 
-
         $("#surat_jalan_url").fileinput({
             showClose: false,
             showBrowse: false,
@@ -292,7 +291,7 @@
                 // ... other file action settings ...
             },
         });
-        
+
         $("#invoice_url").fileinput({
             showClose: false,
             showBrowse: false,
@@ -307,7 +306,7 @@
             initialPreview: [
                 // URL gambar yang ingin ditampilkan
                 '<%= result[0].url_invoice.replace(/\s+/g, '').replace(/\\/g, '/') %>',
-                
+
                 // ... URL gambar lainnya ...
             ],
             initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup

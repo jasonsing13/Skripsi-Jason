@@ -89,7 +89,7 @@ async function checkSession (req, res, next) {
       };
     }else{
       // Vendor
-      var result = await vendorController.getEmail('koci@gmail.com');
+      var result = await vendorController.getEmail('logistikabadi@gmail.com');
       result[0]['isAdmin'] = false
       req.session.data = {
         parent : result[0]
@@ -290,7 +290,7 @@ router.post('/registration', async function(req, res) {
   try {
       const res_vendor = await vendorController.addVendor(req, res);
       const vendor_id = res_vendor.rows[0].id;
-      
+
       await notifController.addNotif(vendor_id, `Akun Anda telah dibuat di Portal Vendor. Silahkan mengunggah dokumen yang diperlukan.`);
       res.redirect(`/login`);
   } catch (error) {
@@ -1384,13 +1384,12 @@ router.get('/informasi-pengadaan-previous/:id', async (req, res) => {
     const data = req.session.data;
     const pengadaan_id = req.params.id
     const result = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
-    res.render('informasi-pengadaan-previous', { pengadaan_id, pengadaan: result, parent: data.parent, page: 'pengadaan' });
-  } catch (error) {
+    res.render('informasi-pengadaan-previous', { pengadaan_id, pengadaan: result, parent: data.parent, page: 'pengadaan' }); 
+  } catch (error) { 
       console.error('Error fetching procurement data:', error);
       res.status(500).send('Error fetching procurement data');
   }
 });
-
 
 router.get('/item-pengadaan-previous/:id', async (req, res) => {
   // Fetch the necessary items data

@@ -101,61 +101,61 @@
                             <div class="col-6 my-2">
                                 <label class="form-label" for="ktpDirektur">KTP Direktur</label>
                                 <div class="file-loading">
-                                    <input id="ktpDirektur" name="ktpDirektur" type="file" accept="image/*">
+                                    <input id="ktpDirektur" name="ktpDirektur" type="file" accept="applications/pdf">
                                 </div>
                             </div>
                             <div class="col-6 my-2">
                                 <label class="form-label" for="ktpKuasa">KTP Penerima Kuasa</label>
                                 <div class="file-loading">
-                                    <input id="ktpKuasa" name="ktpKuasa" type="file" accept="image/*">
+                                    <input id="ktpKuasa" name="ktpKuasa" type="file" accept="applications/pdf">
                                 </div>
                             </div>
                             <div class="col-6 my-2">
                                 <label class="form-label" for="nirlaba">NIBRBA</label>
                                 <div class="file-loading">
-                                    <input id="nirlaba" name="nirlaba" type="file" accept="image/*">
+                                    <input id="nirlaba" name="nirlaba" type="file" accept="applications/pdf">
                                 </div>
                             </div>
                             <div class="col-6 my-2">
                                 <label class="form-label" for="akta_pendirian">Akta Pendirian</label>
                                 <div class="file-loading">
-                                    <input id="akta_pendirian" name="akta_pendirian" type="file" accept="image/*">
+                                    <input id="akta_pendirian" name="akta_pendirian" type="file" accept="applications/pdf">
                                 </div>
                             </div>
                             <div class="col-6 my-2">
                                 <label class="form-label" for="akta_perubahan">Akta Perubahan</label>
                                 <div class="file-loading">
-                                    <input id="akta_perubahan" name="akta_perubahan" type="file" accept="image/*">
+                                    <input id="akta_perubahan" name="akta_perubahan" type="file" accept="applications/pdf">
                                 </div>
                             </div>
                             <div class="col-6 my-2">
                                 <label class="form-label" for="dokumen_ijin_lain">Dokumen Ijin Lain</label>
                                 <div class="file-loading">
-                                    <input id="dokumen_ijin_lain" name="dokumen_ijin_lain" type="file" accept="image/*">
+                                    <input id="dokumen_ijin_lain" name="dokumen_ijin_lain" type="file" accept="applications/pdf">
                                 </div>
                             </div>
                             <div class="col-6 my-2">
                                 <label class="form-label" for="dokumen_npwp">Dokumen NPWP</label>
                                 <div class="file-loading">
-                                    <input id="dokumen_npwp" name="dokumen_npwp" type="file" accept="image/*">
+                                    <input id="dokumen_npwp" name="dokumen_npwp" type="file" accept="applications/pdf">
                                 </div>
                             </div>
                             <div class="col-6 my-2">
                                 <label class="form-label" for="buku_akun_bank">Buku Akun Bank</label>
                                 <div class="file-loading">
-                                    <input id="buku_akun_bank" name="buku_akun_bank" type="file" accept="image/*">
+                                    <input id="buku_akun_bank" name="buku_akun_bank" type="file" accept="applications/pdf">
                                 </div>
                             </div>
                             <div class="col-6 my-2">
                                 <label class="form-label" for="profil_perusahaan">Profil Perusahaan</label>
                                 <div class="file-loading">
-                                    <input id="profil_perusahaan" name="profil_perusahaan" type="file" accept="image/*">
+                                    <input id="profil_perusahaan" name="profil_perusahaan" type="file" accept="applications/pdf">
                                 </div>
                             </div>
                             <div class="col-6 my-2">
                                 <label class="form-label" for="dokumen_ppkp">Dokumen PPKP</label>
                                 <div class="file-loading">
-                                    <input id="dokumen_ppkp" name="dokumen_ppkp" type="file" accept="image/*">
+                                    <input id="dokumen_ppkp" name="dokumen_ppkp" type="file" accept="applications/pdf">
                                 </div>
                             </div>
                         </div>
@@ -178,7 +178,7 @@
     %>
     $("#ktpDirektur").fileinput({
         uploadUrl: "/upload-ktpDirektur",
-        allowedFileExtensions: ["jpg", "png"],
+        allowedFileExtensions: ["pdf"],
         resizePreference: 'height',
         maxFileCount: 1,
         autoReplace: true,
@@ -267,7 +267,7 @@
     %>
     $("#ktpKuasa").fileinput({
         uploadUrl: "/upload-ktpKuasa",
-        allowedFileExtensions: ["jpg", "png"],
+        allowedFileExtensions: ["pdf"],
         resizePreference: 'height',
         maxFileCount: 1,
         autoReplace: true,
@@ -356,7 +356,7 @@
     %>
     $("#nirlaba").fileinput({
         uploadUrl: "/upload-nirlaba",
-        allowedFileExtensions: ["jpg", "png"],
+        allowedFileExtensions: ["pdf"],
         resizePreference: 'height',
         maxFileCount: 1,
         autoReplace: true,
@@ -445,7 +445,7 @@
     %>
     $("#akta_pendirian").fileinput({
         uploadUrl: "/upload-akta_pendirian",
-        allowedFileExtensions: ["jpg", "png"],
+        allowedFileExtensions: ["pdf"],
         resizePreference: 'height',
         maxFileCount: 1,
         autoReplace: true,
@@ -534,7 +534,7 @@
     %>
     $("#akta_perubahan").fileinput({
         uploadUrl: "/upload-akta_perubahan",
-        allowedFileExtensions: ["jpg", "png"],
+        allowedFileExtensions: ["pdf"],
         resizePreference: 'height',
         maxFileCount: 1,
         autoReplace: true,
@@ -623,7 +623,7 @@
     %>
     $("#dokumen_ijin_lain").fileinput({
         uploadUrl: "/upload-dokumen_ijin_lain",
-        allowedFileExtensions: ["jpg", "png"],
+        allowedFileExtensions: ["pdf"],
         resizePreference: 'height',
         maxFileCount: 1,
         autoReplace: true,
@@ -712,7 +712,7 @@
     %>
     $("#dokumen_npwp").fileinput({
         uploadUrl: "/upload-dokumen_npwp",
-        allowedFileExtensions: ["jpg", "png"],
+        allowedFileExtensions: ["pdf"],
         resizePreference: 'height',
         maxFileCount: 1,
         autoReplace: true,
@@ -801,7 +801,7 @@
     %>
     $("#buku_akun_bank").fileinput({
         uploadUrl: "/upload-buku_akun_bank",
-        allowedFileExtensions: ["jpg", "png"],
+        allowedFileExtensions: ["pdf"],
         resizePreference: 'height',
         maxFileCount: 1,
         autoReplace: true,
@@ -890,7 +890,7 @@
     %>
     $("#profil_perusahaan").fileinput({
         uploadUrl: "/upload-profil_perusahaan",
-        allowedFileExtensions: ["jpg", "png"],
+        allowedFileExtensions: ["pdf"],
         resizePreference: 'height',
         maxFileCount: 1,
         autoReplace: true,
@@ -979,7 +979,7 @@
     %>
     $("#dokumen_ppkp").fileinput({
         uploadUrl: "/upload-dokumen_ppkp",
-        allowedFileExtensions: ["jpg", "png"],
+        allowedFileExtensions: ["pdf"],
         resizePreference: 'height',
         maxFileCount: 1,
         autoReplace: true,
