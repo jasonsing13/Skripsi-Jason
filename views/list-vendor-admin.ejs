@@ -124,72 +124,62 @@
                                                             <div class="row mt-2">
                                                                 <div class="col-md-6">
                                                                     <label class="form-label" for="ktpDirektur">KTP Direktur</label>
-                                                                    <div class="embed-responsive">
-
-                                                                        <iframe id="ktpDirektur" src="<%= vendor.url_ktp_direktur ?? "/images/empty.jpg" %>" class="embed-responsive-item" alt="..."> </iframe>
+                                                                    <div class="file-loading">
+                                                                        <input id="ktpDirektur-<%= vendor.id %>" name="ktpDirektur" type="file" accept="applications/pdf">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <label class="form-label" for="ktpKuasa">KTP Kuasa</label>
-                                                                    <div class="embed-responsive">
-
-                                                                        <iframe id="ktpKuasa" src="<%= vendor.url_ktp_penerima_kuasa ?? "/images/empty.jpg" %>" class="embed-responsive-item" alt="..."> </iframe>
+                                                                    <div class="file-loading">
+                                                                        <input id="ktpKuasa-<%= vendor.id %>" name="ktpKuasa" type="file" accept="applications/pdf">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <label class="form-label" for="nirlaba">Nibrba</label>
-                                                                    <div class="embed-responsive">
-
-                                                                        <iframe id="nirlaba" src="<%= vendor.url_nibrba ?? "/images/empty.jpg" %>" class="embed-responsive-item" alt="..."> </iframe>
+                                                                    <div class="file-loading">
+                                                                        <input id="nirlaba-<%= vendor.id %>" name="ktpKuasa" type="file" accept="applications/pdf">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <label class="form-label" for="akta_pendirian">Akta Pendirian</label>
-                                                                    <div class="embed-responsive">
-
-                                                                        <iframe id="akta_pendirian" src="<%= vendor.url_akta_pendirian ?? "/images/empty.jpg" %>" class="embed-responsive-item" alt="..."> </iframe>
+                                                                    <div class="file-loading">
+                                                                        <input id="akta_pendirian-<%= vendor.id %>" name="ktpKuasa" type="file" accept="applications/pdf">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <label class="form-label" for="akta_perubahan">Akta Perubahan</label>
-                                                                    <div class="embed-responsive">
-
-                                                                        <iframe id="akta_perubahan" src="<%= vendor.url_akta_perubahan ?? "/images/empty.jpg" %>" class="embed-responsive-item" alt="..."> </iframe>
+                                                                    <div class="file-loading">
+                                                                        <input id="akta_perubahan-<%= vendor.id %>" name="ktpKuasa" type="file" accept="applications/pdf">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <label class="form-label" for="dokumen_ijin_lain">Dokumen Ijin Lain</label>
-                                                                    <div class="embed-responsive">
-
-                                                                        <iframe id="dokumen_ijin_lain" src="<%= vendor.url_dokumen_ijin_lain ?? "/images/empty.jpg" %>" class="embed-responsive-item" alt="..."> </iframe>
+                                                                    <div class="file-loading">
+                                                                        <input id="dokumen_ijin_lain-<%= vendor.id %>" name="ktpKuasa" type="file" accept="applications/pdf">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <label class="form-label" for="dokumen_npwp">Dokumen NPWP</label>
-                                                                    <div class="embed-responsive">
-
-                                                                        <iframe id="dokumen_npwp" src="<%= vendor.url_dokumen_npwp ?? "/images/empty.jpg" %>" class="embed-responsive-item" alt="..."> </iframe>
+                                                                    <div class="file-loading">
+                                                                        <input id="dokumen_npwp-<%= vendor.id %>" name="ktpKuasa" type="file" accept="applications/pdf">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <label class="form-label" for="buku_akun_bank">Buku Akun Bank</label>
-                                                                    <div class="embed-responsive">
-
-                                                                        <iframe id="buku_akun_bank" src="<%= vendor.url_buku_akun_bank ?? "/images/empty.jpg" %>" class="embed-responsive-item" alt="..."> </iframe>
+                                                                    <div class="file-loading">
+                                                                        <input id="buku_akun_bank-<%= vendor.id %>" name="ktpKuasa" type="file" accept="applications/pdf">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <label class="form-label" for="profil_perusahaan">Profil Perusahaan</label>
-                                                                    <div class="embed-responsive">
-
-                                                                        <iframe id="profil_perusahaan" src="<%= vendor.url_profil_perusahaan ?? "/images/empty.jpg" %>" class="embed-responsive-item" alt="..."> </iframe>
+                                                                    <div class="file-loading">
+                                                                        <input id="profil_perusahaan-<%= vendor.id %>" name="ktpKuasa" type="file" accept="applications/pdf">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <label class="form-label" for="dokumen_ppkp">Dokumen PPKP</label>
-                                                                    <div class="embed-responsive">
-
-                                                                        <iframe id="dokumen_ppkp" src="<%= vendor.url_dokumen_ppkp ?? "/images/empty.jpg" %>" class="embed-responsive-item" alt="..."> </iframe>
+                                                                    <div class="file-loading">
+                                                                        <input id="dokumen_ppkp-<%= vendor.id %>" name="ktpKuasa" type="file" accept="applications/pdf">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -251,4 +241,499 @@
         
     </div>
 <%- include('partials/footer.ejs') %>
+
+<script>
+    <% vendor.forEach(function(vendor, i) { %>
+        $("#ktpDirektur-<%= vendor.id %>").fileinput({
+            showClose: false,
+            showBrowse: false,
+            showCancel: false,
+            showRemove: false,
+            showUpload: false,
+            sortable: false,
+            showCaption: false,
+            <%
+            if(vendor.url_ktp_direktur){
+            %>
+            initialPreview: [
+                // URL gambar yang ingin ditampilkan
+                '<%= vendor.url_ktp_direktur.replace(/\s+/g, '').replace(/\\/g, '/') %>',
+                
+                // ... URL gambar lainnya ...
+            ],
+            initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+            initialPreviewFileType: 'pdf', // image is the default and can be overridden in config below
+            <%
+            }
+            %>
+            initialPreviewConfig: [
+                {
+                    // Menyembunyikan tombol remove
+                    showRemove: false,
+                    // Menyembunyikan tombol upload
+                    showUpload: false,
+                    // Menyembunyikan tombol zoom
+                    showZoom: true,
+                    showRotate: false,
+                    // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                    showDownload: false,
+                    showDrag: false,
+                }
+            ],
+            fileActionSettings: {
+                // Menyembunyikan tombol remove
+                showRemove: false,
+                // Menyembunyikan tombol upload
+                showUpload: false,
+                // Menyembunyikan tombol zoom
+                showZoom: true,
+                showRotate: false,
+                // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                showDownload: false,
+                // ... other file action settings ...
+            },
+        });
+        $("#ktpKuasa-<%= vendor.id %>").fileinput({
+            showClose: false,
+            showBrowse: false,
+            showCancel: false,
+            showRemove: false,
+            showUpload: false,
+            sortable: false,
+            showCaption: false,
+            <%
+            if(vendor.url_ktp_penerima_kuasa){
+            %>
+            initialPreview: [
+                // URL gambar yang ingin ditampilkan
+                '<%= vendor.url_ktp_penerima_kuasa.replace(/\s+/g, '').replace(/\\/g, '/') %>',
+                
+                // ... URL gambar lainnya ...
+            ],
+            initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+            initialPreviewFileType: 'pdf', // image is the default and can be overridden in config below
+            <%
+            }
+            %>
+            initialPreviewConfig: [
+                {
+                    // Menyembunyikan tombol remove
+                    showRemove: false,
+                    // Menyembunyikan tombol upload
+                    showUpload: false,
+                    // Menyembunyikan tombol zoom
+                    showZoom: true,
+                    showRotate: false,
+                    // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                    showDownload: false,
+                    showDrag: false,
+                }
+            ],
+            fileActionSettings: {
+                // Menyembunyikan tombol remove
+                showRemove: false,
+                // Menyembunyikan tombol upload
+                showUpload: false,
+                // Menyembunyikan tombol zoom
+                showZoom: true,
+                showRotate: false,
+                // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                showDownload: false,
+                // ... other file action settings ...
+            },
+        });
+        $("#nirlaba-<%= vendor.id %>").fileinput({
+            showClose: false,
+            showBrowse: false,
+            showCancel: false,
+            showRemove: false,
+            showUpload: false,
+            sortable: false,
+            showCaption: false,
+            <%
+            if(vendor.url_nibrba){
+            %>
+            initialPreview: [
+                // URL gambar yang ingin ditampilkan
+                '<%= vendor.url_nibrba.replace(/\s+/g, '').replace(/\\/g, '/') %>',
+                
+                // ... URL gambar lainnya ...
+            ],
+            initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+            initialPreviewFileType: 'pdf', // image is the default and can be overridden in config below
+            <%
+            }
+            %>
+            initialPreviewConfig: [
+                {
+                    // Menyembunyikan tombol remove
+                    showRemove: false,
+                    // Menyembunyikan tombol upload
+                    showUpload: false,
+                    // Menyembunyikan tombol zoom
+                    showZoom: true,
+                    showRotate: false,
+                    // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                    showDownload: false,
+                    showDrag: false,
+                }
+            ],
+            fileActionSettings: {
+                // Menyembunyikan tombol remove
+                showRemove: false,
+                // Menyembunyikan tombol upload
+                showUpload: false,
+                // Menyembunyikan tombol zoom
+                showZoom: true,
+                showRotate: false,
+                // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                showDownload: false,
+                // ... other file action settings ...
+            },
+        });
+        $("#akta_pendirian-<%= vendor.id %>").fileinput({
+            showClose: false,
+            showBrowse: false,
+            showCancel: false,
+            showRemove: false,
+            showUpload: false,
+            sortable: false,
+            showCaption: false,
+            <%
+            if(vendor.url_akta_pendirian){
+            %>
+            initialPreview: [
+                // URL gambar yang ingin ditampilkan
+                '<%= vendor.url_akta_pendirian.replace(/\s+/g, '').replace(/\\/g, '/') %>',
+                
+                // ... URL gambar lainnya ...
+            ],
+            initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+            initialPreviewFileType: 'pdf', // image is the default and can be overridden in config below
+            <%
+            }
+            %>
+            initialPreviewConfig: [
+                {
+                    // Menyembunyikan tombol remove
+                    showRemove: false,
+                    // Menyembunyikan tombol upload
+                    showUpload: false,
+                    // Menyembunyikan tombol zoom
+                    showZoom: true,
+                    showRotate: false,
+                    // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                    showDownload: false,
+                    showDrag: false,
+                }
+            ],
+            fileActionSettings: {
+                // Menyembunyikan tombol remove
+                showRemove: false,
+                // Menyembunyikan tombol upload
+                showUpload: false,
+                // Menyembunyikan tombol zoom
+                showZoom: true,
+                showRotate: false,
+                // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                showDownload: false,
+                // ... other file action settings ...
+            },
+        });
+        $("#akta_perubahan-<%= vendor.id %>").fileinput({
+            showClose: false,
+            showBrowse: false,
+            showCancel: false,
+            showRemove: false,
+            showUpload: false,
+            sortable: false,
+            showCaption: false,
+            <%
+            if(vendor.url_akta_perubahan){
+            %>
+            initialPreview: [
+                // URL gambar yang ingin ditampilkan
+                '<%= vendor.url_akta_perubahan.replace(/\s+/g, '').replace(/\\/g, '/') %>',
+                
+                // ... URL gambar lainnya ...
+            ],
+            initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+            initialPreviewFileType: 'pdf', // image is the default and can be overridden in config below
+            <%
+            }
+            %>
+            initialPreviewConfig: [
+                {
+                    // Menyembunyikan tombol remove
+                    showRemove: false,
+                    // Menyembunyikan tombol upload
+                    showUpload: false,
+                    // Menyembunyikan tombol zoom
+                    showZoom: true,
+                    showRotate: false,
+                    // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                    showDownload: false,
+                    showDrag: false,
+                }
+            ],
+            fileActionSettings: {
+                // Menyembunyikan tombol remove
+                showRemove: false,
+                // Menyembunyikan tombol upload
+                showUpload: false,
+                // Menyembunyikan tombol zoom
+                showZoom: true,
+                showRotate: false,
+                // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                showDownload: false,
+                // ... other file action settings ...
+            },
+        });
+        $("#dokumen_ijin_lain-<%= vendor.id %>").fileinput({
+            showClose: false,
+            showBrowse: false,
+            showCancel: false,
+            showRemove: false,
+            showUpload: false,
+            sortable: false,
+            showCaption: false,
+            <%
+            if(vendor.url_dokumen_ijin_lain){
+            %>
+            initialPreview: [
+                // URL gambar yang ingin ditampilkan
+                '<%= vendor.url_dokumen_ijin_lain.replace(/\s+/g, '').replace(/\\/g, '/') %>',
+                
+                // ... URL gambar lainnya ...
+            ],
+            initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+            initialPreviewFileType: 'pdf', // image is the default and can be overridden in config below
+            <%
+            }
+            %>
+            initialPreviewConfig: [
+                {
+                    // Menyembunyikan tombol remove
+                    showRemove: false,
+                    // Menyembunyikan tombol upload
+                    showUpload: false,
+                    // Menyembunyikan tombol zoom
+                    showZoom: true,
+                    showRotate: false,
+                    // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                    showDownload: false,
+                    showDrag: false,
+                }
+            ],
+            fileActionSettings: {
+                // Menyembunyikan tombol remove
+                showRemove: false,
+                // Menyembunyikan tombol upload
+                showUpload: false,
+                // Menyembunyikan tombol zoom
+                showZoom: true,
+                showRotate: false,
+                // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                showDownload: false,
+                // ... other file action settings ...
+            },
+        });
+        $("#dokumen_npwp-<%= vendor.id %>").fileinput({
+            showClose: false,
+            showBrowse: false,
+            showCancel: false,
+            showRemove: false,
+            showUpload: false,
+            sortable: false,
+            showCaption: false,
+            <%
+            if(vendor.url_dokumen_npwp){
+            %>
+            initialPreview: [
+                // URL gambar yang ingin ditampilkan
+                '<%= vendor.url_dokumen_npwp.replace(/\s+/g, '').replace(/\\/g, '/') %>',
+                
+                // ... URL gambar lainnya ...
+            ],
+            initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+            initialPreviewFileType: 'pdf', // image is the default and can be overridden in config below
+            <%
+            }
+            %>
+            initialPreviewConfig: [
+                {
+                    // Menyembunyikan tombol remove
+                    showRemove: false,
+                    // Menyembunyikan tombol upload
+                    showUpload: false,
+                    // Menyembunyikan tombol zoom
+                    showZoom: true,
+                    showRotate: false,
+                    // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                    showDownload: false,
+                    showDrag: false,
+                }
+            ],
+            fileActionSettings: {
+                // Menyembunyikan tombol remove
+                showRemove: false,
+                // Menyembunyikan tombol upload
+                showUpload: false,
+                // Menyembunyikan tombol zoom
+                showZoom: true,
+                showRotate: false,
+                // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                showDownload: false,
+                // ... other file action settings ...
+            },
+        });
+        $("#buku_akun_bank-<%= vendor.id %>").fileinput({
+            showClose: false,
+            showBrowse: false,
+            showCancel: false,
+            showRemove: false,
+            showUpload: false,
+            sortable: false,
+            showCaption: false,
+            <%
+            if(vendor.url_buku_akun_bank){
+            %>
+            initialPreview: [
+                // URL gambar yang ingin ditampilkan
+                '<%= vendor.url_buku_akun_bank.replace(/\s+/g, '').replace(/\\/g, '/') %>',
+                
+                // ... URL gambar lainnya ...
+            ],
+            initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+            initialPreviewFileType: 'pdf', // image is the default and can be overridden in config below
+            <%
+            }
+            %>
+            initialPreviewConfig: [
+                {
+                    // Menyembunyikan tombol remove
+                    showRemove: false,
+                    // Menyembunyikan tombol upload
+                    showUpload: false,
+                    // Menyembunyikan tombol zoom
+                    showZoom: true,
+                    showRotate: false,
+                    // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                    showDownload: false,
+                    showDrag: false,
+                }
+            ],
+            fileActionSettings: {
+                // Menyembunyikan tombol remove
+                showRemove: false,
+                // Menyembunyikan tombol upload
+                showUpload: false,
+                // Menyembunyikan tombol zoom
+                showZoom: true,
+                showRotate: false,
+                // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                showDownload: false,
+                // ... other file action settings ...
+            },
+        });
+        $("#profil_perusahaan-<%= vendor.id %>").fileinput({
+            showClose: false,
+            showBrowse: false,
+            showCancel: false,
+            showRemove: false,
+            showUpload: false,
+            sortable: false,
+            showCaption: false,
+            <%
+            if(vendor.url_profil_perusahaan){
+            %>
+            initialPreview: [
+                // URL gambar yang ingin ditampilkan
+                '<%= vendor.url_profil_perusahaan.replace(/\s+/g, '').replace(/\\/g, '/') %>',
+                
+                // ... URL gambar lainnya ...
+            ],
+            initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+            initialPreviewFileType: 'pdf', // image is the default and can be overridden in config below
+            <%
+            }
+            %>
+            initialPreviewConfig: [
+                {
+                    // Menyembunyikan tombol remove
+                    showRemove: false,
+                    // Menyembunyikan tombol upload
+                    showUpload: false,
+                    // Menyembunyikan tombol zoom
+                    showZoom: true,
+                    showRotate: false,
+                    // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                    showDownload: false,
+                    showDrag: false,
+                }
+            ],
+            fileActionSettings: {
+                // Menyembunyikan tombol remove
+                showRemove: false,
+                // Menyembunyikan tombol upload
+                showUpload: false,
+                // Menyembunyikan tombol zoom
+                showZoom: true,
+                showRotate: false,
+                // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                showDownload: false,
+                // ... other file action settings ...
+            },
+        });
+        $("#dokumen_ppkp-<%= vendor.id %>").fileinput({
+            showClose: false,
+            showBrowse: false,
+            showCancel: false,
+            showRemove: false,
+            showUpload: false,
+            sortable: false,
+            showCaption: false,
+            <%
+            if(vendor.url_dokumen_ppkp){
+            %>
+            initialPreview: [
+                // URL gambar yang ingin ditampilkan
+                '<%= vendor.url_dokumen_ppkp.replace(/\s+/g, '').replace(/\\/g, '/') %>',
+                
+                // ... URL gambar lainnya ...
+            ],
+            initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+            initialPreviewFileType: 'pdf', // image is the default and can be overridden in config below
+            <%
+            }
+            %>
+            initialPreviewConfig: [
+                {
+                    // Menyembunyikan tombol remove
+                    showRemove: false,
+                    // Menyembunyikan tombol upload
+                    showUpload: false,
+                    // Menyembunyikan tombol zoom
+                    showZoom: true,
+                    showRotate: false,
+                    // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                    showDownload: false,
+                    showDrag: false,
+                }
+            ],
+            fileActionSettings: {
+                // Menyembunyikan tombol remove
+                showRemove: false,
+                // Menyembunyikan tombol upload
+                showUpload: false,
+                // Menyembunyikan tombol zoom
+                showZoom: true,
+                showRotate: false,
+                // Menampilkan tombol download (bisa dianggap sebagai 'view detail')
+                showDownload: false,
+                // ... other file action settings ...
+            },
+        });
+    <% }) %>
+</script>
 </html>
