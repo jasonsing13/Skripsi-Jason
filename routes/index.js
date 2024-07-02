@@ -186,7 +186,7 @@ router.post('/login', async (req, res) => {
         res.redirect(result[0]['status_verifikasi_id'] == "bec6ed04-e967-4ce8-8865-e6285690174e" ? '/dashboard-vendor' : '/approved-vendor-profile');
         // Send data to route 2 via POST request
       } else {
-        return res.status(401).json({ error: 'Autentikasi gagal. Email atau kata sandi tidak valid.' });
+        return res.redirect(`/login?status=-1`);
       }
     } else if(resultAdm.length > 0) {
       const passwordDb = resultAdm[0].password;
@@ -200,11 +200,11 @@ router.post('/login', async (req, res) => {
 
         res.redirect('/dashboard-admin');
       } else {
-        return res.status(401).json({ error: 'Autentikasi gagal. Email atau kata sandi tidak valid.' });
+        return res.redirect(`/login?status=-1`);
       }
     } else {
         return res.redirect(`/login?status=-1`);
-      // return res.status(401).json({ error: 'Autentikasi gagal. Email atau kata sandi tidak valid.' });
+      // return res.redirect(`/login?status=-1`);
     }
   } catch (error) {
     return res.redirect(`/login?status=-1`);
@@ -778,25 +778,6 @@ router.get('/daftar-pengadaan', async function(req, res) {
   }
 });
 
-// Tambahkan route untuk filter status pengadaan
-router.get('/daftar-pengadaan/status/:status_id', async function(req, res) {
-  const status_id = req.params.status_id;
-  const data = req.session.data;
-  try {
-      const statusOptions = await pengadaanController.option_Select_Status();
-      const result = await pengadaanController.getDaftarPengadaanByStatus(status_id, data.parent.id);
-      res.render('daftar-pengadaan', {
-          pengadaan: result,
-          status: statusOptions,
-          status_id: status_id,
-          parent: data.parent,
-          page: 'pengadaan'
-      });
-  } catch (error) {
-      console.error('Error fetching pengadaan data:', error);
-      res.status(500).send('Error fetching pengadaan data: ' + error.message);
-  }
-});
 
 
 router.get('/informasi-pengadaan', async (req, res) => {
