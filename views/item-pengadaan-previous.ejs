@@ -10,7 +10,7 @@
 <body>
     <%- include('partials/sidebar.ejs') %>
     <div class="container mt-4">
-        <h1>Item Pengadaan</h1>
+        <h1>Item/Jasa Pengadaan</h1>
         <h1>Informasi Pengadaan</h1>      
         <% if(pengadaan.status_id == '5b117843-38aa-47cd-b4f2-24c3f88ab472'){ %>
             <div class="d-flex justify-content-end align-items-start mb-3">
@@ -22,7 +22,7 @@
                 <a class="nav-link" href="/informasi-pengadaan-previous/<%= pengadaan_id %>">Informasi Pengadaan</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="/item-pengadaan-previous/<%= pengadaan_id %>">Item Pengadaan</a>
+                <a class="nav-link active" href="/item-pengadaan-previous/<%= pengadaan_id %>">Item/Jasa Pengadaan</a>
             </li>
             <% if(pengadaan.status_id == '0b3e77e5-140b-4662-9563-dde365358ddc' || pengadaan.status_id == '3b9a7057-fc96-4894-88b6-24f2f4211110'){ %>
             <li class="nav-item">
@@ -43,14 +43,14 @@
         </ul>
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Daftar Item</h5>
+                <h5 class="card-title">Daftar Item/Jasa</h5>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>No. Item</th>
-                            <th>Nama Item</th>
+                            <th>No. Item/Jasa</th>
+                            <th>Nama Item/Jasa</th>
                             <th>Quantity</th>
-                            <th>Harga Item</th>
+                            <th>Harga Item/Jasa</th>
                             <th>Sub Total</th>
                         </tr>
                     </thead>

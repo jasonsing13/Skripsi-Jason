@@ -16,15 +16,15 @@
                 <table class="table dataTables">
                     <thead>
                         <tr>
-                            <th>Kode</th>
-                            <th>Isi</th>
-                            <th>Create Date</th>
+                            <!-- <th>Kode</th> -->
+                            <!-- <th>Isi</th>
+                            <th>Create Date</th> -->
                         </tr>
                     </thead>
                     <tbody>
                         <% item.forEach(function(it, i) { %>
                             <tr>
-                                <td><%= it.notif_id %></td>
+                                <!-- <td><%= it.notif_id %></td> -->
                                 <td><%= it.isi || "-" %></td>
                                 <td><%= moment(it.cdate).calendar() %></td>
                             </tr>

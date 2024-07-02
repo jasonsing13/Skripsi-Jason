@@ -10,7 +10,7 @@
 <body>
     <%- include('partials/sidebar.ejs') %>
     <div class="container mt-4">
-        <h1>Item Pengadaan</h1>
+        <h1>Item/Jasa Pengadaan</h1>
         <% if (pengadaanUser) { %>
             <% if(pengadaan.tipe_pemilihan_id == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f' && pengadaanUser.status_id != '9e18ab27-4557-41eb-b3c1-430c67377830' && pengadaanUser.status_id != '760ad69f-7739-41e1-baf9-7a68665b21e8'){ %>
                 <div class="d-flex justify-content-end align-items-start mb-3">
@@ -28,7 +28,7 @@
                 <a class="nav-link" href="/informasi-pengadaan-approved?id=<%= pengadaan_id %>">Informasi Pengadaan</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="/item-pengadaan-approved?id=<%= pengadaan_id %>">Item Pengadaan</a>
+                <a class="nav-link active" href="/item-pengadaan-approved?id=<%= pengadaan_id %>">Item/Jasa Pengadaan</a>
             </li>
             <% if((pengadaan.tipe_pemilihan_id == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f' && pengadaanUser.status_id == '760ad69f-7739-41e1-baf9-7a68665b21e8') || (pengadaan.tipe_pemilihan_id == '4ff07c90-7efb-4a4a-8715-d53748a387d6' && pengadaanUser.status_id == '760ad69f-7739-41e1-baf9-7a68665b21e8') || (pengadaan.tipe_pemilihan_id != 'b8649cf1-3da3-4258-8e2d-459e10b1b95f' && pengadaan.tipe_pemilihan_id != '4ff07c90-7efb-4a4a-8715-d53748a387d6')){ %>
                 <!-- <li class="nav-item">
@@ -44,14 +44,14 @@
         </ul>
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Daftar Item</h5>
+                <h5 class="card-title">Daftar Item/Jasa</h5>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>No. Item</th>
-                            <th>Nama Item</th>
+                            <th>No. Item/Jasa</th>
+                            <th>Nama Item/Jasa</th>
                             <th>Quantity</th>
-                            <th>Harga Item</th>
+                            <th>Harga Item/Jasa</th>
                             <th>Sub Total</th>
                         </tr>
                     </thead>
