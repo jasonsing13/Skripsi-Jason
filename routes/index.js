@@ -89,7 +89,7 @@ async function checkSession (req, res, next) {
       };
     }else{
       // Vendor
-      var result = await vendorController.getEmail('logistikabadi@gmail.com');
+      var result = await vendorController.getEmail('koci@gmail.com');
       result[0]['isAdmin'] = false
       req.session.data = {
         parent : result[0]

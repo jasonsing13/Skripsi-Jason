@@ -51,21 +51,31 @@
                             <th>Nama Pengadaan</th>
                             <th>Quantity</th>
                             <th>Harga Item</th>
-                            <!-- <th>Diskon</th> -->
-                            <th>Net Amount</th>
+                            <th>Sub Total</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <% var total = 0 %>
                         <% items.forEach(function(item, i) { %>
+                            <% total += item.harga_item * item.quantity %>
                         <tr>
                             <td><%= i+1 %></td>
                             <td><%= item.nama_item %></td>
                             <td class="qty"><%= item.quantity %></td>
                             <td class="currency"><%= item.harga_item %></td>
-                            <td class="currency"><%= item.harga_total %></td>
+                            <td class="currency"><%= item.harga_item * item.quantity %></td>
                         </tr>
                         <% }); %>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Harga Total:</td>
+                            <td class="currency"><%= total %></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
