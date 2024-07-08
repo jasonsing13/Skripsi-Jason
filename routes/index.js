@@ -82,7 +82,27 @@ async function checkSession (req, res, next) {
 
     // ADMIN
     if(process.env.ISADMIN == "true"){
-      var result = await userController.getUserByEmail('admin@example.com');
+      const role = process.env.ROLE || '1';
+      var email2 = '';
+      switch(role){
+        case '1':
+          email2 = 'admin@example.com';
+          break;
+        case '2':
+          email2 = 'purchasing@example.com';
+          break;
+        case '3':
+          email2 = 'divhead@example.com';
+          break;
+        case '4':
+          email2 = 'dephead@example.com';
+          break;
+        case '5':
+          email2 = 'presdir@example.com';
+          break;
+      }
+      console.log("email2: "+email2)
+      var result = await userController.getUserByEmail(email2);
       result[0]['isAdmin'] = true
       req.session.data = {
         parent : result[0] 
@@ -1412,8 +1432,9 @@ router.get('/validasi-pengadaan-admin/:id', async function(req, res) {
   const pengadaan_id = req.params.id
   const result = await pengadaanController.getInformasiPengadaanPrevious(pengadaan_id);
   const item = await pengadaanController.getItemPengadaan(pengadaan_id);
+  const bidding = await bidding_tenderController.getBidding_TenderDetailById(pengadaan_id)
   const data = req.session.data;
-  res.render('validasi-pengadaan-admin', {pengadaan: result, pengadaanItem: item, option_Tipe_Pemilihan2, option_Vendor, option_PIC, parent: data.parent, page: "pengadaan"});
+  res.render('validasi-pengadaan-admin', {pengadaan: result, bidding, pengadaanItem: item, option_Tipe_Pemilihan2, option_Vendor, option_PIC, parent: data.parent, page: "pengadaan"});
 });
 
 router.post('/validasi-pengadaan-admin', async function(req, res) {

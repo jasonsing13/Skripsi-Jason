@@ -404,15 +404,72 @@ const addItem = `
 
 const removePengadaan = ` delete from pengadaan where pengadaan_id = $1 `;
 
+const getValidatorByID = `
+    SELECT * 
+    FROM validasi_pengadaan
+    WHERE id = $1;
+`;
+
+const addValidator = `
+    INSERT INTO validasi_pengadaan (
+        status
+    ) 
+    VALUES (0)
+    RETURNING id;
+`;
+
+const insertValidatorPengadaan = `
+    UPDATE pengadaan
+    SET 
+    is_validate = $1
+    WHERE pengadaan_id = $2
+`;
+
+const insertValidatorPemenangPengadaan = `
+    UPDATE pengadaan
+    SET 
+    is_set_pemenang = $1
+    WHERE pengadaan_id = $2
+`;
+
+const validateDivisiHead = `
+    UPDATE validasi_pengadaan
+    SET 
+    division_head = $1
+    WHERE id = $2
+`;
+
+const validatePurchasing = `
+    UPDATE validasi_pengadaan
+    SET 
+    purchasing = $1
+    WHERE id = $2
+`;
+
+const validateDivisi = `
+    UPDATE validasi_pengadaan
+    SET 
+    division = $1
+    WHERE id = $2
+`;
+
+
 const validasiPengadaan = ` 
 UPDATE public.pengadaan
 SET 
 tanggal_pemilihan = $1, 
 tanggal_pemilihan_selesai = $2, 
 pic = $3,
-aanwijzing = $4,
-status_id = '0b3e77e5-140b-4662-9563-dde365358ddc'
+aanwijzing = $4
 WHERE pengadaan_id = $5
+;`
+;
+
+const updateStatusValidate = ` 
+UPDATE public.pengadaan
+SET 
+status_id = '0b3e77e5-140b-4662-9563-dde365358ddc'
+WHERE pengadaan_id = $1
 ;`
 ;
 
@@ -521,6 +578,14 @@ module.exports = {
     setPemenangTender,
     getVendorPemenang,
     validasiPengadaanTender,
-    tutup
+    tutup,
+    validateDivisi,
+    validatePurchasing,
+    validateDivisiHead,
+    insertValidatorPemenangPengadaan,
+    insertValidatorPengadaan,
+    addValidator,
+    updateStatusValidate,
+    getValidatorByID
 };
 

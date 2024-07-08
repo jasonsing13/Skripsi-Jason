@@ -15,6 +15,8 @@
             <div class="card-body">
                 <h5 class="card-title">Approve Pengadaan yang diinput oleh admin divisi</h5>
                 <form action="/validasi-pengadaan-admin" method="post">
+                    <input type="hidden" name="user_id" value="<%= parent.id %>">
+                    <input type="hidden" name="role_id" value="<%= parent.role_id %>">
                     <div class="row flex-wrap mb-3">
                         <div class="col-md-6">
                             <label for="nama_pengadaan" class="form-label">Nama Pengadaan</label>
@@ -44,47 +46,48 @@
                     <div class="row flex-wrap mb-3">
                         <div class="col-md-6">
                             <label for="tanggal_pemilihan" class="form-label">Tanggal Mulai</label>
-                            <input type="date" class="form-control" id="tanggal_pemilihan" name="tanggal_pemilihan" required>
+                            <input type="date" class="form-control" id="tanggal_pemilihan" name="tanggal_pemilihan" <%= parent.role_id == '123e4567-e89b-12d3-a456-426614174002' || parent.role_id == '123e4567-e89b-12d3-a456-426614174001' ? "" : "readonly" %> value="<%= moment(pengadaan.tanggal_pemilihan).format("YYYY-MM-DD") %>" required>
                         </div>
                         <div class="col-md-6">
                             <label for="tanggal_pemilihan_selesai" class="form-label">Tanggal Selesai</label>
-                            <input type="date" class="form-control" id="tanggal_pemilihan_selesai" name="tanggal_pemilihan_selesai" required>
+                            <input type="date" class="form-control" id="tanggal_pemilihan_selesai" name="tanggal_pemilihan_selesai" <%= parent.role_id == '123e4567-e89b-12d3-a456-426614174002' || parent.role_id == '123e4567-e89b-12d3-a456-426614174001' ? "" : "readonly" %> value="<%= moment(pengadaan.tanggal_pemilihan_selesai).format("YYYY-MM-DD") %>" required>
                         </div>
                         <div class="col-md-6">
                             <label for="pic" class="form-label">PIC</label>
-                            <select class="form-select" id="pic" name="pic">
+                            <select class="form-select" id="pic" <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174004' ? "disabled" : "name=pic" %>>
                                 <option selected>Pilih PIC</option>
                                 <% option_PIC.forEach(option => { %>
-                                    <option value="<%= option.id %>"><%= option.first_name %> <%= option.last_name %></option>
+                                    <option value="<%= option.id %>" <%= option.id == pengadaan.pic ? "selected" : "" %>><%= option.first_name %> <%= option.last_name %></option>
                                 <% }); %>
                             </select>
+                            <input type="hidden" <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174004' ? `name=pic value=${pengadaan.pic ?? ''}` : "" %>>
                         </div>
                         <% if (pengadaan.tipe_pemilihan_id == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f') { %>
                             <div class="col-md-6">
                                 <label for="link_zoom" class="form-label">Keterangan Meeting (Zoom)</label>
-                                <textarea class="form-control" name="link_zoom" id="link_zoom" rows="3" required></textarea>
+                                <textarea class="form-control" name="link_zoom" id="link_zoom" rows="3" required><%= bidding[0].link_zoom %></textarea>
                             </div>
                         <% } %>
                         <% if(pengadaan.tipe_pemilihan_id == 'a81c1ea8-2e4f-47f1-a963-38496490cd93'){ %>
                             <div class="col-md-6">
                                 <label for="vendor_id" class="form-label">Vendor Yang Dipilih</label>
-                                <select class="form-select" id="vendor_id" name="vendor_id">
+                                <select class="form-select" id="vendor_id" name="vendor_id" >
                                     <option selected>Pilih Vendor</option>
                                     <% option_Vendor.forEach(option => { %>
-                                        <option value="<%= option.id %>"><%= option.nama_vendor %></option>
+                                        <option value="<%= option.id %>" <%= option.id == pengadaan.vendor_pemenang ? "selected" : "" %>><%= option.nama_vendor %></option>
                                     <% }); %>
                                 </select>
                             </div>
                         <% } %>
-                        <div class="col-md-12">
+                        <div class="col-md-12 mt-3">
                             <label for="aanwijzing" class="form-label">Aanwijzingi</label>
-                            <textarea rows="7" class="form-control" name="aanwijzing" id="aanwijzing">[Hari, Tanggal-bulan-tahun]
+                            <textarea rows="7" class="form-control" name="aanwijzing" id="aanwijzing" <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174001' ? "readonly" : "" %>><%= pengadaan.aanwijzing ?? `[Hari, Tanggal-bulan-tahun]
 Scope pekerjaan dari [bidding/tender] yang diadakan adalah sebagai berikut:
 - Harga rekomendasi adalah [Harga rekomendasi]
 - Termin pembayaran lebih dari [termin] bulan
 - Proyek memiliki scope pekerjaan renovasi gudang 2 lantai
 Pihak vendor dianggap telah memahami spesifikasi pekerjaan, volume pekerjaan maupun kelengkapan lainnya sesuai kebutuhan dan keinginan yang diharapkan pihak PT. Mitra Pinasthika Mulia. Dengan demikian, jika salah satu vendor yang hadir saat ini terpilih sebagai pemenang [tender/bidding], maka segala resiko yang timbul akibat kekurangan volume dan sebagainya, telah menjadi tanggung jawab dari pihak vendor pemenang [tender/bidding] pekerjaan ini. Demikian Berita Acara ini dibuat dan disetujui oleh perwakilan dari pihak perwakilan vendor. 
-(paragraph diatas ini isian sendiri)</textarea>    
+(paragraph diatas ini isian sendiri)` %></textarea>    
                         </div>
                     </div>
                     <div class="row">

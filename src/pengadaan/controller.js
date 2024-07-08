@@ -417,14 +417,85 @@ const removePengadaan = (req,res)=>{
     });
 };
 
+const doValidator = async (pengadaan_id, role_id, user_id, type) => {
+    // GET Validator
+    const pengadaan = await getPengadaanById(pengadaan_id);
+    var validator = '';
+    if(type == 'is_validate'){
+        validator = pengadaan.is_validate;
+    
+        if(!validator){
+            const validator_db = await db.pool.query(queries.addValidator);
+            validator = validator_db.rows[0].id
+    
+            await db.pool.query(queries.insertValidatorPengadaan, [validator, pengadaan_id])
+        }
+    }else{
+        validator = pengadaan.is_set_pemenang;
+    
+        if(!validator){
+            const validator_db = await db.pool.query(queries.addValidator);
+            validator = validator_db.rows[0].id
+    
+            await db.pool.query(queries.insertValidatorPemenangPengadaan, [validator, pengadaan_id])
+        }
+    }
+
+    switch (role_id) {
+        // ADMIN DIVISI
+        case '123e4567-e89b-12d3-a456-426614174001':
+            await db.pool.query(queries.validateDivisi, [user_id, validator]);
+            break;
+
+        // ADMIN PURCHASING
+        case '123e4567-e89b-12d3-a456-426614174002':
+            await db.pool.query(queries.validatePurchasing, [user_id, validator]);
+            break;
+
+        // ADMIN Division Head
+        case '123e4567-e89b-12d3-a456-426614174004':
+            console.log("CUKI");
+            await db.pool.query(queries.validateDivisiHead, [user_id, validator]);
+            break;
+    }
+}
+
+const checkValidator = async (pengadaan_id, type) => {
+    // GET Validator
+    const pengadaan = await getPengadaanById(pengadaan_id);
+    var validator = '';
+    if(type == 'is_validate'){
+        validator = pengadaan.is_validate;
+    
+    }else{
+        validator = pengadaan.is_set_pemenang;
+    }
+
+    const validator_db = await db.pool.query(queries.getValidatorByID, [validator]);
+    const status = validator_db.rows[0].status;
+
+    console.table(validator_db);
+    console.table(validator);
+
+    if(status == 1){
+        return true;
+    }
+
+    return false;
+}
+
 const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
-    const { tanggal_pemilihan, tanggal_pemilihan_selesai, pic, pengadaan_id, harga, aanwijzing } = reqa;
+    const { tanggal_pemilihan, tanggal_pemilihan_selesai, pic, pengadaan_id, harga, aanwijzing, user_id, role_id } = reqa;
     var queryParams = [];
     try {
 
+        // GET PENGADAAN
+        const pengadaan_db = await getPengadaanById(pengadaan_id);
+        const type_p = pengadaan_db.tipe_pemilihan_id ;
+        console.log(type_p);
         // PENUNJUKAN LANGSUNG
-        if(vendor_id != null){
-            queryParams = [tanggal_pemilihan, tanggal_pemilihan_selesai, pic, aanwijzing, vendor_id, pengadaan_id];
+        if(type_p  == 'a81c1ea8-2e4f-47f1-a963-38496490cd93'){
+            queryParams = [tanggal_pemilihan || null, tanggal_pemilihan_selesai || null, pic || null, aanwijzing || null, vendor_id, pengadaan_id];
             await db.pool.query( queries.validasiPengadaanLangsung, queryParams, (error, result) => {
                 if (error) throw error;
             });
@@ -458,8 +529,9 @@ const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
             await contNotif.addNotif(vendor_id, `Selamat! Anda telah terpilih sebagai pemenang penunjukan langsung untuk pengadaan ${nama_pengadaan}. Silakan masuk ke Portal Vendor untuk detail lebih lanjut.`);
         }
         // TENDER
-        else if(link_zoom != null){
-            queryParams = [tanggal_pemilihan, tanggal_pemilihan_selesai, pic, aanwijzing, pengadaan_id];
+        else if(type_p == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f'){
+            queryParams = [tanggal_pemilihan || null, tanggal_pemilihan_selesai || null, pic || null, aanwijzing || null, pengadaan_id];
+            console.table(queryParams.pic)
             await db.pool.query( queries.validasiPengadaan, queryParams, (error, result) => {
                 if (error) throw error;
             });
@@ -467,10 +539,16 @@ const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
                 if (error) throw error;
             });
         }else{
-            queryParams = [tanggal_pemilihan, tanggal_pemilihan_selesai, pic, aanwijzing, pengadaan_id];
+            queryParams = [tanggal_pemilihan || null, tanggal_pemilihan_selesai || null, pic || null, aanwijzing || null, pengadaan_id];
             await db.pool.query( queries.validasiPengadaan, queryParams, (error, result) => {
                 if (error) throw error;
             });
+        }
+
+        await doValidator(pengadaan_id, role_id, user_id, 'is_validate');
+
+        if(await checkValidator(pengadaan_id, 'is_validate')){
+            await db.pool.query( queries.updateStatusValidate, [pengadaan_id]);
         }
 
         const p_res = await getPengadaanById(pengadaan_id);
