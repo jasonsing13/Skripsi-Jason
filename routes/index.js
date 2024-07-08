@@ -101,7 +101,6 @@ async function checkSession (req, res, next) {
           email2 = 'presdir@example.com';
           break;
       }
-      console.log("email2: "+email2)
       var result = await userController.getUserByEmail(email2);
       result[0]['isAdmin'] = true
       req.session.data = {
@@ -1457,8 +1456,8 @@ router.post('/set-pemenang', async function(req, res) {
   const {pengadaan_id, vendor_id, dbt_id, bt_id, harga, durasi} = req.body;
   try {
       // Asumsi Anda memiliki fungsi untuk menyetujui pengadaan
-      await pengadaanController.setPemenang(pengadaan_id, vendor_id, dbt_id, bt_id, harga, durasi);
-      // const data = req.session.data;
+      const data = req.session.data.parent;
+      await pengadaanController.setPemenang(pengadaan_id, data.role_id, data.id, vendor_id, dbt_id, bt_id, harga, durasi);
       // const statusOptions = await pengadaanController.option_Select_Status();
       // const result = await pengadaanController.getDaftarPengadaan();
       res.redirect(`/vendor-pengadaan-previous/`+pengadaan_id);

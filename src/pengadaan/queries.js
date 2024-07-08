@@ -505,15 +505,29 @@ WHERE pengadaan_id = $6
 const setPemenang = ` 
 UPDATE public.pengadaan
 SET 
-vendor_pemenang = $1
+vendor_pemenang = temp_vendor_pemenang
+WHERE pengadaan_id = $1;`
+;
+
+const setTempPemenang = ` 
+UPDATE public.pengadaan
+SET 
+temp_vendor_pemenang = $1
 WHERE pengadaan_id = $2;`
 ;
 
 const setPemenangTender = ` 
 UPDATE public.pengadaan
 SET 
-vendor_pemenang = $1, harga = $3, durasi_pengerjaan = $4
+temp_vendor_pemenang = $1, harga = $3, durasi_pengerjaan = $4
 WHERE pengadaan_id = $2;`
+;
+
+const updateHargaDurasiTender = ` 
+UPDATE detail_bidding_tender
+SET 
+pengajuan_harga = $2, durasi_pekerjaan = $3
+WHERE dbt_id = $1;`
 ;
 
 const setPemenang2 = ` 
@@ -586,6 +600,8 @@ module.exports = {
     insertValidatorPengadaan,
     addValidator,
     updateStatusValidate,
-    getValidatorByID
+    getValidatorByID,
+    setTempPemenang,
+    updateHargaDurasiTender
 };
 

@@ -140,11 +140,11 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="harga">Harga</label>
-                            <input id="harga" class="form-control currency" type="text" name="harga">
+                            <input id="harga" class="form-control currency" type="text" name="harga" value="<%= bt.pengajuan_harga || 0 %>">
                         </div>    
                         <div class="form-group">
                             <label for="harga">Durasi Pekerjaan (Day)</label>
-                            <input id="harga" class="form-control qty" type="text" name="durasi">
+                            <input id="harga" class="form-control qty" type="text" name="durasi" value="<%= bt.durasi_pekerjaan || 0 %>">
                         </div>    
                     </div>
                     <div class="modal-footer">

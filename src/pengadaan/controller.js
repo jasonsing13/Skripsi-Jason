@@ -474,9 +474,6 @@ const checkValidator = async (pengadaan_id, type) => {
     const validator_db = await db.pool.query(queries.getValidatorByID, [validator]);
     const status = validator_db.rows[0].status;
 
-    console.table(validator_db);
-    console.table(validator);
-
     if(status == 1){
         return true;
     }
@@ -492,7 +489,6 @@ const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
         // GET PENGADAAN
         const pengadaan_db = await getPengadaanById(pengadaan_id);
         const type_p = pengadaan_db.tipe_pemilihan_id ;
-        console.log(type_p);
         // PENUNJUKAN LANGSUNG
         if(type_p  == 'a81c1ea8-2e4f-47f1-a963-38496490cd93'){
             queryParams = [tanggal_pemilihan || null, tanggal_pemilihan_selesai || null, pic || null, aanwijzing || null, vendor_id, pengadaan_id];
@@ -519,6 +515,10 @@ const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
             await db.pool.query( queries.setPemenangTender, [vendor_id, pengadaan_id, harga, differenceInDays], (error, result) => {
                 if (error) throw error;
             });
+
+            await db.pool.query( queries.setPemenang, [pengadaan_id], (error, result) => {
+                if (error) throw error;
+            });
             
             await db.pool.query( queries.setPemenang2, [dbt_id], (error, result) => {
                 if (error) throw error;
@@ -531,7 +531,6 @@ const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
         // TENDER
         else if(type_p == 'b8649cf1-3da3-4258-8e2d-459e10b1b95f'){
             queryParams = [tanggal_pemilihan || null, tanggal_pemilihan_selesai || null, pic || null, aanwijzing || null, pengadaan_id];
-            console.table(queryParams.pic)
             await db.pool.query( queries.validasiPengadaan, queryParams, (error, result) => {
                 if (error) throw error;
             });
@@ -561,13 +560,14 @@ const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
     }
 };
 
-async function setPemenang (pengadaan_id, vendor_id, dbt_id, bt_id, harga, durasi) {
+async function setPemenang (pengadaan_id, role_id, user_id, vendor_id, dbt_id, bt_id, harga, durasi) {
     const client = await db.pool.connect();
     try {
         if(harga){
+            await client.query(queries.updateHargaDurasiTender, [dbt_id, harga, durasi]); 
             await client.query(queries.setPemenangTender, [vendor_id, pengadaan_id, harga, durasi]); 
         }else{
-            await client.query(queries.setPemenang, [vendor_id, pengadaan_id]); 
+            await client.query(queries.setTempPemenang, [vendor_id, pengadaan_id]); 
         }
 
         const r_id = await client.query(queries.getPengadaanById, [pengadaan_id]);
@@ -576,11 +576,17 @@ async function setPemenang (pengadaan_id, vendor_id, dbt_id, bt_id, harga, duras
         if(r_id.rows[0].tipe_pemilihan_id == '8ef85b64-6d65-4b87-b5ee-5f06016b135c'){
             await contNotif.addNotif(vendor_id, `Selamat! Anda telah terpilih sebagai pemenang vendor scoring untuk pengadaan ${nama_pengadaan}. Silakan masuk ke Portal Vendor untuk detail lebih lanjut.`);
         }else{
-            await client.query(queries.setPemenang2, [dbt_id]); 
-            await client.query(queries.setDitolak, [bt_id, dbt_id]);
+            await doValidator(pengadaan_id, role_id, user_id, 'is_set_pemenang');
 
-            await contNotif.addNotif(vendor_id, `Selamat! Anda telah terpilih sebagai pemenang ${harga ? 'tender' : 'bidding'} untuk pengadaan ${nama_pengadaan}. Silakan masuk ke Portal Vendor untuk detail lebih lanjut.`);
+            if(await checkValidator(pengadaan_id, 'is_set_pemenang')){
+                await client.query( queries.setPemenang, [pengadaan_id]);
+                await client.query(queries.setPemenang2, [dbt_id]); 
+                await client.query(queries.setDitolak, [bt_id, dbt_id]);
+    
+                await contNotif.addNotif(vendor_id, `Selamat! Anda telah terpilih sebagai pemenang ${harga ? 'tender' : 'bidding'} untuk pengadaan ${nama_pengadaan}. Silakan masuk ke Portal Vendor untuk detail lebih lanjut.`);
+            }
         }
+
     } catch (error) {
         console.error('Error executing query', error.stack);
         throw error;
