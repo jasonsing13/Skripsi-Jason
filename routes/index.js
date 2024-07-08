@@ -1195,7 +1195,8 @@ router.get('/list-admin', async (req, res) => {
     const data = req.session.data;
     const result = await userController.getUser(); // Fetch vendors data using a function from db.js
     const option_role = await roleController.getRole();
-    res.render('list-admin', { vendor: result, parent: data.parent, option_role, page: 'list-admin' });
+    const opt_detail_role = await roleController.getDetailRole();
+    res.render('list-admin', { vendor: result, parent: data.parent, option_role, opt_detail_role, page: 'list-admin' });
   } catch (error) {
       console.error('Error fetching vendors:', error);
       res.status(500).send('Error fetching vendor data');

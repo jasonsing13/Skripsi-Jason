@@ -22,7 +22,7 @@
                             <th>Nama</th>
                             <th>Phone Number</th>
                             <th>Role</th>
-                            <!-- <th>Aksi</th> -->
+                            <th>Sub-role</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,6 +32,7 @@
                                 <td><%= vendor.first_name + " " + vendor.last_name %></td>
                                 <td><%= vendor.phone_number || "-" %></td>
                                 <td><%= vendor.role_name || "-" %></td>
+                                <td><%= vendor.detail_role_name || "Global" %></td>
                                 <!-- <td>
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detail-<%= vendor.id %>">Detail</button>
         
@@ -186,11 +187,22 @@
                                         <option selected>Choose...</option>
                                         <% option_role.forEach(option => { %>
                                             <option value="<%= option.role_id %>"><%= option.role_name %></option>
-                                        <% }); %>
-                                    </select>
+                                            <% }); %>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="detail_role">Sub Role</label>
+                                    <input id="detail_role" class="form-control" type="text" name="detail_role" list="detail_role_dl" placeholder="Kosongi jika Global" required>
+                                    <datalist id="detail_role_dl">
+                                        <% opt_detail_role.forEach(e => { %>
+                                            <option value="<%= e.nama %>"><%= e.nama %></option>
+                                        <% }) %>
+                                    </datalist>
+                                </div>
+                            </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

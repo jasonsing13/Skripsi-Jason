@@ -1,5 +1,6 @@
 const db = require('../../database/db');
 const queries = require('../user/queries');
+const conRole = require('../role/controller');
 
 async function getUser() {
     const client = await db.pool.connect();
@@ -37,10 +38,21 @@ async function getUserByEmail(email_perusahaan) {
 
 const addUser = async (req,res)=>{
     const created_by = req.session.data.parent.id;
-    const { username, password, email, first_name, last_name, phone_number, role_id } = req.body;
+    const { username, password, email, first_name, last_name, phone_number, role_id, detail_role } = req.body;
+    const detail_role_id = null;
+    
+    if(detail_role){
+        detail_role_id = await conRole.getDetailRoleByName(detail_role);
+    
+        if(!detail_role_id){
+            const dr_role = await conRole.addDetailRole(detail_role);
+            detail_role_id = dr_role.rows[0].id;
+        }
+    }
+
     const result = await db.pool.query(
         queries.addUser,
-        [username, password, email, first_name, last_name, phone_number, created_by, role_id]);
+        [username, password, email, first_name, last_name, phone_number, created_by, role_id, detail_role_id]);
     return result.rows[0].id;
 };
 
