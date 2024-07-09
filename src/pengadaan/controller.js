@@ -578,8 +578,8 @@ async function setPemenang (pengadaan_id, role_id, user_id, vendor_id, dbt_id, b
 
             if(await checkValidator(pengadaan_id, 'is_set_pemenang')){
                 await client.query( queries.setPemenang, [pengadaan_id]);
-                await client.query(queries.setPemenang2, [dbt_id]); 
-                await client.query(queries.setDitolak, [bt_id, dbt_id]);
+                // await client.query(queries.setPemenang2, [dbt_id]); 
+                // await client.query(queries.setDitolak, [bt_id, dbt_id]);
     
                 await contNotif.addNotif(vendor_id, `Selamat! Anda telah terpilih sebagai pemenang vendor scoring untuk pengadaan ${nama_pengadaan}. Silakan masuk ke Portal Vendor untuk detail lebih lanjut.`);
             }
