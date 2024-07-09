@@ -496,8 +496,7 @@ tanggal_pemilihan = $1,
 tanggal_pemilihan_selesai = $2, 
 pic = $3,
 aanwijzing = $4,
-vendor_pemenang = $5,
-status_id = '0b3e77e5-140b-4662-9563-dde365358ddc'
+temp_vendor_pemenang = $5
 WHERE pengadaan_id = $6
 ;`
 ;
