@@ -16,11 +16,13 @@
                         <h1>Daftar Pengadaan</h1>
                         <p>Informasi daftar pengadaan</p>
                     </div>
-                    <div class="col d-flex justify-content-end align-items-center">
-                        <form action="buat-pengadaan" method="get">
-                            <button type="submit" class="btn btn-primary">Tambah Pengadaan</button>        
-                        </form>
-                    </div>
+                    <% if (parent.role_id == '123e4567-e89b-12d3-a456-426614174002' && parent.role_id == '123e4567-e89b-12d3-a456-426614174001') { %>
+                        <div class="col d-flex justify-content-end align-items-center">
+                            <form action="buat-pengadaan" method="get">
+                                <button type="submit" class="btn btn-primary">Tambah Pengadaan</button>        
+                            </form>
+                        </div>
+                    <% } %>
                 </div>
             </div>
             <div class="card-body">

@@ -53,11 +53,13 @@
                     List Vendor
                 </a>
             </li>
-            <li>
-                <a href="/list-admin" class="nav-link <%= page == 'list-admin' ? 'active text-white' : 'link-dark' %>">
-                    List Admin
-                </a>
-            </li>
+            <% if (parent.role_id != '123e4567-e89b-12d3-a456-426614174002' && parent.role_id != '123e4567-e89b-12d3-a456-426614174001') { %>
+                <li>
+                    <a href="/list-admin" class="nav-link <%= page == 'list-admin' ? 'active text-white' : 'link-dark' %>">
+                        List Admin
+                    </a>
+                </li>
+            <% } %>
             <li>
                 <a href="/list-barang" class="nav-link <%= page == 'list-barang' ? 'active text-white' : 'link-dark' %>">
                     List Barang & Jasa

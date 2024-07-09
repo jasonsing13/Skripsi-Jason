@@ -183,8 +183,8 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="role_id">Role</label>
-                                    <select id="role_id" class="form-control" name="role_id">
-                                        <option selected>Choose...</option>
+                                    <select id="role_id" class="form-control" name="role_id" required>
+                                        <option value="" selected>Choose...</option>
                                         <% option_role.forEach(option => { %>
                                             <option value="<%= option.role_id %>"><%= option.role_name %></option>
                                             <% }); %>
@@ -194,13 +194,13 @@
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="detail_role">Sub Role</label>
-                                    <input id="detail_role" class="form-control" type="text" name="detail_role" list="detail_role_dl" placeholder="Kosongi jika Global">
-                                    <datalist id="detail_role_dl">
+                                    <label for="detail_role">Department</label>
+                                    <select name="detail_role" id="detail_role" class="form-control">
+                                        <option value="" selected>-</option>
                                         <% opt_detail_role.forEach(e => { %>
-                                            <option value="<%= e.nama %>"><%= e.nama %></option>
+                                            <option value="<%= e.id %>"><%= e.nama %></option>
                                         <% }) %>
-                                    </datalist>
+                                    </select>
                                 </div>
                             </div>
                     </div>
