@@ -512,7 +512,7 @@ const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
             // Konversi milidetik ke hari
             const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
 
-            await db.pool.query( queries.setPemenangTender, [vendor_id, pengadaan_id, harga, differenceInDays], (error, result) => {
+            await db.pool.query( queries.setPemenangTender, [vendor_id, pengadaan_id, harga || 0, differenceInDays || 0], (error, result) => {
                 if (error) throw error;
             });
 
