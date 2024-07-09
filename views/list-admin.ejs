@@ -22,7 +22,7 @@
                             <th>Nama</th>
                             <th>Phone Number</th>
                             <th>Role</th>
-                            <th>Sub-role</th>
+                            <th>Department</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,7 +32,7 @@
                                 <td><%= vendor.first_name + " " + vendor.last_name %></td>
                                 <td><%= vendor.phone_number || "-" %></td>
                                 <td><%= vendor.role_name || "-" %></td>
-                                <td><%= vendor.detail_role_name || "Global" %></td>
+                                <td><%= vendor.detail_role_name || "-" %></td>
                                 <!-- <td>
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detail-<%= vendor.id %>">Detail</button>
         
