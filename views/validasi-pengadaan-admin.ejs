@@ -54,8 +54,8 @@
                         </div>
                         <div class="col-md-6">
                             <label for="pic" class="form-label">PIC</label>
-                            <select class="form-select" id="pic" <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174004' ? "disabled" : "name=pic" %>>
-                                <option selected>Pilih PIC</option>
+                            <select class="form-select" id="pic" <%= parent.role_id != '123e4567-e89b-12d3-a456-426614174004' ? "disabled" : "name=pic" %> required>
+                                <option value="" selected>Pilih PIC</option>
                                 <% option_PIC.forEach(option => { %>
                                     <option value="<%= option.id %>" <%= option.id == pengadaan.pic ? "selected" : "" %>><%= option.first_name %> <%= option.last_name %></option>
                                 <% }); %>
@@ -72,7 +72,7 @@
                             <div class="col-md-6">
                                 <label for="vendor_id" class="form-label">Vendor Yang Dipilih</label>
                                 <select class="form-select" id="vendor_id" name="vendor_id" >
-                                    <option selected>Pilih Vendor</option>
+                                    <option value="" selected>Pilih Vendor</option>
                                     <% option_Vendor.forEach(option => { %>
                                         <option value="<%= option.id %>" <%= option.id == pengadaan.vendor_pemenang ? "selected" : "" %>><%= option.nama_vendor %></option>
                                     <% }); %>
