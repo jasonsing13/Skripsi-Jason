@@ -502,8 +502,13 @@ const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
             const bt_id = bt.rows[0].bt_id
 
             // ADD BIDDING DETAIL
-            const dbt = await db.pool.query( queriesDBT.addDetail_Bidding_Tender, [bt_id, vendor_id]);
-            const dbt_id = dbt.rows[0].dbt_id ;
+            const dbt_db = await db.pool.query(queriesDBT.getDetail_Bidding_TenderByIdnV, [bt_id, vendor_id])
+            const dbt_id = dbt_db.rows[0].dbt_id ;
+
+            if(!dbt_id){
+                const dbt = await db.pool.query( queriesDBT.addDetail_Bidding_Tender, [bt_id, vendor_id]);
+                dbt_id = dbt.rows[0].dbt_id ;
+            }
 
             // SET PEMENANG
             // Hitung selisih dalam milidetik

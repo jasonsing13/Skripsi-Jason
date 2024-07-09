@@ -16,6 +16,10 @@ LEFT JOIN status s ON s.status_id = dbt.status_id
 where bt_id = $1
 GROUP BY dbt.dbt_id, v.nama_vendor, jv.nama_jenis_vendor, s.nama_status, v.id, dbt.bt_id, dbt.dbt_id`;
 
+const getDetail_Bidding_TenderByIdnV = `select dbt_id
+from public.detail_bidding_tender
+where bt_id = $1 AND vendor_id = $2`;
+
 const addDetail_Bidding_Tender = `INSERT INTO public.detail_bidding_tender (bt_id, vendor_id)
 VALUES ( 
     $1,
@@ -35,6 +39,7 @@ module.exports = {
     addDetail_Bidding_Tender,
     removeDetail_Bidding_Tender,
     updateDetail_Bidding_Tender,
-    updateStatusDetail_Bidding_Tender
+    updateStatusDetail_Bidding_Tender,
+    getDetail_Bidding_TenderByIdnV
 };
 
