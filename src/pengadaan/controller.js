@@ -503,7 +503,7 @@ const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
 
             // ADD BIDDING DETAIL
             const dbt_db = await db.pool.query(queriesDBT.getDetail_Bidding_TenderByIdnV, [bt_id, vendor_id])
-            const dbt_id = '' ;
+            var dbt_id = '' ;
             
             if(!dbt_id){
                 const dbt = await db.pool.query( queriesDBT.addDetail_Bidding_Tender, [bt_id, vendor_id]);
