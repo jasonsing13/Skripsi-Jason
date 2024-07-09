@@ -454,7 +454,6 @@ const doValidator = async (pengadaan_id, role_id, user_id, type) => {
 
         // ADMIN Division Head
         case '123e4567-e89b-12d3-a456-426614174004':
-            console.log("CUKI");
             await db.pool.query(queries.validateDivisiHead, [user_id, validator]);
             break;
     }
@@ -504,8 +503,7 @@ const validasiPengadaan = async (reqa, vendor_id = null, link_zoom = null) => {
             // ADD BIDDING DETAIL
             const dbt_db = await db.pool.query(queriesDBT.getDetail_Bidding_TenderByIdnV, [bt_id, vendor_id])
             var dbt_id = '' ;
-            
-            if(!dbt_id){
+            if(dbt_db.rows.length == 0){
                 const dbt = await db.pool.query( queriesDBT.addDetail_Bidding_Tender, [bt_id, vendor_id]);
                 dbt_id = dbt.rows[0].dbt_id ;
             }else{
